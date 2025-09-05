@@ -1,9 +1,15 @@
 # Cursor Rules for Task & Reward Community Platform
 
-## Project Overview
-This is a subscription-based SaaS community platform built on Laravel 12 with a gamified task system. Users are assigned tasks and receive rewards/punishments based on self-reported completion. The platform fosters community through user-generated content, feedback mechanisms, and distinct user roles.
+You are an expert Laravel developer working on a subscription-based SaaS community platform with a gamified task system. Users are assigned tasks and receive rewards/punishments based on self-reported completion. The platform fosters community through user-generated content, feedback mechanisms, and distinct user roles.
 
-## Tech Stack
+## Project Context
+- **Platform**: Subscription-based SaaS community platform
+- **Core Feature**: Gamified task system with rewards/punishments
+- **Architecture**: Trust-based system with community moderation
+- **User Types**: Male, Female, Couple accounts
+- **Monetization**: Free tier (limited) + Premium subscription
+
+## Tech Stack & Dependencies
 - **Backend**: Laravel 12, PHP 8.2+
 - **Frontend**: Livewire 3, Alpine.js, Tailwind CSS v4
 - **Admin Panel**: Filament 4
@@ -14,7 +20,7 @@ This is a subscription-based SaaS community platform built on Laravel 12 with a 
 - **WebSockets**: Laravel Reverb
 - **Authentication**: Laravel Sanctum
 
-## Key Packages
+### Key Packages
 - `filament/filament`: Admin panel
 - `livewire/livewire`: Frontend interactivity
 - `lorisleiva/laravel-actions`: Business logic classes
@@ -23,60 +29,60 @@ This is a subscription-based SaaS community platform built on Laravel 12 with a 
 - `spatie/laravel-medialibrary`: File uploads
 - `laravel/cashier`: Subscription management
 
-## Architecture Patterns
+## Core Architecture Patterns
 
-### 1. Laravel Actions Pattern
-- Use `lorisleiva/laravel-actions` for all business logic
-- Actions should be single-purpose, reusable classes
+### Laravel Actions Pattern
+- Use `lorisleiva/laravel-actions` for ALL business logic
+- Actions must be single-purpose, reusable classes
 - Share actions between Livewire components and API controllers
-- Example: `RequestNewTaskAction`, `ResolveTaskAction`, `SubmitContentAction`
+- Examples: `RequestNewTaskAction`, `ResolveTaskAction`, `SubmitContentAction`
 
-### 2. Role-Based Access Control
+### Role-Based Access Control
 - Use `spatie/laravel-permission` for roles and permissions
 - Roles: User, Reviewer, Moderator, Admin
 - Implement middleware for role-based route protection
 - Use `HasRoles` trait on User model
 
-### 3. API-First Design
+### API-First Design
 - All business logic in Actions for API reusability
 - Use Laravel API Resources for consistent JSON responses
 - Version API endpoints (`/api/v1/`)
 - Use Laravel Sanctum for token authentication
 
-## Code Style & Standards
+## Code Standards & Conventions
 
-### PHP/Laravel
-- Follow PSR-12 coding standards
-- Use Laravel Pint for code formatting
+### PHP/Laravel Standards
+- Follow PSR-12 coding standards strictly
+- Use Laravel Pint for automatic code formatting
 - Use type hints and return types everywhere
 - Prefer Eloquent relationships over raw queries
 - Use Laravel's built-in validation rules
 - Follow Laravel naming conventions
 
-### Livewire Components
+### Livewire Component Guidelines
 - Keep components focused and single-purpose
 - Use public properties for data binding
 - Implement proper validation in components
 - Use wire:model for two-way data binding
 - Follow Livewire naming conventions
 
-### Database
+### Database Design
 - Use migrations for all schema changes
 - Add proper foreign key constraints
 - Use meaningful column names
 - Implement soft deletes where appropriate
 - Add database indexes for performance
 
-### Testing
+### Testing Requirements
 - Use Pest PHP for all tests
 - Write feature tests for user workflows
 - Write unit tests for Actions and business logic
 - Use factories for test data generation
 - Test both success and failure scenarios
 
-## File Organization
+## File Structure & Organization
 
-### Actions
+### Actions Directory
 - Place all Actions in `app/Actions/`
 - Group by feature: `app/Actions/Task/`, `app/Actions/Content/`
 - Use descriptive names: `RequestNewTaskAction.php`
@@ -91,13 +97,13 @@ This is a subscription-based SaaS community platform built on Laravel 12 with a 
 - Use versioned folders: `app/Http/Resources/V1/`
 - Follow RESTful naming conventions
 
-### Models
+### Model Guidelines
 - Use Eloquent relationships extensively
 - Implement proper accessors and mutators
 - Use model events for business logic
 - Add proper validation rules
 
-## Database Schema Guidelines
+## Database Schema Design
 
 ### Core Tables
 - `users`: User accounts with Cashier integration
@@ -106,14 +112,14 @@ This is a subscription-based SaaS community platform built on Laravel 12 with a 
 - `reactions`: Polymorphic reactions system
 - `stories`: User-generated stories (premium content)
 
-### Key Fields
+### Required Fields
 - Always include `id`, `created_at`, `updated_at`
 - Use `status` enum for content moderation
 - Include `user_id` for ownership tracking
 - Use `target_user_type` for content filtering
 - Implement soft deletes where needed
 
-## Security Best Practices
+## Security & Data Protection
 
 ### Authentication & Authorization
 - Use Laravel Sanctum for API authentication
@@ -128,15 +134,15 @@ This is a subscription-based SaaS community platform built on Laravel 12 with a 
 - Use database transactions for critical operations
 - Log all user actions with activity log
 
-## Performance Considerations
+## Performance Optimization
 
-### Database
+### Database Performance
 - Add proper indexes for frequently queried columns
 - Use eager loading to prevent N+1 queries
 - Implement database query caching where appropriate
 - Use database transactions for bulk operations
 
-### Frontend
+### Frontend Performance
 - Use Livewire's lazy loading for heavy components
 - Implement proper pagination for large datasets
 - Use Tailwind CSS for optimized styling
