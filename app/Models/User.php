@@ -26,6 +26,8 @@ class User extends Authenticatable implements HasPassKeys
         'name',
         'email',
         'password',
+        'username',
+        'about',
     ];
 
     /**
