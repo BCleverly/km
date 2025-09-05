@@ -31,11 +31,11 @@ STRIPE_MODE=test
 
 ### 2. Cursor Configuration
 
-The MCP server is configured in `mcp-config.json`. To use it with Cursor:
+The MCP server is configured in `cursor.json` in your workspace root. This is the modern way to configure MCP servers in Cursor:
 
-1. Copy the configuration from `mcp-config.json` to your Cursor settings
-2. Or place the file in your Cursor configuration directory
-3. Restart Cursor to load the MCP server
+1. The `cursor.json` file is automatically detected by Cursor
+2. No additional configuration needed - just restart Cursor
+3. The configuration uses environment variables from your `.env` file
 
 ### 3. Testing the Setup
 
