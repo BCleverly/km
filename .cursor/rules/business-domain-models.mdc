@@ -1,0 +1,188 @@
+---
+description: Business domain models and database schema guidelines for the task and reward community platform
+globs: app/Models/*.php,database/migrations/*.php,app/Actions/*.php
+---
+
+# Business Domain Models & Database Schema
+
+## Core Database Tables
+
+### Users Table
+The [User.php](mdc:app/Models/User.php) model extends Laravel's Authenticatable with additional traits:
+- `Billable` (Laravel Cashier for Stripe subscriptions)
+- `HasRoles` (Spatie Permission for role management)
+- `HasApiTokens` (Laravel Sanctum for API authentication)
+- `InteractsWithPasskeys` (Spatie Passkeys for passwordless auth)
+
+**Key Fields:**
+- `user_type` (enum: 'male', 'female', 'couple')
+- `partner_id` (nullable, foreign key to users.id for couple accounts)
+- Stripe fields: `stripe_id`, `pm_type`, `pm_last_four`, `trial_ends_at`
+
+### Content Tables (Tasks, Rewards, Punishments)
+All three tables share identical structure for consistency:
+
+**Common Fields:**
+- `title` (string)
+- `description` (text)
+- `difficulty_level` (integer, 1-10 scale)
+- `target_user_type` (enum: 'male', 'female', 'couple', 'any')
+- `user_id` (foreign key to users.id - original author)
+- `status` (enum: 'pending', 'approved', 'in_review', 'rejected')
+- `view_count` (integer, default 0)
+- `is_premium` (boolean, default false - subscriber-only content)
+
+### User Assigned Tasks (Junction Table)
+**Fields:**
+- `user_id` (foreign key to users.id)
+- `task_id` (foreign key to tasks.id)
+- `status` (enum: 'assigned', 'completed', 'failed')
+- `outcome_type` (string, nullable - 'reward' or 'punishment')
+- `outcome_id` (unsignedBigInteger, nullable - ID of assigned reward/punishment)
+- `assigned_at` (timestamp)
+- `completed_at` (timestamp, nullable)
+
+### Reactions Table (Polymorphic)
+**Fields:**
+- `user_id` (foreign key to users.id)
+- `reactable_id` (unsignedBigInteger - ID of item being reacted to)
+- `reactable_type` (string - model name like 'App\Models\Task')
+- `type` (enum: 'positive', 'negative')
+- Unique composite key on (user_id, reactable_id, reactable_type)
+
+### Stories Table
+**Fields:**
+- `user_id` (foreign key to users.id)
+- `title` (string)
+- `content` (longText)
+- `is_private` (boolean, default true - initially private to members)
+- `status` (enum: 'pending', 'approved', 'rejected')
+
+## Model Relationships
+
+### User Model Relationships
+```php
+// Couple relationship
+public function partner(): BelongsTo
+{
+    return $this->belongsTo(User::class, 'partner_id');
+}
+
+public function couplePartner(): HasOne
+{
+    return $this->hasOne(User::class, 'partner_id');
+}
+
+// Content relationships
+public function tasks(): HasMany
+{
+    return $this->hasMany(Task::class);
+}
+
+public function rewards(): HasMany
+{
+    return $this->hasMany(Reward::class);
+}
+
+public function punishments(): HasMany
+{
+    return $this->hasMany(Punishment::class);
+}
+
+public function stories(): HasMany
+{
+    return $this->hasMany(Story::class);
+}
+
+// Assigned tasks
+public function assignedTasks(): HasMany
+{
+    return $this->hasMany(UserAssignedTask::class);
+}
+
+// Reactions
+public function reactions(): HasMany
+{
+    return $this->hasMany(Reaction::class);
+}
+```
+
+### Content Model Relationships (Task, Reward, Punishment)
+```php
+public function author(): BelongsTo
+{
+    return $this->belongsTo(User::class, 'user_id');
+}
+
+public function reactions(): MorphMany
+{
+    return $this->morphMany(Reaction::class, 'reactable');
+}
+
+public function assignedTasks(): HasMany // For Task model only
+{
+    return $this->hasMany(UserAssignedTask::class);
+}
+```
+
+## Business Logic Actions
+
+### Core Actions (Lorisleiva Laravel Actions)
+All business logic should be encapsulated in Action classes for reusability between web and API:
+
+1. **RequestNewTask Action**
+   - Fetches approved task matching user's type
+   - Ensures task hasn't been previously assigned
+   - Creates UserAssignedTask record with 'assigned' status
+   - Dispatches NewTaskAssigned event
+
+2. **ResolveTask Action**
+   - Updates UserAssignedTask status ('completed' or 'failed')
+   - Randomly assigns appropriate reward or punishment
+   - Dispatches NewOutcomeAssigned event
+   - For couples: updates both partner records
+
+3. **SubmitContent Action**
+   - Generic action for submitting tasks, rewards, punishments, stories
+   - Creates record with 'pending' status
+   - Dispatches ContentStatusUpdated event when approved
+
+4. **ReactToContent Action**
+   - Adds positive/negative reaction to content
+   - Triggers automated review if negative ratio >= 70% and total reactions >= 50
+
+## Moderation Workflow
+
+### Content Lifecycle
+1. **Submission**: User submits content → status = 'pending'
+2. **Initial Review**: Moderator/Admin reviews in Filament panel
+3. **Approval**: Content becomes visible to users
+4. **Community Feedback**: Users can react to content
+5. **Automated Review**: Negative reactions trigger 'in_review' status
+6. **Final Decision**: Moderator makes final approval/rejection
+
+### Automated Review Triggers
+- Scheduled job runs periodically (every hour)
+- Calculates reaction ratio: (negative_reactions / total_reactions) * 100
+- If total_reactions >= 50 AND negative_ratio >= 70% → status = 'in_review'
+
+## Couple Account Logic
+
+### Partner Linking
+- Primary user selects 'couple' during registration
+- System generates invitation link for partner
+- Partner signs up via link, creating linked account
+- Both accounts share same UserAssignedTask records
+
+### Shared Task Management
+- Any action by one partner reflects for both
+- Real-time notifications via WebSocket for partner actions
+- Separate login credentials but shared task view
+
+## Activity Logging
+Use Spatie Laravel Activity Log to track:
+- User registration, login, subscription changes
+- Content creation and status changes
+- Moderation actions and administrative changes
+- Task assignments and completions
+- All actions accessible through Filament admin panel

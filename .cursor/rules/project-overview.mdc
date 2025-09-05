@@ -1,0 +1,85 @@
+---
+alwaysApply: true
+description: Project overview and architecture guidelines for the Kink Master task and reward community platform
+---
+
+# Kink Master - Project Overview & Architecture
+
+## Project Context
+This is a subscription-based SaaS community platform built on Laravel 12. The platform's core is a gamified task system where users are assigned tasks and receive rewards or punishments based on self-reported completion. It operates on a foundation of trust and community-driven content.
+
+## Core Business Model
+- **Gamification**: Users get tasks assigned and report completion for rewards/punishments
+- **Community Driven**: Content library grows through user submissions (tasks, rewards, punishments, stories)
+- **Trust-Based**: System operates on honor system for task completion
+- **Inclusivity**: Supports different user types (male, female, couples)
+- **Moderation**: Clear system for maintaining content quality
+- **Monetization**: Free tier (limited) + Premium subscription via Stripe
+
+## Key Technical Architecture
+
+### Backend Stack
+- **Framework**: Laravel 12 with PHP 8.4
+- **Admin Panel**: Filament v4 for rapid admin interface development
+- **Frontend**: Livewire 3 + Alpine.js for dynamic SPA feel
+- **Styling**: Tailwind CSS v4
+- **Database**: MySQL 8 or PostgreSQL 15
+- **WebSockets**: Laravel Reverb for real-time notifications
+- **Payments**: Laravel Cashier (Stripe integration)
+- **Authentication**: Laravel Sanctum for API + traditional web auth
+- **Permissions**: Spatie Laravel Permission for role management
+
+### Key Packages & Versions
+- `filament/filament` ~4.0
+- `laravel/cashier` ^15.7
+- `laravel/framework` ^12.0
+- `laravel/reverb` ^1.0
+- `laravel/sanctum` ^4.0
+- `livewire/livewire` ^3.6
+- `lorisleiva/laravel-actions` ^2.9
+- `spatie/laravel-activitylog` ^4.10
+- `spatie/laravel-medialibrary` ^11.14
+- `spatie/laravel-passkeys` ^1.0
+- `spatie/laravel-permission` ^6.21
+
+## User Roles & Permissions
+1. **User** (Default): Get tasks, submit content, react to content, manage subscription
+2. **Reviewer**: All User permissions + access review queue, vote on content
+3. **Moderator**: All Reviewer permissions + direct approve/reject, ban users
+4. **Admin**: Superuser with all permissions, manage roles, view subscription data
+
+## Core User Types
+- **Male**: Individual male users
+- **Female**: Individual female users  
+- **Couple**: Linked partner accounts with shared task views
+
+## Key Business Logic
+- Task assignment based on user type and availability
+- Self-reported completion with random reward/punishment assignment
+- Community moderation with automated review triggers
+- Subscription-based content access (free vs premium)
+- Real-time notifications for task assignments and outcomes
+
+## Development Principles
+- **API-First**: All business logic in Laravel Actions for web/API reuse
+- **Real-time**: WebSocket notifications for user engagement
+- **Audit Trail**: Comprehensive activity logging for moderation
+- **Scalable**: Architecture supports future mobile apps and advanced features
+- **Clean UI**: Minimalist design inspired by Linear, Vercel, Craft, Stripe dashboards
+
+## File Structure Context
+- Models: [app/Models/](mdc:app/Models/)
+- Controllers: [app/Http/Controllers/](mdc:app/Http/Controllers/)
+- Livewire Components: [app/Livewire/](mdc:app/Livewire/)
+- Filament Resources: [app/Filament/Resources/](mdc:app/Filament/Resources/)
+- Actions: [app/Actions/](mdc:app/Actions/)
+- API Routes: [routes/api.php](mdc:routes/api.php)
+- Web Routes: [routes/web.php](mdc:routes/web.php)
+- Migrations: [database/migrations/](mdc:database/migrations/)
+- Tests: [tests/](mdc:tests/)
+
+## Development Workflow
+- Use `composer run dev` for full development environment (server, queue, logs, vite)
+- Use `php artisan test` for running tests
+- Use `vendor/bin/pint --dirty` for code formatting
+- Use `npm run build` or `npm run dev` for frontend assets

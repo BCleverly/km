@@ -1,0 +1,414 @@
+---
+description: Comprehensive testing guidelines for the task and reward community platform
+globs: tests/**/*.php
+---
+
+# Testing Guidelines
+
+## Testing Philosophy
+- **Test All Happy Paths**: Ensure core functionality works as expected
+- **Test Failure Paths**: Verify proper error handling and edge cases
+- **Test Weird Paths**: Handle unexpected inputs and boundary conditions
+- **Business Logic Focus**: Prioritize testing the core task/reward system
+- **API & Web Parity**: Test both web Livewire components and API endpoints
+
+## Test Structure & Organization
+
+### Test Directories
+- `tests/Feature/` - Integration tests for complete user workflows
+- `tests/Unit/` - Isolated tests for individual classes/methods
+- `tests/Browser/` - End-to-end browser tests with Pest v4
+- `tests/Api/` - API endpoint testing
+
+### Test Naming Conventions
+```php
+// Feature tests - describe user actions
+it('can request a new task when user has no active task', function () { ... });
+it('cannot request a new task when user already has an active task', function () { ... });
+it('assigns appropriate reward when user completes a task', function () { ... });
+
+// Unit tests - describe specific functionality
+it('calculates reaction ratio correctly', function () { ... });
+it('validates user type for task assignment', function () { ... });
+
+// API tests - describe API behavior
+it('returns 401 when requesting task without authentication', function () { ... });
+it('returns current task for authenticated user', function () { ... });
+```
+
+## Core Business Logic Testing
+
+### Task Assignment System
+```php
+it('assigns task matching user type', function () {
+    $maleUser = User::factory()->male()->create();
+    $task = Task::factory()->forMales()->approved()->create();
+    
+    $action = new RequestNewTask();
+    $result = $action->execute($maleUser);
+    
+    expect($result)->toBeInstanceOf(UserAssignedTask::class);
+    expect($result->user_id)->toBe($maleUser->id);
+    expect($result->task_id)->toBe($task->id);
+    expect($result->status)->toBe('assigned');
+});
+
+it('does not assign task user has already completed', function () {
+    $user = User::factory()->create();
+    $task = Task::factory()->approved()->create();
+    
+    // User already completed this task
+    UserAssignedTask::factory()->create([
+        'user_id' => $user->id,
+        'task_id' => $task->id,
+        'status' => 'completed'
+    ]);
+    
+    $action = new RequestNewTask();
+    
+    expect(fn() => $action->execute($user))
+        ->toThrow(TaskAlreadyCompletedException::class);
+});
+```
+
+### Task Resolution & Outcomes
+```php
+it('assigns random reward when task is completed', function () {
+    $user = User::factory()->create();
+    $assignedTask = UserAssignedTask::factory()->assigned()->create([
+        'user_id' => $user->id
+    ]);
+    $reward = Reward::factory()->approved()->create();
+    
+    $action = new ResolveTask();
+    $result = $action->execute($assignedTask, 'completed');
+    
+    expect($result->status)->toBe('completed');
+    expect($result->outcome_type)->toBe('reward');
+    expect($result->outcome_id)->not->toBeNull();
+    expect($result->completed_at)->not->toBeNull();
+});
+
+it('assigns random punishment when task is failed', function () {
+    $user = User::factory()->create();
+    $assignedTask = UserAssignedTask::factory()->assigned()->create([
+        'user_id' => $user->id
+    ]);
+    $punishment = Punishment::factory()->approved()->create();
+    
+    $action = new ResolveTask();
+    $result = $action->execute($assignedTask, 'failed');
+    
+    expect($result->status)->toBe('failed');
+    expect($result->outcome_type)->toBe('punishment');
+    expect($result->outcome_id)->not->toBeNull();
+});
+```
+
+### Couple Account Logic
+```php
+it('shares task completion between couple partners', function () {
+    $primaryUser = User::factory()->couple()->create();
+    $partnerUser = User::factory()->create(['partner_id' => $primaryUser->id]);
+    $primaryUser->update(['partner_id' => $partnerUser->id]);
+    
+    $assignedTask = UserAssignedTask::factory()->assigned()->create([
+        'user_id' => $primaryUser->id
+    ]);
+    
+    $action = new ResolveTask();
+    $action->execute($assignedTask, 'completed');
+    
+    // Both partners should see the completed task
+    expect($primaryUser->assignedTasks()->completed()->count())->toBe(1);
+    expect($partnerUser->assignedTasks()->completed()->count())->toBe(1);
+});
+```
+
+## Content Moderation Testing
+
+### Content Submission & Review
+```php
+it('creates content with pending status when submitted', function () {
+    $user = User::factory()->create();
+    
+    $action = new SubmitContent();
+    $result = $action->execute($user, 'task', [
+        'title' => 'Test Task',
+        'description' => 'Test Description',
+        'difficulty_level' => 5,
+        'target_user_type' => 'any'
+    ]);
+    
+    expect($result->status)->toBe('pending');
+    expect($result->user_id)->toBe($user->id);
+});
+
+it('triggers automated review when negative reactions exceed threshold', function () {
+    $task = Task::factory()->approved()->create();
+    
+    // Create 50 reactions with 70% negative
+    Reaction::factory()->count(35)->negative()->create(['reactable' => $task]);
+    Reaction::factory()->count(15)->positive()->create(['reactable' => $task]);
+    
+    $job = new ProcessAutomatedReviews();
+    $job->handle();
+    
+    expect($task->fresh()->status)->toBe('in_review');
+});
+```
+
+## API Testing
+
+### Authentication & Authorization
+```php
+it('requires authentication for task request', function () {
+    $response = $this->postJson('/api/v1/tasks/request');
+    
+    $response->assertUnauthorized();
+});
+
+it('allows authenticated user to request task', function () {
+    $user = User::factory()->create();
+    
+    $response = $this->actingAs($user, 'sanctum')
+        ->postJson('/api/v1/tasks/request');
+        
+    $response->assertSuccessful()
+        ->assertJsonStructure(['data' => ['id', 'title', 'description']]);
+});
+
+it('requires premium subscription for stories', function () {
+    $user = User::factory()->free()->create();
+    
+    $response = $this->actingAs($user, 'sanctum')
+        ->getJson('/api/v1/stories');
+        
+    $response->assertForbidden()
+        ->assertJson(['error' => 'Premium subscription required']);
+});
+```
+
+### API Response Format Testing
+```php
+it('returns standardized api response format', function () {
+    $user = User::factory()->create();
+    
+    $response = $this->actingAs($user, 'sanctum')
+        ->getJson('/api/v1/user');
+        
+    $response->assertSuccessful()
+        ->assertJsonStructure([
+            'data' => [
+                'id',
+                'name',
+                'email',
+                'user_type',
+                'subscription_status'
+            ]
+        ]);
+});
+```
+
+## Livewire Component Testing
+
+### Task Dashboard Component
+```php
+it('displays current task when user has active task', function () {
+    $user = User::factory()->create();
+    $assignedTask = UserAssignedTask::factory()->assigned()->create([
+        'user_id' => $user->id
+    ]);
+    
+    Livewire::actingAs($user)
+        ->test(TaskDashboard::class)
+        ->assertSee($assignedTask->task->title)
+        ->assertSee('I Completed This')
+        ->assertSee('I Failed This');
+});
+
+it('shows request task button when no active task', function () {
+    $user = User::factory()->create();
+    
+    Livewire::actingAs($user)
+        ->test(TaskDashboard::class)
+        ->assertSee('Get New Task')
+        ->assertDontSee('I Completed This');
+});
+
+it('completes task when user clicks complete button', function () {
+    $user = User::factory()->create();
+    $assignedTask = UserAssignedTask::factory()->assigned()->create([
+        'user_id' => $user->id
+    ]);
+    
+    Livewire::actingAs($user)
+        ->test(TaskDashboard::class)
+        ->call('completeTask')
+        ->assertNotified('Task completed!')
+        ->assertRedirect();
+        
+    expect($assignedTask->fresh()->status)->toBe('completed');
+});
+```
+
+## Filament Admin Testing
+
+### Resource CRUD Testing
+```php
+it('can create task through filament admin', function () {
+    $admin = User::factory()->admin()->create();
+    
+    livewire(CreateTask::class)
+        ->fillForm([
+            'title' => 'Admin Created Task',
+            'description' => 'Task created by admin',
+            'difficulty_level' => 7,
+            'target_user_type' => 'any',
+            'status' => 'approved'
+        ])
+        ->call('create')
+        ->assertNotified()
+        ->assertRedirect();
+        
+    $this->assertDatabaseHas('tasks', [
+        'title' => 'Admin Created Task',
+        'status' => 'approved'
+    ]);
+});
+
+it('can approve pending content in review queue', function () {
+    $moderator = User::factory()->moderator()->create();
+    $task = Task::factory()->pending()->create();
+    
+    livewire(EditTask::class, ['record' => $task])
+        ->fillForm(['status' => 'approved'])
+        ->call('save')
+        ->assertNotified();
+        
+    expect($task->fresh()->status)->toBe('approved');
+});
+```
+
+## Browser Testing (Pest v4)
+
+### End-to-End User Workflows
+```php
+it('completes full task workflow from dashboard', function () {
+    $user = User::factory()->create();
+    $task = Task::factory()->approved()->create();
+    
+    $this->actingAs($user);
+    
+    $page = visit('/dashboard')
+        ->assertSee('Get New Task')
+        ->click('Get New Task')
+        ->assertSee($task->title)
+        ->assertSee('I Completed This')
+        ->click('I Completed This')
+        ->assertSee('Task completed!')
+        ->assertSee('Get New Task'); // Button should reappear
+});
+```
+
+### Mobile Responsiveness Testing
+```php
+it('works correctly on mobile devices', function () {
+    $user = User::factory()->create();
+    
+    $this->actingAs($user);
+    
+    $page = visit('/dashboard')
+        ->viewport('iphone-14-pro')
+        ->assertSee('Get New Task')
+        ->click('Get New Task')
+        ->assertSee('I Completed This')
+        ->assertSee('I Failed This');
+});
+```
+
+## Test Data & Factories
+
+### Model Factories
+```php
+// UserFactory.php
+class UserFactory extends Factory
+{
+    public function male(): static
+    {
+        return $this->state(['user_type' => 'male']);
+    }
+    
+    public function female(): static
+    {
+        return $this->state(['user_type' => 'female']);
+    }
+    
+    public function couple(): static
+    {
+        return $this->state(['user_type' => 'couple']);
+    }
+    
+    public function premium(): static
+    {
+        return $this->state(['stripe_id' => 'cus_test']);
+    }
+}
+
+// TaskFactory.php
+class TaskFactory extends Factory
+{
+    public function forMales(): static
+    {
+        return $this->state(['target_user_type' => 'male']);
+    }
+    
+    public function approved(): static
+    {
+        return $this->state(['status' => 'approved']);
+    }
+    
+    public function pending(): static
+    {
+        return $this->state(['status' => 'pending']);
+    }
+}
+```
+
+## Performance Testing
+
+### Database Query Optimization
+```php
+it('does not cause n+1 queries when loading user tasks', function () {
+    $user = User::factory()->create();
+    UserAssignedTask::factory()->count(10)->create(['user_id' => $user->id]);
+    
+    $this->assertQueryCount(2, function () use ($user) {
+        $user->load('assignedTasks.task');
+    });
+});
+```
+
+## Test Organization Best Practices
+
+### Use Datasets for Validation Testing
+```php
+it('validates task difficulty level', function (int $level, bool $valid) {
+    $task = Task::factory()->make(['difficulty_level' => $level]);
+    
+    if ($valid) {
+        expect($task->isValid())->toBeTrue();
+    } else {
+        expect($task->isValid())->toBeFalse();
+    }
+})->with([
+    'valid levels' => [1, 5, 10],
+    'invalid levels' => [0, 11, -1]
+]);
+```
+
+### Test Isolation
+- Use `RefreshDatabase` trait for tests that modify data
+- Use `DatabaseTransactions` for tests that only read data
+- Mock external services (Stripe, email) when appropriate
+- Use `Event::fake()` to test event dispatching without side effects

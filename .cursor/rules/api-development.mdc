@@ -1,0 +1,237 @@
+---
+description: API development guidelines for mobile app support and versioning
+globs: routes/api.php,app/Http/Controllers/Api/*.php,app/Http/Resources/*.php,app/Actions/*
+---
+
+# API Development Guidelines
+
+## API Architecture Principles
+
+### API-First Design
+- All business logic must be contained within Laravel Actions for reusability between web interface and API
+- Web Livewire components and API controllers should both call the same Action classes
+- This ensures consistency and reduces code duplication
+
+### Authentication Strategy
+- **Stateless API**: Use Laravel Sanctum for token-based authentication
+- **Mobile Clients**: Obtain token upon login, include in Authorization header for all requests
+- **Web Integration**: Same Sanctum tokens can be used for SPA authentication
+- **Token Management**: Implement proper token refresh and revocation
+
+### API Versioning
+- **URL Versioning**: All API routes start with `/api/v1/`
+- **Future-Proof**: Easy to add v2, v3, etc. without breaking existing clients
+- **Backward Compatibility**: Maintain previous versions when introducing breaking changes
+
+### Response Format
+- **JSON Only**: All responses in JSON format
+- **Laravel API Resources**: Use API Resources to standardize output structure
+- **Consistent Structure**: All responses follow same format for success/error states
+
+## Core API Endpoints
+
+### Authentication Endpoints
+```php
+POST /api/v1/register
+POST /api/v1/login  
+POST /api/v1/logout (Authenticated)
+POST /api/v1/refresh-token (Authenticated)
+```
+
+### User Management
+```php
+GET /api/v1/user (Authenticated - current user profile)
+PUT /api/v1/user (Authenticated - update profile)
+GET /api/v1/user/stats (Authenticated - task completion stats)
+```
+
+### Task System
+```php
+POST /api/v1/tasks/request (Authenticated - executes RequestNewTask Action)
+GET /api/v1/tasks/current (Authenticated - get current assigned task)
+POST /api/v1/assigned-tasks/{id}/complete (Authenticated - executes ResolveTask Action)
+POST /api/v1/assigned-tasks/{id}/fail (Authenticated - executes ResolveTask Action)
+GET /api/v1/assigned-tasks (Authenticated - get user's task history)
+```
+
+### Content & UGC
+```php
+GET /api/v1/content/{type} (e.g., /api/v1/content/tasks - lists approved content)
+POST /api/v1/content/{type} (Authenticated - executes SubmitContent Action)
+POST /api/v1/content/{type}/{id}/react (Authenticated - add reaction)
+GET /api/v1/content/{type}/{id} (get specific content item)
+```
+
+### Stories (Premium Only)
+```php
+GET /api/v1/stories (Authenticated, Premium)
+POST /api/v1/stories (Authenticated, Premium)
+GET /api/v1/stories/{id} (Authenticated, Premium)
+PUT /api/v1/stories/{id} (Authenticated, Premium)
+DELETE /api/v1/stories/{id} (Authenticated, Premium)
+```
+
+### Subscription Management
+```php
+GET /api/v1/subscription (Authenticated - current subscription status)
+POST /api/v1/subscription/create (Authenticated - create subscription)
+POST /api/v1/subscription/cancel (Authenticated - cancel subscription)
+GET /api/v1/subscription/plans (get available subscription plans)
+```
+
+## API Resource Structure
+
+### Standard Response Format
+```php
+// Success Response
+{
+    "data": { ... },
+    "message": "Success message",
+    "status": "success"
+}
+
+// Error Response  
+{
+    "error": "Error message",
+    "status": "error",
+    "code": "ERROR_CODE"
+}
+
+// Paginated Response
+{
+    "data": [...],
+    "links": { ... },
+    "meta": { ... }
+}
+```
+
+### User Resource Example
+```php
+class UserResource extends JsonResource
+{
+    public function toArray($request): array
+    {
+        return [
+            'id' => $this->id,
+            'name' => $this->name,
+            'email' => $this->email,
+            'user_type' => $this->user_type,
+            'subscription_status' => $this->subscriptionStatus(),
+            'partner' => $this->when($this->partner, new UserResource($this->partner)),
+            'stats' => [
+                'tasks_completed' => $this->assignedTasks()->completed()->count(),
+                'tasks_failed' => $this->assignedTasks()->failed()->count(),
+            ],
+            'created_at' => $this->created_at,
+            'updated_at' => $this->updated_at,
+        ];
+    }
+}
+```
+
+## Middleware & Security
+
+### Required Middleware
+- `auth:sanctum` for authenticated endpoints
+- `throttle:api` for rate limiting
+- `premium` for premium-only content
+- `role:admin|moderator` for admin endpoints
+
+### Rate Limiting
+```php
+// In RouteServiceProvider or bootstrap/app.php
+RateLimiter::for('api', function (Request $request) {
+    return Limit::perMinute(60)->by($request->user()?->id ?: $request->ip());
+});
+```
+
+### CORS Configuration
+- Configure CORS for mobile app domains
+- Allow credentials for authenticated requests
+- Set appropriate headers for mobile clients
+
+## Error Handling
+
+### Standard Error Codes
+- `VALIDATION_ERROR` - Form validation failures
+- `UNAUTHORIZED` - Authentication required
+- `FORBIDDEN` - Insufficient permissions
+- `NOT_FOUND` - Resource not found
+- `SUBSCRIPTION_REQUIRED` - Premium subscription needed
+- `RATE_LIMITED` - Too many requests
+
+### Exception Handling
+```php
+// In app/Exceptions/Handler.php
+public function render($request, Throwable $exception)
+{
+    if ($request->is('api/*')) {
+        return $this->handleApiException($exception);
+    }
+    
+    return parent::render($request, $exception);
+}
+```
+
+## Testing API Endpoints
+
+### Feature Test Structure
+```php
+it('can request new task via api', function () {
+    $user = User::factory()->create();
+    
+    $response = $this->actingAs($user, 'sanctum')
+        ->postJson('/api/v1/tasks/request');
+        
+    $response->assertSuccessful()
+        ->assertJsonStructure([
+            'data' => [
+                'id',
+                'title',
+                'description',
+                'difficulty_level'
+            ]
+        ]);
+        
+    $this->assertDatabaseHas('user_assigned_tasks', [
+        'user_id' => $user->id,
+        'status' => 'assigned'
+    ]);
+});
+```
+
+### API Test Helpers
+```php
+// In tests/TestCase.php
+protected function apiAs($user, $endpoint, $data = [])
+{
+    return $this->actingAs($user, 'sanctum')
+        ->postJson($endpoint, $data);
+}
+```
+
+## Real-time API Integration
+
+### WebSocket Events for Mobile
+- Use Laravel Reverb for real-time notifications
+- Mobile apps can connect via WebSocket for live updates
+- Key events: NewTaskAssigned, ContentStatusUpdated, PartnerTaskResolved
+
+### Push Notifications
+- Integrate with Firebase/APNs for mobile push notifications
+- Send notifications for task assignments, content approvals, etc.
+- Use Laravel's notification system with mobile drivers
+
+## Documentation
+
+### API Documentation
+- Use Laravel API Documentation tools (Scribe, L5-Swagger)
+- Document all endpoints with examples
+- Include authentication requirements and rate limits
+- Provide sample requests/responses for each endpoint
+
+### Mobile SDK Considerations
+- Design API responses to be mobile-friendly
+- Include pagination metadata for list endpoints
+- Provide efficient endpoints for mobile app needs
+- Consider offline capability and data synchronization
