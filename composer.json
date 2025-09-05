@@ -19,7 +19,8 @@
         "spatie/laravel-google-fonts": "^1.4",
         "spatie/laravel-medialibrary": "^11.14",
         "spatie/laravel-passkeys": "^1.0",
-        "spatie/laravel-permission": "^6.21"
+        "spatie/laravel-permission": "^6.21",
+        "spatie/laravel-tags": "^4.10"
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "^3.16",
