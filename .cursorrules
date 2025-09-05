@@ -1,0 +1,316 @@
+# Cursor Rules for Task & Reward Community Platform
+
+## Project Overview
+This is a subscription-based SaaS community platform built on Laravel 12 with a gamified task system. Users are assigned tasks and receive rewards/punishments based on self-reported completion. The platform fosters community through user-generated content, feedback mechanisms, and distinct user roles.
+
+## Tech Stack
+- **Backend**: Laravel 12, PHP 8.2+
+- **Frontend**: Livewire 3, Alpine.js, Tailwind CSS v4
+- **Admin Panel**: Filament 4
+- **Database**: MySQL 8 or PostgreSQL 15
+- **Payment**: Laravel Cashier (Stripe)
+- **Testing**: Pest PHP
+- **Build Tool**: Vite
+- **WebSockets**: Laravel Reverb
+- **Authentication**: Laravel Sanctum
+
+## Key Packages
+- `filament/filament`: Admin panel
+- `livewire/livewire`: Frontend interactivity
+- `lorisleiva/laravel-actions`: Business logic classes
+- `spatie/laravel-permission`: Role management
+- `spatie/laravel-activitylog`: Audit logging
+- `spatie/laravel-medialibrary`: File uploads
+- `laravel/cashier`: Subscription management
+
+## Architecture Patterns
+
+### 1. Laravel Actions Pattern
+- Use `lorisleiva/laravel-actions` for all business logic
+- Actions should be single-purpose, reusable classes
+- Share actions between Livewire components and API controllers
+- Example: `RequestNewTaskAction`, `ResolveTaskAction`, `SubmitContentAction`
+
+### 2. Role-Based Access Control
+- Use `spatie/laravel-permission` for roles and permissions
+- Roles: User, Reviewer, Moderator, Admin
+- Implement middleware for role-based route protection
+- Use `HasRoles` trait on User model
+
+### 3. API-First Design
+- All business logic in Actions for API reusability
+- Use Laravel API Resources for consistent JSON responses
+- Version API endpoints (`/api/v1/`)
+- Use Laravel Sanctum for token authentication
+
+## Code Style & Standards
+
+### PHP/Laravel
+- Follow PSR-12 coding standards
+- Use Laravel Pint for code formatting
+- Use type hints and return types everywhere
+- Prefer Eloquent relationships over raw queries
+- Use Laravel's built-in validation rules
+- Follow Laravel naming conventions
+
+### Livewire Components
+- Keep components focused and single-purpose
+- Use public properties for data binding
+- Implement proper validation in components
+- Use wire:model for two-way data binding
+- Follow Livewire naming conventions
+
+### Database
+- Use migrations for all schema changes
+- Add proper foreign key constraints
+- Use meaningful column names
+- Implement soft deletes where appropriate
+- Add database indexes for performance
+
+### Testing
+- Use Pest PHP for all tests
+- Write feature tests for user workflows
+- Write unit tests for Actions and business logic
+- Use factories for test data generation
+- Test both success and failure scenarios
+
+## File Organization
+
+### Actions
+- Place all Actions in `app/Actions/`
+- Group by feature: `app/Actions/Task/`, `app/Actions/Content/`
+- Use descriptive names: `RequestNewTaskAction.php`
+
+### Livewire Components
+- Place in `app/Livewire/`
+- Group by feature: `app/Livewire/Dashboard/`, `app/Livewire/Content/`
+- Use descriptive names: `TaskAssignment.php`
+
+### API Resources
+- Place in `app/Http/Resources/`
+- Use versioned folders: `app/Http/Resources/V1/`
+- Follow RESTful naming conventions
+
+### Models
+- Use Eloquent relationships extensively
+- Implement proper accessors and mutators
+- Use model events for business logic
+- Add proper validation rules
+
+## Database Schema Guidelines
+
+### Core Tables
+- `users`: User accounts with Cashier integration
+- `tasks`, `rewards`, `punishments`: Content tables with identical structure
+- `user_assigned_tasks`: Junction table for task assignments
+- `reactions`: Polymorphic reactions system
+- `stories`: User-generated stories (premium content)
+
+### Key Fields
+- Always include `id`, `created_at`, `updated_at`
+- Use `status` enum for content moderation
+- Include `user_id` for ownership tracking
+- Use `target_user_type` for content filtering
+- Implement soft deletes where needed
+
+## Security Best Practices
+
+### Authentication & Authorization
+- Use Laravel Sanctum for API authentication
+- Implement proper middleware for route protection
+- Validate all user inputs
+- Use Laravel's built-in CSRF protection
+- Implement rate limiting for API endpoints
+
+### Data Protection
+- Use Laravel's encryption for sensitive data
+- Implement proper file upload validation
+- Use database transactions for critical operations
+- Log all user actions with activity log
+
+## Performance Considerations
+
+### Database
+- Add proper indexes for frequently queried columns
+- Use eager loading to prevent N+1 queries
+- Implement database query caching where appropriate
+- Use database transactions for bulk operations
+
+### Frontend
+- Use Livewire's lazy loading for heavy components
+- Implement proper pagination for large datasets
+- Use Tailwind CSS for optimized styling
+- Minimize JavaScript bundle size
+
+## Real-time Features
+
+### WebSockets
+- Use Laravel Reverb for real-time communication
+- Implement private channels for user-specific updates
+- Use Laravel Echo on the frontend
+- Broadcast key events: task assignments, content status changes
+
+### Key Events
+- `NewTaskAssigned`: When user gets new task
+- `ContentStatusUpdated`: When content status changes
+- `PartnerTaskResolved`: For couple accounts
+- `NewOutcomeAssigned`: When reward/punishment assigned
+
+## Subscription & Monetization
+
+### Laravel Cashier
+- Use Cashier traits on User model
+- Implement proper subscription middleware
+- Handle webhook events for payment processing
+- Use Stripe's subscription management features
+
+### Content Tiers
+- Free: 1 task/day, no stories, ads
+- Premium: Unlimited tasks, all stories, ad-free, premium content
+
+## Content Moderation
+
+### Workflow
+- User submits content → `pending` status
+- Moderator reviews → `approved`/`rejected`
+- Community feedback triggers re-review
+- Use Filament admin panel for moderation
+
+### Community Feedback
+- Implement reaction system (positive/negative)
+- Auto-flag content with high negative ratio
+- Use scheduled jobs for feedback processing
+
+## Mobile API Support
+
+### API Design
+- Use versioned endpoints (`/api/v1/`)
+- Implement proper HTTP status codes
+- Use API Resources for consistent responses
+- Include proper error handling
+
+### Key Endpoints
+- Auth: `/api/v1/register`, `/api/v1/login`
+- Tasks: `/api/v1/tasks/request`, `/api/v1/assigned-tasks/{id}/complete`
+- Content: `/api/v1/content/{type}`, `/api/v1/content/{type}/{id}/react`
+- Stories: `/api/v1/stories` (premium only)
+
+## Development Workflow
+
+### Git
+- Use meaningful commit messages
+- Create feature branches for new features
+- Use pull requests for code review
+- Keep commits atomic and focused
+
+### Testing
+- Run tests before committing
+- Use `composer test` for test suite
+- Test both web and API endpoints
+- Use browser testing for critical user flows
+
+### Code Quality
+- Use Laravel Pint for code formatting
+- Run static analysis tools
+- Follow SOLID principles
+- Write self-documenting code
+
+## Common Patterns
+
+### Action Pattern
+```php
+class RequestNewTaskAction
+{
+    public function execute(User $user): Task
+    {
+        // Business logic here
+        return $task;
+    }
+}
+```
+
+### Livewire Component
+```php
+class TaskAssignment extends Component
+{
+    public function requestNewTask()
+    {
+        $this->task = app(RequestNewTaskAction::class)->execute(auth()->user());
+    }
+}
+```
+
+### API Controller
+```php
+class TaskController extends Controller
+{
+    public function request(Request $request)
+    {
+        $task = app(RequestNewTaskAction::class)->execute($request->user());
+        return new TaskResource($task);
+    }
+}
+```
+
+## UI/UX Guidelines
+
+### Design Principles
+- Clean, minimalist aesthetic
+- Generous whitespace usage
+- Professional color palette
+- Dark mode support from start
+- Mobile-first responsive design
+
+### Component Structure
+- Use Tailwind CSS for styling
+- Implement reusable Blade components
+- Follow Livewire best practices
+- Use Alpine.js for enhanced interactivity
+
+### Key UI References
+- Linear: Task-focused dashboard
+- Vercel: Clean dashboard with dark mode
+- Craft: Writing/reading experience
+- Stripe: Form and settings pages
+
+## Future Considerations
+
+### Scalability
+- Design for horizontal scaling
+- Use queue jobs for heavy operations
+- Implement proper caching strategies
+- Plan for database sharding if needed
+
+### Mobile Apps
+- Keep API design mobile-friendly
+- Use consistent data structures
+- Implement proper offline handling
+- Plan for push notifications
+
+### Fantasy Matching System
+- Design for future Tinder-like interface
+- Use polymorphic relationships
+- Implement preference storage
+- Plan for matching algorithms
+
+## Debugging & Monitoring
+
+### Logging
+- Use Laravel's built-in logging
+- Implement structured logging
+- Log all user actions
+- Use different log levels appropriately
+
+### Error Handling
+- Implement proper exception handling
+- Use Laravel's error pages
+- Log errors for debugging
+- Provide user-friendly error messages
+
+### Performance Monitoring
+- Monitor database query performance
+- Track API response times
+- Monitor memory usage
+- Use Laravel Telescope for debugging
+
+Remember: This platform is built on trust and community. Every feature should enhance user engagement while maintaining a safe, inclusive environment.
