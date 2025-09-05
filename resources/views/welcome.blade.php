@@ -16,7 +16,7 @@
         @endif
 
     </head>
-    <body class="">
+    <body>
        Get your kink on
     </body>
 </html>

@@ -53,6 +53,8 @@ Recommended Laravel Packages:
 
     spatie/laravel-activitylog: To create a comprehensive audit trail of user and admin actions.
 
+    spatie/laravel-google-fonts: To easily download and use Google Fonts locally.
+
 3. Database Schema Design
 
 Below is a proposed schema. Primary keys are id (unsigned big integer), and timestamps (created_at, updated_at) are assumed for all tables.
