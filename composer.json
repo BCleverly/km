@@ -17,10 +17,12 @@
         "spatie/laravel-activitylog": "^4.10",
         "spatie/laravel-google-fonts": "^1.4",
         "spatie/laravel-medialibrary": "^11.14",
+        "spatie/laravel-passkeys": "^1.0",
         "spatie/laravel-permission": "^6.21"
     },
     "require-dev": {
         "fakerphp/faker": "^1.23",
+        "laravel/boost": "^1.1",
         "laravel/pail": "^1.2.2",
         "laravel/pint": "^1.24",
         "laravel/sail": "^1.41",
