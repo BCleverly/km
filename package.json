@@ -4,9 +4,12 @@
     "type": "module",
     "scripts": {
         "build": "vite build",
-        "dev": "vite"
+        "dev": "vite",
+        "stripe-mcp": "npx @stripe/mcp --tools=all --api-key=${STRIPE_SECRET}",
+        "setup-stripe-mcp": "./setup-stripe-mcp.sh"
     },
     "devDependencies": {
+        "@stripe/mcp": "^0.2.4",
         "@tailwindcss/vite": "^4.1.13",
         "axios": "^1.11.0",
         "concurrently": "^9.0.1",
