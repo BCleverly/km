@@ -1,0 +1,38 @@
+---
+description: Livewire component guidelines and patterns
+globs:
+  - "app/Livewire/**/*.php"
+  - "resources/views/livewire/**/*.blade.php"
+alwaysApply: false
+---
+
+# Livewire Component Guidelines
+
+## Component Structure
+- Keep components focused and single-purpose
+- Use public properties for data binding
+- Implement proper validation in components
+- Use wire:model for two-way data binding
+- Follow Livewire naming conventions
+
+## File Organization
+- Place in `app/Livewire/`
+- Group by feature: `app/Livewire/Dashboard/`, `app/Livewire/Content/`
+- Use descriptive names: `TaskAssignment.php`
+
+## Component Pattern
+```php
+class TaskAssignment extends Component
+{
+    public function requestNewTask()
+    {
+        $this->task = app(RequestNewTaskAction::class)->execute(auth()->user());
+    }
+}
+```
+
+## Frontend Integration
+- Use Tailwind CSS for styling
+- Implement reusable Blade components
+- Use Alpine.js for enhanced interactivity
+- Follow mobile-first responsive design

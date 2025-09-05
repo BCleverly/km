@@ -1,0 +1,53 @@
+---
+description: UI/UX design principles and component guidelines
+globs:
+  - "resources/views/**/*.blade.php"
+  - "resources/css/**/*.css"
+  - "resources/js/**/*.js"
+alwaysApply: false
+---
+
+# UI/UX Guidelines
+
+## Design Principles
+- Clean, minimalist aesthetic
+- Generous whitespace usage
+- Professional color palette
+- Dark mode support from start
+- Mobile-first responsive design
+
+## Component Structure
+- Use Tailwind CSS for styling
+- Implement reusable Blade components
+- Follow Livewire best practices
+- Use Alpine.js for enhanced interactivity
+
+## Key UI References
+- **Linear**: Task-focused dashboard
+- **Vercel**: Clean dashboard with dark mode
+- **Craft**: Writing/reading experience
+- **Stripe**: Form and settings pages
+
+## Dashboard Design
+- Hyper-focused primary dashboard
+- Large, central card for active tasks
+- Two prominent buttons: "I Completed This," "I Failed This"
+- Clear, unambiguous interface
+
+## Content Feeds
+- Card-based layout for browsing content
+- Uniform cards with key information
+- Title, snippet, author, reactions
+- Scannable format
+
+## Forms
+- Simple, single-purpose forms
+- Avoid clutter
+- Guide users through process
+- Clear validation feedback
+
+## Mobile Optimization
+- Touch-friendly interface
+- Responsive design
+- Fast loading
+- Offline capability where possible

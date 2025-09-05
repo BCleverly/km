@@ -1,0 +1,52 @@
+---
+description: Testing standards and quality assurance
+globs:
+  - "tests/**/*.php"
+  - "app/**/*.php"
+alwaysApply: false
+---
+
+# Testing Standards
+
+## Testing Framework
+- Use Pest PHP for all tests
+- Write feature tests for user workflows
+- Write unit tests for Actions and business logic
+- Use factories for test data generation
+- Test both success and failure scenarios
+
+## Test Organization
+- Feature tests in `tests/Feature/`
+- Unit tests in `tests/Unit/`
+- Use descriptive test names
+- Group related tests in describe blocks
+
+## Test Data
+- Use factories for consistent test data
+- Create realistic test scenarios
+- Test edge cases and error conditions
+- Use database transactions for isolation
+
+## API Testing
+- Test all API endpoints
+- Verify authentication and authorization
+- Test response formats and status codes
+- Test error handling
+
+## Livewire Testing
+- Test component behavior
+- Test user interactions
+- Test validation rules
+- Test real-time updates
+
+## Performance Testing
+- Test database query performance
+- Test API response times
+- Test memory usage
+- Use browser testing for critical flows
+
+## Test Commands
+- `composer test` for full test suite
+- `php artisan test` for Laravel tests
+- Run tests before committing
+- Use continuous integration

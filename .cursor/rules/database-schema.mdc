@@ -1,0 +1,39 @@
+---
+description: Database schema design and relationships
+globs:
+  - "database/migrations/**/*.php"
+  - "app/Models/**/*.php"
+alwaysApply: false
+---
+
+# Database Schema Design
+
+## Core Tables
+- `users`: User accounts with Cashier integration
+- `tasks`, `rewards`, `punishments`: Content tables with identical structure
+- `user_assigned_tasks`: Junction table for task assignments
+- `reactions`: Polymorphic reactions system
+- `stories`: User-generated stories (premium content)
+
+## Required Fields
+- Always include `id`, `created_at`, `updated_at`
+- Use `status` enum for content moderation
+- Include `user_id` for ownership tracking
+- Use `target_user_type` for content filtering
+- Implement soft deletes where needed
+
+## User Types
+- `user_type` enum: 'male', 'female', 'couple'
+- `partner_id` for couple accounts (foreign key to users.id)
+- Couple accounts share the same `user_assigned_tasks`
+
+## Content Moderation
+- `status` enum: 'pending', 'approved', 'in_review', 'rejected'
+- `is_premium` boolean for subscription-only content
+- `view_count` for popularity tracking
+
+## Relationships
+- Use Eloquent relationships extensively
+- Implement proper foreign key constraints
+- Use polymorphic relationships for reactions
+- Add proper database indexes for performance

@@ -1,0 +1,40 @@
+---
+description: API design patterns and mobile app support
+globs:
+  - "app/Http/Controllers/Api/**/*.php"
+  - "app/Http/Resources/**/*.php"
+  - "routes/api.php"
+alwaysApply: false
+---
+
+# API Design Patterns
+
+## API-First Design
+- All business logic in Actions for API reusability
+- Use Laravel API Resources for consistent JSON responses
+- Version API endpoints (`/api/v1/`)
+- Use Laravel Sanctum for token authentication
+
+## Controller Pattern
+```php
+class TaskController extends Controller
+{
+    public function request(Request $request)
+    {
+        $task = app(RequestNewTaskAction::class)->execute($request->user());
+        return new TaskResource($task);
+    }
+}
+```
+
+## Key Endpoints
+- Auth: `/api/v1/register`, `/api/v1/login`
+- Tasks: `/api/v1/tasks/request`, `/api/v1/assigned-tasks/{id}/complete`
+- Content: `/api/v1/content/{type}`, `/api/v1/content/{type}/{id}/react`
+- Stories: `/api/v1/stories` (premium only)
+
+## Response Standards
+- Use proper HTTP status codes
+- Include consistent error handling
+- Use API Resources for data formatting
+- Implement rate limiting for API endpoints

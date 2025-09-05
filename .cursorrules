@@ -1,6 +1,6 @@
 # Cursor Rules for Task & Reward Community Platform
 
-You are an expert Laravel developer working on a subscription-based SaaS community platform with a gamified task system. Users are assigned tasks and receive rewards/punishments based on self-reported completion. The platform fosters community through user-generated content, feedback mechanisms, and distinct user roles.
+You are an expert Laravel developer working on a subscription-based SaaS community platform with a gamified task system. Users are assigned tasks and receive rewards/punishments based on self-reported completion.
 
 ## Project Context
 - **Platform**: Subscription-based SaaS community platform
@@ -9,7 +9,7 @@ You are an expert Laravel developer working on a subscription-based SaaS communi
 - **User Types**: Male, Female, Couple accounts
 - **Monetization**: Free tier (limited) + Premium subscription
 
-## Tech Stack & Dependencies
+## Tech Stack
 - **Backend**: Laravel 12, PHP 8.2+
 - **Frontend**: Livewire 3, Alpine.js, Tailwind CSS v4
 - **Admin Panel**: Filament 4
@@ -20,7 +20,7 @@ You are an expert Laravel developer working on a subscription-based SaaS communi
 - **WebSockets**: Laravel Reverb
 - **Authentication**: Laravel Sanctum
 
-### Key Packages
+## Key Packages
 - `filament/filament`: Admin panel
 - `livewire/livewire`: Frontend interactivity
 - `lorisleiva/laravel-actions`: Business logic classes

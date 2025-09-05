@@ -1,0 +1,45 @@
+---
+description: Real-time features and WebSocket implementation
+globs:
+  - "app/Events/**/*.php"
+  - "app/Listeners/**/*.php"
+  - "resources/js/**/*.js"
+alwaysApply: false
+---
+
+# Real-time Features
+
+## WebSocket Implementation
+- Use Laravel Reverb for real-time communication
+- Implement private channels for user-specific updates
+- Use Laravel Echo on the frontend
+- Broadcast key events for instant updates
+
+## Key Events
+- `NewTaskAssigned`: When user gets new task
+- `ContentStatusUpdated`: When content status changes
+- `PartnerTaskResolved`: For couple accounts
+- `NewOutcomeAssigned`: When reward/punishment assigned
+
+## Event Broadcasting
+```php
+class NewTaskAssigned implements ShouldBroadcast
+{
+    public function broadcastOn()
+    {
+        return new PrivateChannel('user.' . $this->user->id);
+    }
+}
+```
+
+## Frontend Integration
+- Use Laravel Echo for WebSocket listening
+- Display toast notifications for events
+- Update UI in real-time without page refresh
+- Handle connection errors gracefully
+
+## Performance Considerations
+- Use private channels for security
+- Implement proper event throttling
+- Handle offline/online states
+- Optimize for mobile connections

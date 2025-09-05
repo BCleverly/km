@@ -1,0 +1,52 @@
+---
+description: Performance optimization and scalability patterns
+globs:
+  - "app/**/*.php"
+  - "database/**/*.php"
+  - "resources/**/*.js"
+alwaysApply: false
+---
+
+# Performance Optimization
+
+## Database Performance
+- Add proper indexes for frequently queried columns
+- Use eager loading to prevent N+1 queries
+- Implement database query caching where appropriate
+- Use database transactions for bulk operations
+
+## Frontend Performance
+- Use Livewire's lazy loading for heavy components
+- Implement proper pagination for large datasets
+- Use Tailwind CSS for optimized styling
+- Minimize JavaScript bundle size
+
+## Caching Strategies
+- Use Laravel's built-in caching
+- Cache expensive database queries
+- Cache API responses where appropriate
+- Use Redis for session and cache storage
+
+## Queue Jobs
+- Use queue jobs for heavy operations
+- Process content moderation in background
+- Handle email notifications asynchronously
+- Use proper queue monitoring
+
+## Real-time Optimization
+- Use private channels for security
+- Implement proper event throttling
+- Handle offline/online states
+- Optimize for mobile connections
+
+## Monitoring
+- Monitor database query performance
+- Track API response times
+- Monitor memory usage
+- Use Laravel Telescope for debugging
+
+## Scalability Considerations
+- Design for horizontal scaling
+- Use queue jobs for heavy operations
+- Implement proper caching strategies
+- Plan for database sharding if needed

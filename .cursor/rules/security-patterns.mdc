@@ -1,0 +1,41 @@
+---
+description: Security best practices and data protection
+globs:
+  - "app/Http/Middleware/**/*.php"
+  - "app/Http/Controllers/**/*.php"
+  - "app/Models/**/*.php"
+alwaysApply: false
+---
+
+# Security & Data Protection
+
+## Authentication & Authorization
+- Use Laravel Sanctum for API authentication
+- Implement proper middleware for route protection
+- Validate all user inputs
+- Use Laravel's built-in CSRF protection
+- Implement rate limiting for API endpoints
+
+## Data Protection
+- Use Laravel's encryption for sensitive data
+- Implement proper file upload validation
+- Use database transactions for critical operations
+- Log all user actions with activity log
+
+## Role-Based Security
+- User: Can get tasks assigned, submit content, react to content
+- Reviewer: Can access "In Review" queue, vote on content
+- Moderator: Can approve/reject content, ban users
+- Admin: Superuser with all permissions
+
+## Content Moderation
+- User submits content → `pending` status
+- Moderator reviews → `approved`/`rejected`
+- Community feedback triggers re-review
+- Auto-flag content with high negative ratio
+
+## Subscription Security
+- Use Laravel Cashier for payment processing
+- Implement proper subscription middleware
+- Handle webhook events securely
+- Protect premium content with middleware

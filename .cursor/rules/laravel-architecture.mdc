@@ -1,0 +1,47 @@
+---
+description: Laravel architecture patterns and best practices for the Task & Reward Community Platform
+globs:
+  - "app/**/*.php"
+  - "routes/**/*.php"
+  - "database/**/*.php"
+alwaysApply: true
+---
+
+# Laravel Architecture Patterns
+
+## Core Principles
+- Use `lorisleiva/laravel-actions` for ALL business logic
+- Actions must be single-purpose, reusable classes
+- Share actions between Livewire components and API controllers
+- Follow API-first design for future mobile app support
+
+## Action Pattern
+```php
+class RequestNewTaskAction
+{
+    public function execute(User $user): Task
+    {
+        // Business logic here
+        return $task;
+    }
+}
+```
+
+## Role-Based Access Control
+- Use `spatie/laravel-permission` for roles and permissions
+- Roles: User, Reviewer, Moderator, Admin
+- Implement middleware for role-based route protection
+- Use `HasRoles` trait on User model
+
+## Database Design
+- Use migrations for all schema changes
+- Add proper foreign key constraints
+- Use meaningful column names
+- Implement soft deletes where appropriate
+- Add database indexes for performance
+
+## Testing
+- Use Pest PHP for all tests
+- Write feature tests for user workflows
+- Write unit tests for Actions and business logic
+- Use factories for test data generation

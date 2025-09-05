@@ -1,0 +1,52 @@
+---
+description: Subscription management and monetization patterns
+globs:
+  - "app/Models/User.php"
+  - "app/Http/Middleware/**/*.php"
+  - "app/Http/Controllers/**/*.php"
+alwaysApply: false
+---
+
+# Subscription & Monetization
+
+## Laravel Cashier Integration
+- Use Cashier traits on User model
+- Implement proper subscription middleware
+- Handle webhook events for payment processing
+- Use Stripe's subscription management features
+
+## Content Tiers
+- **Free**: 1 task/day, no stories, ads
+- **Premium**: Unlimited tasks, all stories, ad-free, premium content
+
+## Subscription Middleware
+```php
+class EnsureUserIsSubscribed
+{
+    public function handle($request, Closure $next)
+    {
+        if (!$request->user()->subscribed()) {
+            return redirect()->route('subscription.required');
+        }
+        return $next($request);
+    }
+}
+```
+
+## Premium Content Protection
+- Use middleware to protect premium routes
+- Check subscription status in Livewire components
+- Implement proper API authentication for mobile
+- Handle subscription expiration gracefully
+
+## Payment Processing
+- Use Stripe for payment processing
+- Handle webhook events securely
+- Implement proper error handling
+- Provide clear subscription management UI
+
+## Couple Account Billing
+- Primary account holder manages billing
+- Both partners have access to premium features
+- Shared subscription benefits
+- Unified billing interface
