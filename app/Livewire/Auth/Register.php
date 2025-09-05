@@ -27,7 +27,7 @@ class Register extends Component
 
         Auth::login($user);
 
-        return $this->redirect('/dashboard', navigate: true);
+        return $this->redirect(route('app.dashboard'), navigate: true);
     }
 
     public function render()

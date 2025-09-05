@@ -11,10 +11,20 @@ Route::passkeys();
 
 Route::get('/', Homepage::class);
 
-// Authentication Routes
-Route::get('/login', Login::class)->name('login');
-Route::get('/register', Register::class)->name('register');
+// Authentication Routes (Guest only)
+Route::middleware('guest')->group(function () {
+    Route::get('/login', Login::class)->name('login');
+    Route::get('/register', Register::class)->name('register');
+    
+    // Password Reset Routes
+    Route::get('/forgot-password', ForgotPassword::class)->name('password.request');
+    Route::get('/reset-password/{token}', ResetPassword::class)->name('password.reset');
+});
 
-// Password Reset Routes
-Route::get('/forgot-password', ForgotPassword::class)->name('password.request');
-Route::get('/reset-password/{token}', ResetPassword::class)->name('password.reset');
+// Application Routes (Authenticated users only)
+Route::middleware('auth')->prefix('app')->name('app.')->group(function () {
+    // Dashboard
+    Route::get('/dashboard', function () {
+        return view('app.dashboard');
+    })->name('dashboard');
+});

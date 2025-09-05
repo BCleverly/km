@@ -15,10 +15,10 @@ class ResetPassword extends Component
 
     public bool $passwordReset = false;
 
-    public function mount(string $token, string $email)
+    public function mount(string $token)
     {
         $this->form->token = $token;
-        $this->form->email = $email;
+        $this->form->email = request()->query('email', '');
     }
 
     public function resetPassword()

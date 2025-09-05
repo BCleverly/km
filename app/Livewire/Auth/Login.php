@@ -15,7 +15,7 @@ class Login extends Component
     {
         $this->form->validate();
 
-        if (!Auth::attempt($this->form->all(), $this->form->remember)) {
+        if (!Auth::attempt($this->form->only(['email', 'password']), $this->form->remember)) {
             throw ValidationException::withMessages([
                 'email' => 'The provided credentials do not match our records.',
             ]);
@@ -23,7 +23,7 @@ class Login extends Component
 
         session()->regenerate();
 
-        return $this->redirect('/dashboard', navigate: true);
+        return $this->redirect(route('app.dashboard'), navigate: true);
     }
 
     public function render()
