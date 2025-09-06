@@ -4,6 +4,7 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -92,5 +93,64 @@ class User extends Authenticatable implements HasPassKeys
     public function getCoverPhotoUrlAttribute(): ?string
     {
         return $this->profile?->cover_photo_url;
+    }
+
+    /**
+     * Get the user's assigned tasks
+     */
+    public function assignedTasks(): HasMany
+    {
+        return $this->hasMany(\App\Models\Tasks\UserAssignedTask::class);
+    }
+
+    /**
+     * Get the user's created tasks
+     */
+    public function createdTasks(): HasMany
+    {
+        return $this->hasMany(\App\Models\Tasks\Task::class);
+    }
+
+    /**
+     * Get the user's created rewards
+     */
+    public function createdRewards(): HasMany
+    {
+        return $this->hasMany(\App\Models\Tasks\TaskReward::class);
+    }
+
+    /**
+     * Get the user's created punishments
+     */
+    public function createdPunishments(): HasMany
+    {
+        return $this->hasMany(\App\Models\Tasks\TaskPunishment::class);
+    }
+
+    /**
+     * Get the user's task activities
+     */
+    public function taskActivities(): HasMany
+    {
+        return $this->hasMany(\App\Models\Tasks\TaskActivity::class);
+    }
+
+    /**
+     * Get the user's recent task activities
+     */
+    public function recentTaskActivities(int $limit = 10): HasMany
+    {
+        return $this->taskActivities()
+            ->with(['task', 'userAssignedTask'])
+            ->orderBy('activity_at', 'desc')
+            ->limit($limit);
+    }
+
+    /**
+     * Get user stats service instance
+     */
+    public function stats(): \App\Services\UserStatsService
+    {
+        return new \App\Services\UserStatsService($this);
     }
 }

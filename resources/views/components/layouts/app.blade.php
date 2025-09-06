@@ -25,7 +25,7 @@
     <div tabindex="0" class="fixed inset-0 flex focus:outline-none">
       <el-dialog-panel class="group/dialog-panel relative mr-16 flex w-full max-w-xs flex-1 transform transition duration-300 ease-in-out data-closed:-translate-x-full">
         <div class="absolute top-0 left-full flex w-16 justify-center pt-5 duration-300 ease-in-out group-data-closed/dialog-panel:opacity-0">
-          <button type="button" command="close" commandfor="sidebar" class="-m-2.5 p-2.5">
+          <button type="button" command="close" commandfor="sidebar" class="-m-2.5 p-2.5 cursor-pointer hover:bg-red-600/20 rounded-lg transition-colors duration-200">
             <span class="sr-only">Close sidebar</span>
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" data-slot="icon" aria-hidden="true" class="size-6 text-white">
               <path d="M6 18 18 6M6 6l12 12" stroke-linecap="round" stroke-linejoin="round" />
@@ -43,8 +43,13 @@
               <li>
                 <ul role="list" class="-mx-2 space-y-2">
                   <li>
-                    <!-- Current: "bg-red-600 dark:bg-red-800/20 text-white", Default: "text-red-200 dark:text-red-200/80 hover:text-white hover:bg-red-600 dark:hover:bg-red-700/25" -->
-                    <a href="#" class="group flex gap-x-3 rounded-md bg-red-600 p-3 text-base font-semibold text-white dark:bg-red-800/20 leading-relaxed">
+                    <a href="{{ route('app.dashboard') }}" 
+                       wire:navigate
+                       @class([
+                         'group flex gap-x-3 rounded-md p-3 text-base font-semibold leading-relaxed',
+                         'bg-red-600 dark:bg-red-800/20 text-white' => request()->routeIs('app.dashboard'),
+                         'text-red-200 dark:text-red-200/80 hover:text-white hover:bg-red-600 dark:hover:bg-red-700/25' => !request()->routeIs('app.dashboard')
+                       ])>
                       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" data-slot="icon" aria-hidden="true" class="size-6 shrink-0 text-white">
                         <path d="m2.25 12 8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25" stroke-linecap="round" stroke-linejoin="round" />
                       </svg>
@@ -52,24 +57,42 @@
                     </a>
                   </li>
                   <li>
-                    <a href="{{ route('app.tasks') }}" wire:navigate class="group flex gap-x-3 rounded-md p-3 text-base font-semibold text-red-100 hover:bg-red-600 hover:text-white dark:text-red-100/90 dark:hover:bg-red-700/25 leading-relaxed transition-colors duration-200">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" data-slot="icon" aria-hidden="true" class="size-6 shrink-0 text-red-100 group-hover:text-white dark:text-red-100/90 transition-colors duration-200">
+                    <a href="{{ route('app.tasks') }}" 
+                       wire:navigate
+                       @class([
+                         'group flex gap-x-3 rounded-md p-3 text-base font-semibold leading-relaxed',
+                         'bg-red-600 dark:bg-red-800/20 text-white' => request()->routeIs('app.tasks'),
+                         'text-red-200 dark:text-red-200/80 hover:text-white hover:bg-red-600 dark:hover:bg-red-700/25' => !request()->routeIs('app.tasks')
+                       ])>
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" data-slot="icon" aria-hidden="true" class="size-6 shrink-0 text-white">
                         <path d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" stroke-linecap="round" stroke-linejoin="round" />
                       </svg>
                       Tasks
                     </a>
                   </li>
                   <li>
-                  <a href="#" class="group flex gap-x-3 rounded-md p-3 text-base font-semibold text-red-100 hover:bg-red-600 hover:text-white dark:text-red-100/90 dark:hover:bg-red-700/25 leading-relaxed transition-colors duration-200">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" data-slot="icon" aria-hidden="true" class="size-6 shrink-0 text-red-100 group-hover:text-white dark:text-red-100/90 transition-colors duration-200">
+                    <a href="#" 
+                       wire:navigate
+                       @class([
+                         'group flex gap-x-3 rounded-md p-3 text-base font-semibold leading-relaxed',
+                         'bg-red-600 dark:bg-red-800/20 text-white' => false, // No route yet
+                         'text-red-200 dark:text-red-200/80 hover:text-white hover:bg-red-600 dark:hover:bg-red-700/25' => true
+                       ])>
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" data-slot="icon" aria-hidden="true" class="size-6 shrink-0 text-white">
                         <path d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" stroke-linecap="round" stroke-linejoin="round" />
                       </svg>
                       Fantasies
                     </a>
                   </li>
                   <li>
-                    <a href="#" class="group flex gap-x-3 rounded-md p-3 text-base font-semibold text-red-100 hover:bg-red-600 hover:text-white dark:text-red-100/90 dark:hover:bg-red-700/25 leading-relaxed transition-colors duration-200">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" data-slot="icon" aria-hidden="true" class="size-6 shrink-0 text-red-100 group-hover:text-white dark:text-red-100/90 transition-colors duration-200">
+                    <a href="#" 
+                       wire:navigate
+                       @class([
+                         'group flex gap-x-3 rounded-md p-3 text-base font-semibold leading-relaxed',
+                         'bg-red-600 dark:bg-red-800/20 text-white' => false, // No route yet
+                         'text-red-200 dark:text-red-200/80 hover:text-white hover:bg-red-600 dark:hover:bg-red-700/25' => true
+                       ])>
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" data-slot="icon" aria-hidden="true" class="size-6 shrink-0 text-white">
                         <path d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25" stroke-linecap="round" stroke-linejoin="round" />
                       </svg>
                       Stories
@@ -102,8 +125,14 @@
                 </ul>
               </li>
               <li class="mt-auto">
-                <a href="#" class="group -mx-2 flex gap-x-3 rounded-md p-3 text-base font-semibold text-red-100 hover:bg-red-600 hover:text-white dark:text-red-100/90 dark:hover:bg-red-700/25 leading-relaxed transition-colors duration-200">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" data-slot="icon" aria-hidden="true" class="size-6 shrink-0 text-red-100 group-hover:text-white dark:text-red-100/90 transition-colors duration-200">
+                <a href="#" 
+                   wire:navigate
+                   @class([
+                     'group -mx-2 flex gap-x-3 rounded-md p-3 text-base font-semibold leading-relaxed',
+                     'bg-red-600 dark:bg-red-800/20 text-white' => false, // No route yet
+                     'text-red-200 dark:text-red-200/80 hover:text-white hover:bg-red-600 dark:hover:bg-red-700/25' => true
+                   ])>
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" data-slot="icon" aria-hidden="true" class="size-6 shrink-0 text-white">
                     <path d="M9.594 3.94c.09-.542.56-.94 1.11-.94h2.593c.55 0 1.02.398 1.11.94l.213 1.281c.063.374.313.686.645.87.074.04.147.083.22.127.325.196.72.257 1.075.124l1.217-.456a1.125 1.125 0 0 1 1.37.49l1.296 2.247a1.125 1.125 0 0 1-.26 1.431l-1.003.827c-.293.241-.438.613-.43.992a7.723 7.723 0 0 1 0 .255c-.008.378.137.75.43.991l1.004.827c.424.35.534.955.26 1.43l-1.298 2.247a1.125 1.125 0 0 1-1.369.491l-1.217-.456c-.355-.133-.75-.072-1.076.124a6.47 6.47 0 0 1-.22.128c-.331.183-.581.495-.644.869l-.213 1.281c-.09.543-.56.94-1.11.94h-2.594c-.55 0-1.019-.398-1.11-.94l-.213-1.281c-.062-.374-.312-.686-.644-.87a6.52 6.52 0 0 1-.22-.127c-.325-.196-.72-.257-1.076-.124l-1.217.456a1.125 1.125 0 0 1-1.369-.49l-1.297-2.247a1.125 1.125 0 0 1 .26-1.431l1.004-.827c.292-.24.437-.613.43-.991a6.932 6.932 0 0 1 0-.255c.007-.38-.138-.751-.43-.992l-1.004-.827a1.125 1.125 0 0 1-.26-1.43l1.297-2.247a1.125 1.125 0 0 1 1.37-.491l1.216.456c.356.133.751.072 1.076-.124.072-.044.146-.086.22-.128.332-.183.582-.495.644-.869l.214-1.28Z" stroke-linecap="round" stroke-linejoin="round" />
                     <path d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" stroke-linecap="round" stroke-linejoin="round" />
                   </svg>
@@ -130,8 +159,13 @@
         <li>
           <ul role="list" class="-mx-2 space-y-1">
             <li>
-              <!-- Current: "bg-red-600 dark:bg-red-800/20 text-white", Default: "text-red-200 dark:text-red-200/80 hover:text-white hover:bg-red-600 dark:hover:bg-red-700/25" -->
-              <a href="#" class="group flex gap-x-3 rounded-md bg-red-600 p-2 text-sm/6 font-semibold text-white dark:bg-red-800/20">
+              <a href="{{ route('app.dashboard') }}" 
+                 wire:navigate
+                 @class([
+                   'group flex gap-x-3 rounded-md p-2 text-sm/6 font-semibold',
+                   'bg-red-600 dark:bg-red-800/20 text-white' => request()->routeIs('app.dashboard'),
+                   'text-red-200 dark:text-red-200/80 hover:text-white hover:bg-red-600 dark:hover:bg-red-700/25' => !request()->routeIs('app.dashboard')
+                 ])>
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" data-slot="icon" aria-hidden="true" class="size-6 shrink-0 text-white">
                   <path d="m2.25 12 8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25" stroke-linecap="round" stroke-linejoin="round" />
                 </svg>
@@ -139,24 +173,42 @@
               </a>
             </li>
             <li>
-                    <a href="{{ route('app.tasks') }}" wire:navigate class="group flex gap-x-3 rounded-md p-3 text-base font-semibold text-red-100 hover:bg-red-600 hover:text-white dark:text-red-100/90 dark:hover:bg-red-700/25 leading-relaxed transition-colors duration-200">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" data-slot="icon" aria-hidden="true" class="size-6 shrink-0 text-red-100 group-hover:text-white dark:text-red-100/90 transition-colors duration-200">
+              <a href="{{ route('app.tasks') }}" 
+                 wire:navigate
+                 @class([
+                   'group flex gap-x-3 rounded-md p-2 text-sm/6 font-semibold',
+                   'bg-red-600 dark:bg-red-800/20 text-white' => request()->routeIs('app.tasks'),
+                   'text-red-200 dark:text-red-200/80 hover:text-white hover:bg-red-600 dark:hover:bg-red-700/25' => !request()->routeIs('app.tasks')
+                 ])>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" data-slot="icon" aria-hidden="true" class="size-6 shrink-0 text-white">
                   <path d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" stroke-linecap="round" stroke-linejoin="round" />
                 </svg>
                 Tasks
               </a>
             </li>
             <li>
-                    <a href="#" class="group flex gap-x-3 rounded-md p-3 text-base font-semibold text-red-100 hover:bg-red-600 hover:text-white dark:text-red-100/90 dark:hover:bg-red-700/25 leading-relaxed transition-colors duration-200">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" data-slot="icon" aria-hidden="true" class="size-6 shrink-0 text-red-100 group-hover:text-white dark:text-red-100/90 transition-colors duration-200">
+              <a href="#" 
+                 wire:navigate
+                 @class([
+                   'group flex gap-x-3 rounded-md p-2 text-sm/6 font-semibold',
+                   'bg-red-600 dark:bg-red-800/20 text-white' => false, // No route yet
+                   'text-red-200 dark:text-red-200/80 hover:text-white hover:bg-red-600 dark:hover:bg-red-700/25' => true
+                 ])>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" data-slot="icon" aria-hidden="true" class="size-6 shrink-0 text-white">
                   <path d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" stroke-linecap="round" stroke-linejoin="round" />
                 </svg>
                 Fantasies
               </a>
             </li>
             <li>
-                    <a href="#" class="group flex gap-x-3 rounded-md p-3 text-base font-semibold text-red-100 hover:bg-red-600 hover:text-white dark:text-red-100/90 dark:hover:bg-red-700/25 leading-relaxed transition-colors duration-200">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" data-slot="icon" aria-hidden="true" class="size-6 shrink-0 text-red-100 group-hover:text-white dark:text-red-100/90 transition-colors duration-200">
+              <a href="#" 
+                 wire:navigate
+                 @class([
+                   'group flex gap-x-3 rounded-md p-2 text-sm/6 font-semibold',
+                   'bg-red-600 dark:bg-red-800/20 text-white' => false, // No route yet
+                   'text-red-200 dark:text-red-200/80 hover:text-white hover:bg-red-600 dark:hover:bg-red-700/25' => true
+                 ])>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" data-slot="icon" aria-hidden="true" class="size-6 shrink-0 text-white">
                   <path d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25" stroke-linecap="round" stroke-linejoin="round" />
                 </svg>
                 Stories
@@ -189,8 +241,14 @@
           </ul>
         </li>
         <li class="mt-auto">
-          <a href="#" class="group -mx-2 flex gap-x-3 rounded-md p-2 text-sm/6 font-semibold text-red-200 hover:bg-red-600 hover:text-white dark:text-red-200/80 dark:hover:bg-red-700/25">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" data-slot="icon" aria-hidden="true" class="size-6 shrink-0 text-red-100 group-hover:text-white dark:text-red-100/90 transition-colors duration-200">
+          <a href="#" 
+             wire:navigate
+             @class([
+               'group -mx-2 flex gap-x-3 rounded-md p-2 text-sm/6 font-semibold',
+               'bg-red-600 dark:bg-red-800/20 text-white' => false, // No route yet
+               'text-red-200 dark:text-red-200/80 hover:text-white hover:bg-red-600 dark:hover:bg-red-700/25' => true
+             ])>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" data-slot="icon" aria-hidden="true" class="size-6 shrink-0 text-white">
               <path d="M9.594 3.94c.09-.542.56-.94 1.11-.94h2.593c.55 0 1.02.398 1.11.94l.213 1.281c.063.374.313.686.645.87.074.04.147.083.22.127.325.196.72.257 1.075.124l1.217-.456a1.125 1.125 0 0 1 1.37.49l1.296 2.247a1.125 1.125 0 0 1-.26 1.431l-1.003.827c-.293.241-.438.613-.43.992a7.723 7.723 0 0 1 0 .255c-.008.378.137.75.43.991l1.004.827c.424.35.534.955.26 1.43l-1.298 2.247a1.125 1.125 0 0 1-1.369.491l-1.217-.456c-.355-.133-.75-.072-1.076.124a6.47 6.47 0 0 1-.22.128c-.331.183-.581.495-.644.869l-.213 1.281c-.09.543-.56.94-1.11.94h-2.594c-.55 0-1.019-.398-1.11-.94l-.213-1.281c-.062-.374-.312-.686-.644-.87a6.52 6.52 0 0 1-.22-.127c-.325-.196-.72-.257-1.076-.124l-1.217.456a1.125 1.125 0 0 1-1.369-.49l-1.297-2.247a1.125 1.125 0 0 1 .26-1.431l1.004-.827c.292-.24.437-.613.43-.991a6.932 6.932 0 0 1 0-.255c.007-.38-.138-.751-.43-.992l-1.004-.827a1.125 1.125 0 0 1-.26-1.43l1.297-2.247a1.125 1.125 0 0 1 1.37-.491l1.216.456c.356.133.751.072 1.076-.124.072-.044.146-.086.22-.128.332-.183.582-.495.644-.869l.214-1.28Z" stroke-linecap="round" stroke-linejoin="round" />
               <path d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" stroke-linecap="round" stroke-linejoin="round" />
             </svg>
@@ -204,7 +262,7 @@
 
 <div class="lg:pl-72">
   <div class="sticky top-0 z-40 flex h-16 shrink-0 items-center gap-x-4 border-b border-gray-200 bg-white px-4 shadow-xs sm:gap-x-6 sm:px-6 lg:px-8 dark:border-white/10 dark:bg-gray-900 dark:shadow-none">
-    <button type="button" command="show-modal" commandfor="sidebar" class="-m-2.5 p-2.5 text-gray-700 hover:text-gray-900 lg:hidden dark:text-gray-400 dark:hover:text-white">
+    <button type="button" command="show-modal" commandfor="sidebar" class="-m-2.5 p-2.5 text-gray-700 hover:text-gray-900 lg:hidden dark:text-gray-400 dark:hover:text-white cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors duration-200">
       <span class="sr-only">Open sidebar</span>
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" data-slot="icon" aria-hidden="true" class="size-6">
         <path d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" stroke-linecap="round" stroke-linejoin="round" />
