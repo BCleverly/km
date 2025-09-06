@@ -1,5 +1,8 @@
 @import 'tailwindcss';
 
+/* Configure dark mode for Tailwind v4 */
+@variant dark (.dark &);
+
 /* Alpine.js x-cloak directive to prevent flashing */
 [x-cloak] {
     display: none !important;

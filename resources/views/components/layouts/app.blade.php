@@ -1,5 +1,32 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="h-full bg-white dark:bg-gray-900">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="h-full bg-white dark:bg-gray-900" x-data="{ theme: '{{ session('theme', 'system') }}' }" x-init="
+    // Initialize theme on page load
+    $el.classList.remove('dark');
+    if (theme === 'system') {
+        if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            $el.classList.add('dark');
+        }
+    } else if (theme === 'dark') {
+        $el.classList.add('dark');
+    }
+    
+    // Listen for theme changes
+    $watch('theme', (value) => {
+        $el.classList.remove('dark');
+        if (value === 'system') {
+            if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                $el.classList.add('dark');
+            }
+        } else if (value === 'dark') {
+            $el.classList.add('dark');
+        }
+    });
+    
+    // Listen for Livewire theme changes
+    $el.addEventListener('theme-changed', (event) => {
+        theme = event.detail.theme;
+    });
+">
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -14,7 +41,7 @@
         @googlefonts
 
     </head>
-    <body class="h-full">
+    <body class="h-full  dark:bg-gray-900">
     <el-dialog>
   <dialog id="sidebar" class="backdrop:bg-transparent lg:hidden">
     <el-dialog-backdrop class="fixed inset-0 bg-gray-900/80 transition-opacity duration-300 ease-linear data-closed:opacity-0"></el-dialog-backdrop>
@@ -259,6 +286,9 @@
             <path d="M14.857 17.082a23.848 23.848 0 0 0 5.454-1.31A8.967 8.967 0 0 1 18 9.75V9A6 6 0 0 0 6 9v.75a8.967 8.967 0 0 1-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 0 1-5.714 0m5.714 0a3 3 0 1 1-5.714 0" stroke-linecap="round" stroke-linejoin="round" />
           </svg>
         </button>
+
+        <!-- Theme Selector -->
+        <livewire:theme-selector />
 
         <!-- Separator -->
         <div aria-hidden="true" class="hidden lg:block lg:h-6 lg:w-px lg:bg-gray-900/10 dark:lg:bg-gray-100/10"></div>
