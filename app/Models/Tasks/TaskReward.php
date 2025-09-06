@@ -62,4 +62,36 @@ class TaskReward extends Model
             ->withPivot('sort_order')
             ->orderBy('task_recommended_rewards.sort_order');
     }
+
+    /**
+     * Scope a query to only include approved rewards.
+     */
+    public function scopeApproved($query)
+    {
+        return $query->where('status', ContentStatus::Approved);
+    }
+
+    /**
+     * Scope a query to only include pending rewards.
+     */
+    public function scopePending($query)
+    {
+        return $query->where('status', ContentStatus::Pending);
+    }
+
+    /**
+     * Scope a query to only include premium rewards.
+     */
+    public function scopePremium($query)
+    {
+        return $query->where('is_premium', true);
+    }
+
+    /**
+     * Scope a query to only include rewards for a specific user type.
+     */
+    public function scopeForUserType($query, TargetUserType $userType)
+    {
+        return $query->where('target_user_type', $userType);
+    }
 }

@@ -123,4 +123,17 @@ return [
         'store' => env('APP_MAINTENANCE_STORE', 'database'),
     ],
 
+    /*
+    |--------------------------------------------------------------------------
+    | Task System Configuration
+    |--------------------------------------------------------------------------
+    |
+    | Configuration options for the task and reward/punishment system.
+    |
+    */
+
+    'tasks' => [
+        'max_active_outcomes' => env('MAX_ACTIVE_OUTCOMES', 2),
+    ],
+
 ];

@@ -22,6 +22,19 @@ class AssignRandomTask
 
     public function handle(User $user): array
     {
+        // Check if user already has an active task
+        $existingActiveTask = UserAssignedTask::where('user_id', $user->id)
+            ->where('status', TaskStatus::Assigned)
+            ->first();
+            
+        if ($existingActiveTask) {
+            return [
+                'success' => false,
+                'message' => 'You already have an active task. Complete or fail your current task before getting a new one.',
+                'task' => null,
+            ];
+        }
+
         // Get a random task suitable for the user
         $randomTask = $this->getRandomTaskForUser($user);
         
@@ -75,7 +88,7 @@ class AssignRandomTask
             ->whereNotIn('id', function ($query) use ($user) {
                 $query->select('task_id')
                       ->from('user_assigned_tasks')
-                      ->where('user_id', $user->id);
+                      ->where('user_id', $user->id); // Exclude ALL previously assigned tasks
             })
             ->inRandomOrder()
             ->first();

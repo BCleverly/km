@@ -153,4 +153,112 @@ class User extends Authenticatable implements HasPassKeys
     {
         return new \App\Services\UserStatsService($this);
     }
+
+    /**
+     * Get the user's active outcomes (rewards and punishments)
+     */
+    public function activeOutcomes()
+    {
+        return $this->hasMany(UserOutcome::class)
+            ->active()
+            ->notExpired()
+            ->with(['outcome', 'task'])
+            ->orderBy('assigned_at', 'desc');
+    }
+
+    /**
+     * Get the user's current active reward
+     */
+    public function getCurrentActiveReward(): ?UserOutcome
+    {
+        return $this->activeOutcomes()
+            ->where('outcome_type', 'App\\Models\\Tasks\\TaskReward')
+            ->first();
+    }
+
+    /**
+     * Get the user's current active punishment
+     */
+    public function getCurrentActivePunishment(): ?UserOutcome
+    {
+        return $this->activeOutcomes()
+            ->where('outcome_type', 'App\\Models\\Tasks\\TaskPunishment')
+            ->first();
+    }
+
+    /**
+     * Get all user outcomes (active and completed)
+     */
+    public function outcomes()
+    {
+        return $this->hasMany(UserOutcome::class)
+            ->with(['outcome', 'task'])
+            ->orderBy('assigned_at', 'desc');
+    }
+
+    /**
+     * Get the maximum number of active outcomes allowed for this user
+     */
+    public function getMaxActiveOutcomes(): int
+    {
+        return config('app.tasks.max_active_outcomes', 2);
+    }
+
+    /**
+     * Check if the user has reached their maximum active outcomes limit
+     */
+    public function hasReachedOutcomeLimit(): bool
+    {
+        $activeCount = $this->activeOutcomes()->count();
+        $maxAllowed = $this->getMaxActiveOutcomes();
+        
+        return $activeCount >= $maxAllowed;
+    }
+
+    /**
+     * Get the number of active outcomes the user currently has
+     */
+    public function getActiveOutcomeCount(): int
+    {
+        return $this->activeOutcomes()->count();
+    }
+
+    /**
+     * Get the number of remaining outcome slots available
+     */
+    public function getRemainingOutcomeSlots(): int
+    {
+        $activeCount = $this->getActiveOutcomeCount();
+        $maxAllowed = $this->getMaxActiveOutcomes();
+        
+        return max(0, $maxAllowed - $activeCount);
+    }
+
+    /**
+     * Clean up expired outcomes for this user
+     */
+    public function cleanupExpiredOutcomes(): int
+    {
+        $expiredOutcomes = $this->activeOutcomes()
+            ->where('expires_at', '<', now())
+            ->get();
+
+        $count = 0;
+        foreach ($expiredOutcomes as $outcome) {
+            $outcome->markAsExpired();
+            $count++;
+        }
+
+        return $count;
+    }
+
+    /**
+     * Get the oldest active outcome (for potential replacement)
+     */
+    public function getOldestActiveOutcome(): ?UserOutcome
+    {
+        return $this->activeOutcomes()
+            ->orderBy('assigned_at', 'asc')
+            ->first();
+    }
 }

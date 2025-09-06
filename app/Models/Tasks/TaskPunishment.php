@@ -62,4 +62,36 @@ class TaskPunishment extends Model
             ->withPivot('sort_order')
             ->orderBy('task_recommended_punishments.sort_order');
     }
+
+    /**
+     * Scope a query to only include approved punishments.
+     */
+    public function scopeApproved($query)
+    {
+        return $query->where('status', ContentStatus::Approved);
+    }
+
+    /**
+     * Scope a query to only include pending punishments.
+     */
+    public function scopePending($query)
+    {
+        return $query->where('status', ContentStatus::Pending);
+    }
+
+    /**
+     * Scope a query to only include premium punishments.
+     */
+    public function scopePremium($query)
+    {
+        return $query->where('is_premium', true);
+    }
+
+    /**
+     * Scope a query to only include punishments for a specific user type.
+     */
+    public function scopeForUserType($query, TargetUserType $userType)
+    {
+        return $query->where('target_user_type', $userType);
+    }
 }
