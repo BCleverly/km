@@ -21,24 +21,28 @@ class DatabaseSeeder extends Seeder
         // Create test users with different roles
         $admin = User::factory()->create([
             'name' => 'Admin User',
+            'username' => 'admin',
             'email' => 'admin@example.com',
         ]);
         $admin->assignRole('Admin');
 
         $moderator = User::factory()->create([
             'name' => 'Moderator User',
+            'username' => 'moderator',
             'email' => 'moderator@example.com',
         ]);
         $moderator->assignRole('Moderator');
 
         $reviewer = User::factory()->create([
             'name' => 'Reviewer User',
+            'username' => 'reviewer',
             'email' => 'reviewer@example.com',
         ]);
         $reviewer->assignRole('Reviewer');
 
         $user = User::factory()->create([
             'name' => 'Test User',
+            'username' => 'testuser',
             'email' => 'test@example.com',
         ]);
         $user->assignRole('User');

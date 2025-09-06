@@ -17,6 +17,7 @@ it('displays the registration form elements', function () {
         ->assertSee('Get started for free')
         ->assertSee('First name')
         ->assertSee('Last name')
+        ->assertSee('Username')
         ->assertSee('Email address')
         ->assertSee('Password')
         ->assertSee('How did you hear about us?')
@@ -28,17 +29,19 @@ it('has proper form validation', function () {
     Livewire::test(Register::class)
         ->set('form.first_name', '')
         ->set('form.last_name', '')
+        ->set('form.username', '')
         ->set('form.email', '')
         ->set('form.password', '')
         ->set('form.hear_about', '')
         ->call('register')
-        ->assertHasErrors(['form.first_name', 'form.last_name', 'form.email', 'form.password', 'form.hear_about']);
+        ->assertHasErrors(['form.first_name', 'form.last_name', 'form.username', 'form.email', 'form.password', 'form.hear_about']);
 });
 
 it('validates email format', function () {
     Livewire::test(Register::class)
         ->set('form.first_name', 'John')
         ->set('form.last_name', 'Doe')
+        ->set('form.username', 'johndoe')
         ->set('form.email', 'invalid-email')
         ->set('form.password', 'password123')
         ->set('form.hear_about', 'search')
@@ -52,6 +55,7 @@ it('validates unique email', function () {
     Livewire::test(Register::class)
         ->set('form.first_name', 'John')
         ->set('form.last_name', 'Doe')
+        ->set('form.username', 'johndoe')
         ->set('form.email', 'test@example.com')
         ->set('form.password', 'password123')
         ->set('form.hear_about', 'search')
@@ -59,10 +63,37 @@ it('validates unique email', function () {
         ->assertHasErrors(['form.email']);
 });
 
+it('validates unique username', function () {
+    User::factory()->create(['username' => 'johndoe']);
+
+    Livewire::test(Register::class)
+        ->set('form.first_name', 'John')
+        ->set('form.last_name', 'Doe')
+        ->set('form.username', 'johndoe')
+        ->set('form.email', 'test@example.com')
+        ->set('form.password', 'password123')
+        ->set('form.hear_about', 'search')
+        ->call('register')
+        ->assertHasErrors(['form.username']);
+});
+
+it('validates username format', function () {
+    Livewire::test(Register::class)
+        ->set('form.first_name', 'John')
+        ->set('form.last_name', 'Doe')
+        ->set('form.username', 'john doe!')
+        ->set('form.email', 'test@example.com')
+        ->set('form.password', 'password123')
+        ->set('form.hear_about', 'search')
+        ->call('register')
+        ->assertHasErrors(['form.username']);
+});
+
 it('validates password requirements', function () {
     Livewire::test(Register::class)
         ->set('form.first_name', 'John')
         ->set('form.last_name', 'Doe')
+        ->set('form.username', 'johndoe')
         ->set('form.email', 'test@example.com')
         ->set('form.password', '123')
         ->set('form.hear_about', 'search')
@@ -74,6 +105,7 @@ it('validates hear_about field', function () {
     Livewire::test(Register::class)
         ->set('form.first_name', 'John')
         ->set('form.last_name', 'Doe')
+        ->set('form.username', 'johndoe')
         ->set('form.email', 'test@example.com')
         ->set('form.password', 'password123')
         ->set('form.hear_about', 'invalid')
@@ -87,6 +119,7 @@ it('creates user successfully with valid data', function () {
     Livewire::test(Register::class)
         ->set('form.first_name', 'John')
         ->set('form.last_name', 'Doe')
+        ->set('form.username', 'johndoe')
         ->set('form.email', 'test@example.com')
         ->set('form.password', 'password123')
         ->set('form.hear_about', 'search')
@@ -95,6 +128,7 @@ it('creates user successfully with valid data', function () {
 
     $this->assertDatabaseHas('users', [
         'name' => 'John Doe',
+        'username' => 'johndoe',
         'email' => 'test@example.com',
     ]);
 
@@ -108,6 +142,7 @@ it('dispatches registered event', function () {
     Livewire::test(Register::class)
         ->set('form.first_name', 'John')
         ->set('form.last_name', 'Doe')
+        ->set('form.username', 'johndoe')
         ->set('form.email', 'test@example.com')
         ->set('form.password', 'password123')
         ->set('form.hear_about', 'search')
@@ -120,6 +155,7 @@ it('logs in user after registration', function () {
     Livewire::test(Register::class)
         ->set('form.first_name', 'John')
         ->set('form.last_name', 'Doe')
+        ->set('form.username', 'johndoe')
         ->set('form.email', 'test@example.com')
         ->set('form.password', 'password123')
         ->set('form.hear_about', 'search')
@@ -133,6 +169,7 @@ it('displays loading state during registration', function () {
     Livewire::test(Register::class)
         ->set('form.first_name', 'John')
         ->set('form.last_name', 'Doe')
+        ->set('form.username', 'johndoe')
         ->set('form.email', 'test@example.com')
         ->set('form.password', 'password123')
         ->set('form.hear_about', 'search')
@@ -186,11 +223,13 @@ it('has proper form accessibility', function () {
     Livewire::test(Register::class)
         ->assertSee('for="first_name"', false)
         ->assertSee('for="last_name"', false)
+        ->assertSee('for="username"', false)
         ->assertSee('for="email"', false)
         ->assertSee('for="password"', false)
         ->assertSee('for="hear_about"', false)
         ->assertSee('autocomplete="given-name"', false)
         ->assertSee('autocomplete="family-name"', false)
+        ->assertSee('autocomplete="username"', false)
         ->assertSee('autocomplete="email"', false)
         ->assertSee('autocomplete="new-password"', false);
 });

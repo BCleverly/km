@@ -18,7 +18,8 @@ class Register extends Component
         $this->form->validate();
 
         $user = User::create([
-            'name' => trim($this->form->first_name . ' ' . $this->form->last_name),
+            'name' => trim($this->form->first_name.' '.$this->form->last_name),
+            'username' => $this->form->username,
             'email' => $this->form->email,
             'password' => Hash::make($this->form->password),
         ]);
@@ -34,7 +35,7 @@ class Register extends Component
     {
         return view('livewire.register')
             ->layout('components.layouts.guest', [
-                'title' => 'Get started for free - Kink Master'
+                'title' => 'Get started for free - Kink Master',
             ]);
     }
 }

@@ -8,14 +8,14 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Cashier\Billable;
 use Laravel\Sanctum\HasApiTokens;
-use Spatie\Permission\Traits\HasRoles;
 use Spatie\LaravelPasskeys\Models\Concerns\HasPasskeys;
 use Spatie\LaravelPasskeys\Models\Concerns\InteractsWithPasskeys;
+use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable implements HasPassKeys
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
-    use Billable, HasFactory, HasRoles, Notifiable, HasApiTokens, InteractsWithPasskeys;
+    use Billable, HasApiTokens, HasFactory, HasRoles, InteractsWithPasskeys, Notifiable;
 
     /**
      * The attributes that are mass assignable.
@@ -51,5 +51,23 @@ class User extends Authenticatable implements HasPassKeys
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    /**
+     * Get the user's display name (username or name fallback)
+     */
+    public function getDisplayNameAttribute(): string
+    {
+        return $this->username ?? $this->name;
+    }
+
+    /**
+     * Get the user's Gravatar URL
+     */
+    public function getGravatarUrlAttribute(): string
+    {
+        $hash = md5(strtolower(trim($this->email)));
+
+        return "https://www.gravatar.com/avatar/{$hash}?d=identicon&s=256";
     }
 }
