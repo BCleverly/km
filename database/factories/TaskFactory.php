@@ -2,6 +2,9 @@
 
 namespace Database\Factories;
 
+use App\Models\User;
+use App\ContentStatus;
+use App\TargetUserType;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -24,7 +27,54 @@ class TaskFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'title' => fake()->sentence(4),
+            'description' => fake()->paragraph(3),
+            'difficulty_level' => fake()->numberBetween(1, 10),
+            'target_user_type' => fake()->randomElement(TargetUserType::cases()),
+            'user_id' => User::factory(),
+            'status' => ContentStatus::Approved,
+            'view_count' => fake()->numberBetween(0, 1000),
+            'is_premium' => fake()->boolean(20), // 20% chance of being premium
         ];
+    }
+
+    /**
+     * Create a pending task
+     */
+    public function pending(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'status' => ContentStatus::Pending,
+        ]);
+    }
+
+    /**
+     * Create an approved task
+     */
+    public function approved(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'status' => ContentStatus::Approved,
+        ]);
+    }
+
+    /**
+     * Create a premium task
+     */
+    public function premium(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'is_premium' => true,
+        ]);
+    }
+
+    /**
+     * Create a task for a specific user type
+     */
+    public function forUserType(TargetUserType $userType): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'target_user_type' => $userType,
+        ]);
     }
 }

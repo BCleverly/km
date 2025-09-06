@@ -31,13 +31,13 @@ class UserAssignedTaskFactory extends Factory
         return [
             'user_id' => User::factory(),
             'task_id' => Task::factory(),
-            'status' => fake()->randomElement(TaskStatus::cases()),
-            'outcome_type' => fake()->randomElement(['reward', 'punishment']),
+            'status' => TaskStatus::Assigned,
+            'outcome_type' => null,
             'outcome_id' => null,
             'potential_reward_id' => TaskReward::factory(),
             'potential_punishment_id' => TaskPunishment::factory(),
             'assigned_at' => fake()->dateTimeBetween('-30 days', 'now'),
-            'completed_at' => fake()->optional(0.7)->dateTimeBetween('-30 days', 'now'),
+            'completed_at' => null,
         ];
     }
 
