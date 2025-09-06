@@ -4,6 +4,7 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Cashier\Billable;
@@ -26,8 +27,6 @@ class User extends Authenticatable implements HasPassKeys
         'name',
         'email',
         'password',
-        'username',
-        'about',
     ];
 
     /**
@@ -54,11 +53,19 @@ class User extends Authenticatable implements HasPassKeys
     }
 
     /**
-     * Get the user's display name (username or name fallback)
+     * Get the user's profile.
+     */
+    public function profile(): HasOne
+    {
+        return $this->hasOne(Profile::class);
+    }
+
+    /**
+     * Get the user's display name (username from profile or name fallback)
      */
     public function getDisplayNameAttribute(): string
     {
-        return $this->username ?? $this->name;
+        return $this->profile?->username ?? $this->name;
     }
 
     /**
@@ -69,5 +76,21 @@ class User extends Authenticatable implements HasPassKeys
         $hash = md5(strtolower(trim($this->email)));
 
         return "https://www.gravatar.com/avatar/{$hash}?d=identicon&s=256";
+    }
+
+    /**
+     * Get the user's profile picture URL
+     */
+    public function getProfilePictureUrlAttribute(): string
+    {
+        return $this->profile?->profile_picture_url ?? $this->gravatar_url;
+    }
+
+    /**
+     * Get the user's cover photo URL
+     */
+    public function getCoverPhotoUrlAttribute(): ?string
+    {
+        return $this->profile?->cover_photo_url;
     }
 }
