@@ -23,7 +23,7 @@
         </div>
     @endif
 
-    <form wire:submit="submit" class="space-y-8">
+    <form wire:submit="submit" class="space-y-8" x-data="{ taskSelection: 'existing', rewardSelection: 'existing', punishmentSelection: 'existing' }">
         <!-- Task Selection Section -->
         <div class="bg-white dark:bg-gray-800 shadow rounded-lg p-6">
             <h2 class="text-xl font-semibold text-gray-900 dark:text-white mb-4">Task Selection</h2>
@@ -38,7 +38,7 @@
                         <label class="flex items-center">
                             <input 
                                 type="radio" 
-                                wire:model.live="form.taskSelection" 
+                                x-model="taskSelection"
                                 value="existing" 
                                 class="h-4 w-4 text-red-600 focus:ring-red-500 border-gray-300"
                             >
@@ -47,7 +47,7 @@
                         <label class="flex items-center">
                             <input 
                                 type="radio" 
-                                wire:model.live="form.taskSelection" 
+                                x-model="taskSelection"
                                 value="create" 
                                 class="h-4 w-4 text-red-600 focus:ring-red-500 border-gray-300"
                             >
@@ -58,34 +58,36 @@
                 </div>
 
                 <!-- Existing Task Selection -->
-                @if($form->taskSelection === 'existing')
+                <div x-show="taskSelection === 'existing'">
                     <div>
                         <label for="taskAutocomplete" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                             Search & Select Task *
                         </label>
                         
-                        <div class="relative">
+                        <div class="relative" x-data="{ showDropdown: false }">
                             <input 
                                 type="text" 
                                 id="taskAutocomplete"
                                 wire:model.live="form.taskSearch"
+                                x-on:focus="showDropdown = true"
+                                x-on:blur="setTimeout(() => showDropdown = false, 150)"
                                 class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
                                 placeholder="Type to search or click to see all tasks..."
                                 autocomplete="off"
                             >
                             
-                            @if($form->taskSearch && !$form->selectedTaskId)
-                                <div class="absolute z-10 w-full mt-1 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm max-h-48 overflow-y-auto">
-                                    @foreach($this->getAvailableTasks() as $id => $title)
-                                        <div 
-                                            wire:click="selectTask({{ $id }}, '{{ addslashes($title) }}')"
-                                            class="px-3 py-2 text-left hover:bg-gray-100 dark:hover:bg-gray-600 focus:outline-none focus:bg-gray-100 dark:focus:bg-gray-600 cursor-pointer text-gray-900 dark:text-white"
-                                        >
-                                            {{ $title }}
-                                        </div>
-                                    @endforeach
-                                </div>
-                            @endif
+                            <div x-show="showDropdown && !$wire.form.selectedTaskId" 
+                                 x-transition
+                                 class="absolute z-10 w-full mt-1 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm max-h-48 overflow-y-auto">
+                                @foreach($this->getAllAvailableTasks() as $id => $title)
+                                    <div 
+                                        wire:click="selectTask({{ $id }}, '{{ addslashes($title) }}')"
+                                        class="px-3 py-2 text-left hover:bg-gray-100 dark:hover:bg-gray-600 focus:outline-none focus:bg-gray-100 dark:focus:bg-gray-600 cursor-pointer text-gray-900 dark:text-white"
+                                    >
+                                        {{ $title }}
+                                    </div>
+                                @endforeach
+                            </div>
                         </div>
                         
                         @if($form->selectedTaskId)
@@ -112,10 +114,10 @@
                         
                         @error('form.selectedTaskId') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
                     </div>
-                @endif
+                </div>
 
                 <!-- Custom Task Creation -->
-                @if($form->taskSelection === 'create')
+                <div x-show="taskSelection === 'create'">
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <!-- Title -->
                         <div class="md:col-span-2">
@@ -228,7 +230,7 @@
                             </label>
                         </div>
                     </div>
-                @endif
+                </div>
             </div>
         </div>
 
@@ -246,7 +248,7 @@
                         <label class="flex items-center">
                             <input 
                                 type="radio" 
-                                wire:model.live="form.rewardSelection" 
+                                x-model="rewardSelection"
                                 value="existing" 
                                 class="h-4 w-4 text-red-600 focus:ring-red-500 border-gray-300"
                             >
@@ -255,7 +257,7 @@
                         <label class="flex items-center">
                             <input 
                                 type="radio" 
-                                wire:model.live="form.rewardSelection" 
+                                x-model="rewardSelection"
                                 value="create" 
                                 class="h-4 w-4 text-red-600 focus:ring-red-500 border-gray-300"
                             >
@@ -266,49 +268,64 @@
                 </div>
 
                 <!-- Existing Reward Selection -->
-                @if($form->rewardSelection === 'existing')
+                <div x-show="rewardSelection === 'existing'">
                     <div>
                         <label for="rewardAutocomplete" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                             Search & Select Reward
                         </label>
                         
-                        <div class="relative">
+                        <div class="relative" x-data="{ showDropdown: false }">
                             <input 
                                 type="text" 
                                 id="rewardAutocomplete"
                                 wire:model.live="form.rewardSearch"
+                                x-on:focus="showDropdown = true"
+                                x-on:blur="setTimeout(() => showDropdown = false, 150)"
                                 class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
                                 placeholder="Type to search or click to see all rewards..."
                                 autocomplete="off"
                             >
                             
-                            @if($form->rewardSearch && !$form->selectedRewardId)
-                                <div class="absolute z-10 w-full mt-1 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm max-h-48 overflow-y-auto">
-                                    @foreach($this->getAvailableRewards() as $id => $title)
-                                        <div 
-                                            wire:click="selectReward({{ $id }}, '{{ addslashes($title) }}')"
-                                            class="px-3 py-2 text-left hover:bg-gray-100 dark:hover:bg-gray-600 focus:outline-none focus:bg-gray-100 dark:focus:bg-gray-600 cursor-pointer text-gray-900 dark:text-white"
-                                        >
-                                            {{ $title }}
-                                        </div>
-                                    @endforeach
-                                </div>
-                            @endif
+                            <div x-show="showDropdown && !$wire.form.selectedRewardId" 
+                                 x-transition
+                                 class="absolute z-10 w-full mt-1 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm max-h-48 overflow-y-auto">
+                                @foreach($this->getAvailableRewards() as $id => $reward)
+                                    <div 
+                                        wire:click="selectReward({{ $id }}, '{{ addslashes($reward['title']) }}')"
+                                        class="px-3 py-2 text-left hover:bg-gray-100 dark:hover:bg-gray-600 focus:outline-none focus:bg-gray-100 dark:focus:bg-gray-600 cursor-pointer text-gray-900 dark:text-white"
+                                    >
+                                        <div class="font-medium">{{ $reward['title'] }}</div>
+                                        @if($reward['description'])
+                                            <div class="text-sm text-gray-500 dark:text-gray-400 mt-1">{{ Str::limit($reward['description'], 80) }}</div>
+                                        @endif
+                                    </div>
+                                @endforeach
+                            </div>
                         </div>
                         
                         @if($form->selectedRewardId)
-                            <div class="mt-2 p-2 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-md">
-                                <div class="flex items-center">
-                                    <svg class="h-4 w-4 text-green-500 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                            @php
+                                $selectedReward = collect($this->getAllAvailableRewards())->get($form->selectedRewardId);
+                            @endphp
+                            <div class="mt-2 p-3 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-md">
+                                <div class="flex items-start">
+                                    <svg class="h-4 w-4 text-green-500 mr-2 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
                                         <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
                                     </svg>
-                                    <span class="text-sm text-green-700 dark:text-green-300">
-                                        Selected: {{ collect($this->getAllAvailableRewards())->get($form->selectedRewardId) }}
-                                    </span>
+                                    <div class="flex-1">
+                                        <div class="text-sm font-medium text-green-700 dark:text-green-300">
+                                            Selected: {{ $selectedReward['title'] }}
+                                        </div>
+                                        @if($selectedReward['description'])
+                                            <div class="text-xs text-green-600 dark:text-green-400 mt-1">
+                                                {{ $selectedReward['description'] }}
+                                            </div>
+                                        @endif
+                                    </div>
                                     <button 
                                         type="button"
-                                        wire:click="$set('form.selectedRewardId', null)"
-                                        class="ml-auto text-green-600 hover:text-green-800 dark:text-green-400 dark:hover:text-green-200"
+                                        wire:click="$set('form.selectedRewardId', null); $set('form.rewardSearch', '')"
+                                        class="ml-2 text-green-600 hover:text-green-800 dark:text-green-400 dark:hover:text-green-200"
                                     >
                                         <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
@@ -320,10 +337,10 @@
                         
                         @error('form.selectedRewardId') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
                     </div>
-                @endif
+                </div>
 
                 <!-- Custom Reward Creation -->
-                @if($form->rewardSelection === 'create')
+                <div x-show="rewardSelection === 'create'">
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <!-- Reward Title -->
                         <div class="md:col-span-2">
@@ -372,7 +389,7 @@
                             @error('form.rewardDifficultyLevel') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
                         </div>
                     </div>
-                @endif
+                </div>
             </div>
         </div>
 
@@ -390,7 +407,7 @@
                         <label class="flex items-center">
                             <input 
                                 type="radio" 
-                                wire:model.live="form.punishmentSelection" 
+                                x-model="punishmentSelection"
                                 value="existing" 
                                 class="h-4 w-4 text-red-600 focus:ring-red-500 border-gray-300"
                             >
@@ -399,7 +416,7 @@
                         <label class="flex items-center">
                             <input 
                                 type="radio" 
-                                wire:model.live="form.punishmentSelection" 
+                                x-model="punishmentSelection"
                                 value="create" 
                                 class="h-4 w-4 text-red-600 focus:ring-red-500 border-gray-300"
                             >
@@ -410,49 +427,64 @@
                 </div>
 
                 <!-- Existing Punishment Selection -->
-                @if($form->punishmentSelection === 'existing')
+                <div x-show="punishmentSelection === 'existing'">
                     <div>
                         <label for="punishmentAutocomplete" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                             Search & Select Punishment
                         </label>
                         
-                        <div class="relative">
+                        <div class="relative" x-data="{ showDropdown: false }">
                             <input 
                                 type="text" 
                                 id="punishmentAutocomplete"
                                 wire:model.live="form.punishmentSearch"
+                                x-on:focus="showDropdown = true"
+                                x-on:blur="setTimeout(() => showDropdown = false, 150)"
                                 class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
                                 placeholder="Type to search or click to see all punishments..."
                                 autocomplete="off"
                             >
                             
-                            @if($form->punishmentSearch && !$form->selectedPunishmentId)
-                                <div class="absolute z-10 w-full mt-1 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm max-h-48 overflow-y-auto">
-                                    @foreach($this->getAvailablePunishments() as $id => $title)
-                                        <div 
-                                            wire:click="selectPunishment({{ $id }}, '{{ addslashes($title) }}')"
-                                            class="px-3 py-2 text-left hover:bg-gray-100 dark:hover:bg-gray-600 focus:outline-none focus:bg-gray-100 dark:focus:bg-gray-600 cursor-pointer text-gray-900 dark:text-white"
-                                        >
-                                            {{ $title }}
-                                        </div>
-                                    @endforeach
-                                </div>
-                            @endif
+                            <div x-show="showDropdown && !$wire.form.selectedPunishmentId" 
+                                 x-transition
+                                 class="absolute z-10 w-full mt-1 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm max-h-48 overflow-y-auto">
+                                @foreach($this->getAvailablePunishments() as $id => $punishment)
+                                    <div 
+                                        wire:click="selectPunishment({{ $id }}, '{{ addslashes($punishment['title']) }}')"
+                                        class="px-3 py-2 text-left hover:bg-gray-100 dark:hover:bg-gray-600 focus:outline-none focus:bg-gray-100 dark:focus:bg-gray-600 cursor-pointer text-gray-900 dark:text-white"
+                                    >
+                                        <div class="font-medium">{{ $punishment['title'] }}</div>
+                                        @if($punishment['description'])
+                                            <div class="text-sm text-gray-500 dark:text-gray-400 mt-1">{{ Str::limit($punishment['description'], 80) }}</div>
+                                        @endif
+                                    </div>
+                                @endforeach
+                            </div>
                         </div>
                         
                         @if($form->selectedPunishmentId)
-                            <div class="mt-2 p-2 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-md">
-                                <div class="flex items-center">
-                                    <svg class="h-4 w-4 text-green-500 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                            @php
+                                $selectedPunishment = collect($this->getAllAvailablePunishments())->get($form->selectedPunishmentId);
+                            @endphp
+                            <div class="mt-2 p-3 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-md">
+                                <div class="flex items-start">
+                                    <svg class="h-4 w-4 text-green-500 mr-2 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
                                         <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
                                     </svg>
-                                    <span class="text-sm text-green-700 dark:text-green-300">
-                                        Selected: {{ collect($this->getAllAvailablePunishments())->get($form->selectedPunishmentId) }}
-                                    </span>
+                                    <div class="flex-1">
+                                        <div class="text-sm font-medium text-green-700 dark:text-green-300">
+                                            Selected: {{ $selectedPunishment['title'] }}
+                                        </div>
+                                        @if($selectedPunishment['description'])
+                                            <div class="text-xs text-green-600 dark:text-green-400 mt-1">
+                                                {{ $selectedPunishment['description'] }}
+                                            </div>
+                                        @endif
+                                    </div>
                                     <button 
                                         type="button"
-                                        wire:click="$set('form.selectedPunishmentId', null)"
-                                        class="ml-auto text-green-600 hover:text-green-800 dark:text-green-400 dark:hover:text-green-200"
+                                        wire:click="$set('form.selectedPunishmentId', null); $set('form.punishmentSearch', '')"
+                                        class="ml-2 text-green-600 hover:text-green-800 dark:text-green-400 dark:hover:text-green-200"
                                     >
                                         <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
@@ -464,10 +496,10 @@
                         
                         @error('form.selectedPunishmentId') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
                     </div>
-                @endif
+                </div>
 
                 <!-- Custom Punishment Creation -->
-                @if($form->punishmentSelection === 'create')
+                <div x-show="punishmentSelection === 'create'">
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <!-- Punishment Title -->
                         <div class="md:col-span-2">
@@ -516,12 +548,14 @@
                             @error('form.punishmentDifficultyLevel') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
                         </div>
                     </div>
-                @endif
+                </div>
             </div>
         </div>
 
         <!-- Privacy Options Section -->
-        <div class="bg-white dark:bg-gray-800 shadow rounded-lg p-6">
+        <div x-show="taskSelection === 'create' || rewardSelection === 'create' || punishmentSelection === 'create'" 
+             x-transition
+             class="bg-white dark:bg-gray-800 shadow rounded-lg p-6">
             <h2 class="text-xl font-semibold text-gray-900 dark:text-white mb-4">Privacy & Review Options</h2>
             
             <div class="space-y-4">

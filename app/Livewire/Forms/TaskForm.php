@@ -68,7 +68,7 @@ class TaskForm extends Form
     public int $punishmentDifficultyLevel = 3;
 
     // Privacy/Review Options
-    public bool $keepPrivate = true;
+    public bool $keepPrivate = false;
 
     public function rules(): array
     {

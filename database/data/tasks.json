@@ -54,5 +54,14 @@
    "status": 1,
    "recommended_rewards": [1],
    "recommended_punishments": [7]
+ },
+ {
+   "task": "Practice your oral skills on your partner",
+   "user_type": 3,
+   "duration": 1,
+   "tip": [],
+   "status": 1,
+   "recommended_rewards": [1],
+   "recommended_punishments": [7]
  }
 ]

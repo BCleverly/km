@@ -66,7 +66,7 @@ class CreateCustomTask extends Component
         // Update the search field to show the selected reward title
         if ($this->form->selectedRewardId) {
             $rewards = $this->getAllAvailableRewards();
-            $this->form->rewardSearch = $rewards[$this->form->selectedRewardId] ?? '';
+            $this->form->rewardSearch = $rewards[$this->form->selectedRewardId]['title'] ?? '';
         }
     }
 
@@ -75,7 +75,7 @@ class CreateCustomTask extends Component
         // Update the search field to show the selected punishment title
         if ($this->form->selectedPunishmentId) {
             $punishments = $this->getAllAvailablePunishments();
-            $this->form->punishmentSearch = $punishments[$this->form->selectedPunishmentId] ?? '';
+            $this->form->punishmentSearch = $punishments[$this->form->selectedPunishmentId]['title'] ?? '';
         }
     }
 
@@ -102,7 +102,7 @@ class CreateCustomTask extends Component
         }
         
         $rewards = $this->getAllAvailableRewards();
-        return $rewards[$this->form->selectedRewardId] ?? null;
+        return $rewards[$this->form->selectedRewardId]['title'] ?? null;
     }
 
     public function getSelectedPunishmentTitle(): ?string
@@ -112,7 +112,7 @@ class CreateCustomTask extends Component
         }
         
         $punishments = $this->getAllAvailablePunishments();
-        return $punishments[$this->form->selectedPunishmentId] ?? null;
+        return $punishments[$this->form->selectedPunishmentId]['title'] ?? null;
     }
 
     protected $listeners = ['selectTask', 'selectReward', 'selectPunishment'];
@@ -158,7 +158,7 @@ class CreateCustomTask extends Component
         }
     }
 
-    public function submit(): void
+    public function submit(): mixed
     {
         $this->isSubmitting = true;
         $this->successMessage = null;
@@ -170,7 +170,7 @@ class CreateCustomTask extends Component
         if (!$user) {
             $this->addError('form', 'You must be logged in to create a custom task.');
             $this->isSubmitting = false;
-            return;
+            return null;
         }
 
         try {
@@ -195,9 +195,7 @@ class CreateCustomTask extends Component
             $this->successMessage = 'Your custom task has been created and assigned to you! ' . 
                 ($this->form->keepPrivate ? 'This task is private to you.' : 'This task has been submitted for community review.');
             
-            // Reset form
-            $this->form->reset();
-
+            return redirect()->route('app.tasks');
         } catch (\Exception $e) {
             $this->addError('form', $e->getMessage());
         } finally {
@@ -314,32 +312,6 @@ class CreateCustomTask extends Component
             ->toArray();
     }
 
-    public function getAvailableRewards(): array
-    {
-        $user = Auth::user();
-        if (!$user) {
-            return [];
-        }
-
-        $query = Outcome::approved()
-            ->where('intended_type', 'reward')
-            ->where(function ($query) use ($user) {
-                $query->where('target_user_type', TargetUserType::Any)
-                      ->orWhere('target_user_type', $user->user_type);
-            });
-
-        // Add search filter if search term is provided
-        if (!empty($this->form->rewardSearch)) {
-            $query->where('title', 'like', '%' . $this->form->rewardSearch . '%');
-        }
-
-        return $query->orderBy('title')
-            ->get()
-            ->mapWithKeys(function (Outcome $outcome) {
-                return [$outcome->id => $outcome->title];
-            })
-            ->toArray();
-    }
 
     public function getAllAvailableRewards(): array
     {
@@ -357,37 +329,14 @@ class CreateCustomTask extends Component
             ->orderBy('title')
             ->get()
             ->mapWithKeys(function (Outcome $outcome) {
-                return [$outcome->id => $outcome->title];
+                return [$outcome->id => [
+                    'title' => $outcome->title,
+                    'description' => $outcome->description
+                ]];
             })
             ->toArray();
     }
 
-    public function getAvailablePunishments(): array
-    {
-        $user = Auth::user();
-        if (!$user) {
-            return [];
-        }
-
-        $query = Outcome::approved()
-            ->where('intended_type', 'punishment')
-            ->where(function ($query) use ($user) {
-                $query->where('target_user_type', TargetUserType::Any)
-                      ->orWhere('target_user_type', $user->user_type);
-            });
-
-        // Add search filter if search term is provided
-        if (!empty($this->form->punishmentSearch)) {
-            $query->where('title', 'like', '%' . $this->form->punishmentSearch . '%');
-        }
-
-        return $query->orderBy('title')
-            ->get()
-            ->mapWithKeys(function (Outcome $outcome) {
-                return [$outcome->id => $outcome->title];
-            })
-            ->toArray();
-    }
 
     public function getAllAvailablePunishments(): array
     {
@@ -405,9 +354,44 @@ class CreateCustomTask extends Component
             ->orderBy('title')
             ->get()
             ->mapWithKeys(function (Outcome $outcome) {
-                return [$outcome->id => $outcome->title];
+                return [$outcome->id => [
+                    'title' => $outcome->title,
+                    'description' => $outcome->description
+                ]];
             })
             ->toArray();
+    }
+
+    public function getAvailableRewards(): array
+    {
+        $rewards = $this->getAllAvailableRewards();
+        
+        if (empty($this->form->rewardSearch)) {
+            return $rewards;
+        }
+        
+        $searchTerm = strtolower($this->form->rewardSearch);
+        
+        return array_filter($rewards, function ($reward) use ($searchTerm) {
+            return str_contains(strtolower($reward['title']), $searchTerm) ||
+                   str_contains(strtolower($reward['description']), $searchTerm);
+        });
+    }
+
+    public function getAvailablePunishments(): array
+    {
+        $punishments = $this->getAllAvailablePunishments();
+        
+        if (empty($this->form->punishmentSearch)) {
+            return $punishments;
+        }
+        
+        $searchTerm = strtolower($this->form->punishmentSearch);
+        
+        return array_filter($punishments, function ($punishment) use ($searchTerm) {
+            return str_contains(strtolower($punishment['title']), $searchTerm) ||
+                   str_contains(strtolower($punishment['description']), $searchTerm);
+        });
     }
 
     public function getTargetUserTypeOptions(): array
