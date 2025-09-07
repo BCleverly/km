@@ -66,7 +66,6 @@ class FailTask
             UserOutcome::create([
                 'user_id' => $user->id,
                 'outcome_id' => $activeTask->potentialPunishment->id,
-                'outcome_type' => 'App\\Models\\Tasks\\TaskPunishment',
                 'task_id' => $activeTask->task->id,
                 'user_assigned_task_id' => $activeTask->id,
                 'status' => 'active',

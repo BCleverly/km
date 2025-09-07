@@ -13,14 +13,14 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
-class Task extends Model
+class Outcome extends Model
 {
-    /** @use HasFactory<\Database\Factories\TaskFactory> */
+    /** @use HasFactory<\Database\Factories\OutcomeFactory> */
     use HasFactory;
 
     protected static function newFactory()
     {
-        return \Database\Factories\TaskFactory::new();
+        return \Database\Factories\OutcomeFactory::new();
     }
 
     protected $fillable = [
@@ -32,6 +32,7 @@ class Task extends Model
         'status',
         'view_count',
         'is_premium',
+        'intended_type', // 'reward' or 'punishment'
     ];
 
     protected function casts(): array
@@ -50,30 +51,20 @@ class Task extends Model
         return $this->belongsTo(User::class, 'user_id');
     }
 
-    public function assignedTasks(): HasMany
+    public function assignedOutcomes(): HasMany
     {
-        return $this->hasMany(UserAssignedTask::class);
+        return $this->hasMany(UserOutcome::class, 'outcome_id');
     }
 
-    public function recommendedOutcomes(): BelongsToMany
+    public function recommendedForTasks(): BelongsToMany
     {
-        return $this->belongsToMany(Outcome::class, 'task_recommended_outcomes')
+        return $this->belongsToMany(Task::class, 'task_recommended_outcomes')
             ->withPivot('sort_order')
             ->orderBy('task_recommended_outcomes.sort_order');
     }
 
-    public function recommendedRewards(): BelongsToMany
-    {
-        return $this->recommendedOutcomes()->where('intended_type', 'reward');
-    }
-
-    public function recommendedPunishments(): BelongsToMany
-    {
-        return $this->recommendedOutcomes()->where('intended_type', 'punishment');
-    }
-
     /**
-     * Scope a query to only include approved tasks.
+     * Scope a query to only include approved outcomes.
      */
     public function scopeApproved($query)
     {
@@ -81,7 +72,7 @@ class Task extends Model
     }
 
     /**
-     * Scope a query to only include pending tasks.
+     * Scope a query to only include pending outcomes.
      */
     public function scopePending($query)
     {
@@ -89,7 +80,7 @@ class Task extends Model
     }
 
     /**
-     * Scope a query to only include premium tasks.
+     * Scope a query to only include premium outcomes.
      */
     public function scopePremium($query)
     {
@@ -97,10 +88,50 @@ class Task extends Model
     }
 
     /**
-     * Scope a query to only include tasks for a specific user type.
+     * Scope a query to only include outcomes for a specific user type.
      */
     public function scopeForUserType($query, TargetUserType $userType)
     {
         return $query->where('target_user_type', $userType);
+    }
+
+    /**
+     * Scope a query to only include outcomes intended as rewards.
+     */
+    public function scopeIntendedAsRewards($query)
+    {
+        return $query->where('intended_type', 'reward');
+    }
+
+    /**
+     * Scope a query to only include outcomes intended as punishments.
+     */
+    public function scopeIntendedAsPunishments($query)
+    {
+        return $query->where('intended_type', 'punishment');
+    }
+
+    /**
+     * Check if this outcome is intended as a reward.
+     */
+    public function isIntendedAsReward(): bool
+    {
+        return $this->intended_type === 'reward';
+    }
+
+    /**
+     * Check if this outcome is intended as a punishment.
+     */
+    public function isIntendedAsPunishment(): bool
+    {
+        return $this->intended_type === 'punishment';
+    }
+
+    /**
+     * Get the intended type label.
+     */
+    public function getIntendedTypeLabelAttribute(): string
+    {
+        return $this->intended_type === 'reward' ? 'Reward' : 'Punishment';
     }
 }

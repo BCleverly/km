@@ -6,8 +6,7 @@ namespace App\Actions\Tasks;
 
 use App\Models\User;
 use App\Models\Tasks\Task;
-use App\Models\Tasks\TaskReward;
-use App\Models\Tasks\TaskPunishment;
+use App\Models\Tasks\Outcome;
 use App\Models\Tasks\UserAssignedTask;
 use App\Models\Tasks\TaskActivity;
 use App\TaskStatus;
@@ -47,8 +46,8 @@ class AssignRandomTask
         }
 
         // Get random reward and punishment for this task
-        $reward = $this->getRandomRewardForUser($user);
-        $punishment = $this->getRandomPunishmentForUser($user);
+        $reward = $this->getRandomOutcomeForUser($user, 'reward');
+        $punishment = $this->getRandomOutcomeForUser($user, 'punishment');
 
         // Create the assigned task
         $assignedTask = UserAssignedTask::create([
@@ -94,24 +93,12 @@ class AssignRandomTask
             ->first();
     }
 
-    private function getRandomRewardForUser(User $user): ?TaskReward
+    private function getRandomOutcomeForUser(User $user, string $intendedType): ?Outcome
     {
         $userType = $user->profile?->user_type ?? 'any';
         
-        return TaskReward::where('status', ContentStatus::Approved)
-            ->where(function ($query) use ($userType) {
-                $query->where('target_user_type', TargetUserType::Any)
-                      ->orWhere('target_user_type', $userType);
-            })
-            ->inRandomOrder()
-            ->first();
-    }
-
-    private function getRandomPunishmentForUser(User $user): ?TaskPunishment
-    {
-        $userType = $user->profile?->user_type ?? 'any';
-        
-        return TaskPunishment::where('status', ContentStatus::Approved)
+        return Outcome::where('status', ContentStatus::Approved)
+            ->where('intended_type', $intendedType)
             ->where(function ($query) use ($userType) {
                 $query->where('target_user_type', TargetUserType::Any)
                       ->orWhere('target_user_type', $userType);

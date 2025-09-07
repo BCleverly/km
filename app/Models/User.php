@@ -172,7 +172,9 @@ class User extends Authenticatable implements HasPassKeys
     public function getCurrentActiveReward(): ?UserOutcome
     {
         return $this->activeOutcomes()
-            ->where('outcome_type', 'App\\Models\\Tasks\\TaskReward')
+            ->whereHas('outcome', function ($query) {
+                $query->where('intended_type', 'reward');
+            })
             ->first();
     }
 
@@ -182,7 +184,9 @@ class User extends Authenticatable implements HasPassKeys
     public function getCurrentActivePunishment(): ?UserOutcome
     {
         return $this->activeOutcomes()
-            ->where('outcome_type', 'App\\Models\\Tasks\\TaskPunishment')
+            ->whereHas('outcome', function ($query) {
+                $query->where('intended_type', 'punishment');
+            })
             ->first();
     }
 

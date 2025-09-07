@@ -4,8 +4,7 @@ namespace Database\Seeders;
 
 use App\Models\User;
 use App\Models\Tasks\Task;
-use App\Models\Tasks\TaskReward;
-use App\Models\Tasks\TaskPunishment;
+use App\Models\Tasks\Outcome;
 use App\ContentStatus;
 use App\TargetUserType;
 use Illuminate\Database\Seeder;
@@ -23,16 +22,12 @@ class TaskDataSeeder extends Seeder
         // Get a system user to assign as the author of imported content
         $systemUser = $this->getSystemUser();
 
-        // Import rewards first
-        $rewards = $this->importRewards($systemUser);
-        $this->command->info('Imported ' . count($rewards) . ' rewards');
-
-        // Import punishments
-        $punishments = $this->importPunishments($systemUser);
-        $this->command->info('Imported ' . count($punishments) . ' punishments');
+        // Import outcomes (rewards and punishments)
+        $outcomes = $this->importOutcomes($systemUser);
+        $this->command->info('Imported ' . count($outcomes) . ' outcomes');
 
         // Import tasks with their relationships
-        $tasks = $this->importTasks($systemUser, $rewards, $punishments);
+        $tasks = $this->importTasks($systemUser, $outcomes);
         $this->command->info('Imported ' . count($tasks) . ' tasks');
 
         $this->command->info('TaskDataSeeder completed successfully!');
@@ -61,15 +56,16 @@ class TaskDataSeeder extends Seeder
     }
 
     /**
-     * Import rewards from JSON file
+     * Import outcomes (rewards and punishments) from JSON files
      */
-    private function importRewards(User $systemUser): array
+    private function importOutcomes(User $systemUser): array
     {
-        $rewardsData = $this->loadJsonData('rewards.json');
-        $rewards = [];
+        $outcomes = [];
 
+        // Import rewards
+        $rewardsData = $this->loadJsonData('rewards.json');
         foreach ($rewardsData as $rewardData) {
-            $reward = TaskReward::create([
+            $outcome = Outcome::create([
                 'title' => $rewardData['title'],
                 'description' => $rewardData['description'],
                 'difficulty_level' => $rewardData['difficulty_level'],
@@ -78,24 +74,16 @@ class TaskDataSeeder extends Seeder
                 'status' => ContentStatus::Approved, // Imported data should be approved
                 'view_count' => 0,
                 'is_premium' => false,
+                'intended_type' => 'reward',
             ]);
 
-            $rewards[$rewardData['id']] = $reward;
+            $outcomes['reward_' . $rewardData['id']] = $outcome;
         }
 
-        return $rewards;
-    }
-
-    /**
-     * Import punishments from JSON file
-     */
-    private function importPunishments(User $systemUser): array
-    {
+        // Import punishments
         $punishmentsData = $this->loadJsonData('punishments.json');
-        $punishments = [];
-
         foreach ($punishmentsData as $punishmentData) {
-            $punishment = TaskPunishment::create([
+            $outcome = Outcome::create([
                 'title' => $punishmentData['title'],
                 'description' => $punishmentData['description'],
                 'difficulty_level' => $punishmentData['difficulty_level'],
@@ -104,18 +92,19 @@ class TaskDataSeeder extends Seeder
                 'status' => ContentStatus::Approved, // Imported data should be approved
                 'view_count' => 0,
                 'is_premium' => false,
+                'intended_type' => 'punishment',
             ]);
 
-            $punishments[$punishmentData['id']] = $punishment;
+            $outcomes['punishment_' . $punishmentData['id']] = $outcome;
         }
 
-        return $punishments;
+        return $outcomes;
     }
 
     /**
      * Import tasks from JSON file with their relationships
      */
-    private function importTasks(User $systemUser, array $rewards, array $punishments): array
+    private function importTasks(User $systemUser, array $outcomes): array
     {
         $tasksData = $this->loadJsonData('tasks.json');
         $tasks = [];
@@ -136,9 +125,9 @@ class TaskDataSeeder extends Seeder
             // Attach recommended rewards if they exist
             if (!empty($taskData['recommended_rewards'])) {
                 $rewardIds = collect($taskData['recommended_rewards'])
-                    ->map(fn($rewardId) => $rewards[$rewardId] ?? null)
+                    ->map(fn($rewardId) => $outcomes['reward_' . $rewardId] ?? null)
                     ->filter()
-                    ->map(fn($reward) => $reward->id)
+                    ->map(fn($outcome) => $outcome->id)
                     ->toArray();
 
                 if (!empty($rewardIds)) {
@@ -149,9 +138,9 @@ class TaskDataSeeder extends Seeder
             // Attach recommended punishments if they exist
             if (!empty($taskData['recommended_punishments'])) {
                 $punishmentIds = collect($taskData['recommended_punishments'])
-                    ->map(fn($punishmentId) => $punishments[$punishmentId] ?? null)
+                    ->map(fn($punishmentId) => $outcomes['punishment_' . $punishmentId] ?? null)
                     ->filter()
-                    ->map(fn($punishment) => $punishment->id)
+                    ->map(fn($outcome) => $outcome->id)
                     ->toArray();
 
                 if (!empty($punishmentIds)) {

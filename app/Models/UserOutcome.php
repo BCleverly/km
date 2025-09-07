@@ -5,13 +5,11 @@ declare(strict_types=1);
 namespace App\Models;
 
 use App\Models\Tasks\Task;
-use App\Models\Tasks\TaskReward;
-use App\Models\Tasks\TaskPunishment;
+use App\Models\Tasks\Outcome;
 use App\Models\Tasks\UserAssignedTask;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\MorphTo;
 
 class UserOutcome extends Model
 {
@@ -20,7 +18,6 @@ class UserOutcome extends Model
     protected $fillable = [
         'user_id',
         'outcome_id',
-        'outcome_type',
         'task_id',
         'user_assigned_task_id',
         'status',
@@ -48,11 +45,11 @@ class UserOutcome extends Model
     }
 
     /**
-     * Get the polymorphic outcome (reward or punishment)
+     * Get the outcome (reward or punishment)
      */
-    public function outcome(): MorphTo
+    public function outcome(): BelongsTo
     {
-        return $this->morphTo();
+        return $this->belongsTo(Outcome::class);
     }
 
     /**
@@ -157,7 +154,22 @@ class UserOutcome extends Model
      */
     public function getOutcomeTypeLabelAttribute(): string
     {
-        $outcomeType = $this->attributes['outcome_type'] ?? null;
-        return $outcomeType === 'App\\Models\\Tasks\\TaskReward' ? 'reward' : 'punishment';
+        return $this->outcome?->intended_type ?? 'unknown';
+    }
+
+    /**
+     * Check if this outcome is intended as a reward
+     */
+    public function isReward(): bool
+    {
+        return $this->outcome?->isIntendedAsReward() ?? false;
+    }
+
+    /**
+     * Check if this outcome is intended as a punishment
+     */
+    public function isPunishment(): bool
+    {
+        return $this->outcome?->isIntendedAsPunishment() ?? false;
     }
 }
