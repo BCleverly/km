@@ -28,6 +28,7 @@ class User extends Authenticatable implements HasPassKeys
         'name',
         'email',
         'password',
+        'user_type',
     ];
 
     /**
@@ -50,6 +51,7 @@ class User extends Authenticatable implements HasPassKeys
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'user_type' => \App\TargetUserType::class,
         ];
     }
 
