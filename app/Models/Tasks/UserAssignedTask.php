@@ -28,6 +28,7 @@ class UserAssignedTask extends Model
         'potential_reward_id',
         'potential_punishment_id',
         'assigned_at',
+        'deadline_at',
         'completed_at',
     ];
 
@@ -36,6 +37,7 @@ class UserAssignedTask extends Model
         return [
             'status' => TaskStatus::class,
             'assigned_at' => 'datetime',
+            'deadline_at' => 'datetime',
             'completed_at' => 'datetime',
         ];
     }
@@ -83,5 +85,60 @@ class UserAssignedTask extends Model
         }
         
         return $this->belongsTo(Outcome::class, 'potential_reward_id');
+    }
+
+    /**
+     * Check if this task has passed its deadline.
+     */
+    public function isOverdue(): bool
+    {
+        return $this->deadline_at && $this->deadline_at->isPast() && $this->status === TaskStatus::Assigned;
+    }
+
+    /**
+     * Check if this task is approaching its deadline (within 1 hour).
+     */
+    public function isApproachingDeadline(): bool
+    {
+        if (!$this->deadline_at || $this->status !== TaskStatus::Assigned) {
+            return false;
+        }
+
+        return $this->deadline_at->isFuture() && $this->deadline_at->diffInMinutes(now()) <= 60;
+    }
+
+    /**
+     * Get the time remaining until deadline.
+     */
+    public function getTimeRemainingAttribute(): ?string
+    {
+        if (!$this->deadline_at || $this->status !== TaskStatus::Assigned) {
+            return null;
+        }
+
+        if ($this->deadline_at->isPast()) {
+            return 'Overdue';
+        }
+
+        return $this->deadline_at->diffForHumans();
+    }
+
+    /**
+     * Scope to get overdue tasks.
+     */
+    public function scopeOverdue($query)
+    {
+        return $query->where('deadline_at', '<', now())
+                    ->where('status', TaskStatus::Assigned);
+    }
+
+    /**
+     * Scope to get tasks approaching deadline.
+     */
+    public function scopeApproachingDeadline($query)
+    {
+        return $query->where('deadline_at', '>', now())
+                    ->where('deadline_at', '<=', now()->addHour())
+                    ->where('status', TaskStatus::Assigned);
     }
 }

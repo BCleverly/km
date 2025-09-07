@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace App\Models\Tasks;
 
 use App\ContentStatus;
-use App\TargetUserType;
 use App\Models\User;
+use App\TargetUserType;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -27,6 +27,8 @@ class Task extends Model
         'title',
         'description',
         'difficulty_level',
+        'duration_time',
+        'duration_type',
         'target_user_type',
         'user_id',
         'status',
@@ -38,6 +40,7 @@ class Task extends Model
     {
         return [
             'difficulty_level' => 'integer',
+            'duration_time' => 'integer',
             'target_user_type' => TargetUserType::class,
             'status' => ContentStatus::class,
             'view_count' => 'integer',
@@ -102,5 +105,60 @@ class Task extends Model
     public function scopeForUserType($query, TargetUserType $userType)
     {
         return $query->where('target_user_type', $userType);
+    }
+
+    /**
+     * Calculate the deadline for this task based on when it was assigned.
+     */
+    public function calculateDeadline(?\DateTimeInterface $assignedAt = null): \DateTimeInterface
+    {
+        $assignedAt = $assignedAt ?? now();
+
+        return match ($this->duration_type) {
+            'minutes' => $assignedAt->addMinutes($this->duration_time),
+            'hours' => $assignedAt->addHours($this->duration_time),
+            'days' => $assignedAt->addDays($this->duration_time),
+            'weeks' => $assignedAt->addWeeks($this->duration_time),
+            default => $assignedAt->addHours($this->duration_time), // Default to hours
+        };
+    }
+
+    /**
+     * Get the duration in a human-readable format.
+     */
+    public function getDurationDisplayAttribute(): string
+    {
+        $time = $this->duration_time;
+        $type = $this->duration_type;
+
+        // Handle pluralization
+        if ($time > 1) {
+            $type = match ($type) {
+                'minutes' => 'minutes',
+                'hours' => 'hours',
+                'days' => 'days',
+                'weeks' => 'weeks',
+                default => 'hours',
+            };
+        } else {
+            $type = match ($type) {
+                'minutes' => 'minute',
+                'hours' => 'hour',
+                'days' => 'day',
+                'weeks' => 'week',
+                default => 'hour',
+            };
+        }
+
+        return "{$time} {$type}";
+    }
+
+    /**
+     * Check if the task has a valid duration configuration.
+     */
+    public function hasValidDuration(): bool
+    {
+        return in_array($this->duration_type, ['minutes', 'hours', 'days', 'weeks'])
+            && $this->duration_time > 0;
     }
 }

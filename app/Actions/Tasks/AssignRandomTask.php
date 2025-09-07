@@ -4,15 +4,15 @@ declare(strict_types=1);
 
 namespace App\Actions\Tasks;
 
-use App\Models\User;
-use App\Models\Tasks\Task;
-use App\Models\Tasks\Outcome;
-use App\Models\Tasks\UserAssignedTask;
-use App\Models\Tasks\TaskActivity;
-use App\TaskStatus;
 use App\ContentStatus;
+use App\Models\Tasks\Outcome;
+use App\Models\Tasks\Task;
+use App\Models\Tasks\TaskActivity;
+use App\Models\Tasks\UserAssignedTask;
+use App\Models\User;
 use App\TargetUserType;
 use App\TaskActivityType;
+use App\TaskStatus;
 use Lorisleiva\Actions\Concerns\AsAction;
 
 class AssignRandomTask
@@ -25,7 +25,7 @@ class AssignRandomTask
         $existingActiveTask = UserAssignedTask::where('user_id', $user->id)
             ->where('status', TaskStatus::Assigned)
             ->first();
-            
+
         if ($existingActiveTask) {
             return [
                 'success' => false,
@@ -36,8 +36,8 @@ class AssignRandomTask
 
         // Get a random task suitable for the user
         $randomTask = $this->getRandomTaskForUser($user);
-        
-        if (!$randomTask) {
+
+        if (! $randomTask) {
             return [
                 'success' => false,
                 'message' => 'No available tasks found. Try again later or create your own!',
@@ -49,6 +49,10 @@ class AssignRandomTask
         $reward = $this->getRandomOutcomeForUser($user, 'reward');
         $punishment = $this->getRandomOutcomeForUser($user, 'punishment');
 
+        // Calculate deadline based on task duration
+        $assignedAt = now();
+        $deadlineAt = $randomTask->calculateDeadline($assignedAt);
+
         // Create the assigned task
         $assignedTask = UserAssignedTask::create([
             'user_id' => $user->id,
@@ -56,7 +60,8 @@ class AssignRandomTask
             'status' => TaskStatus::Assigned,
             'potential_reward_id' => $reward?->id,
             'potential_punishment_id' => $punishment?->id,
-            'assigned_at' => now(),
+            'assigned_at' => $assignedAt,
+            'deadline_at' => $deadlineAt,
         ]);
 
         // Log the activity
@@ -65,7 +70,7 @@ class AssignRandomTask
             user: $user,
             task: $randomTask,
             title: "Assigned random task: {$randomTask->title}",
-            description: "You were assigned a random task with difficulty level {$randomTask->difficulty_level}."
+            description: "You were assigned a random task with difficulty level {$randomTask->difficulty_level}. You have {$randomTask->duration_display} to complete it by {$deadlineAt->format('M j, Y g:i A')}."
         );
 
         return [
@@ -78,16 +83,16 @@ class AssignRandomTask
     private function getRandomTaskForUser(User $user): ?Task
     {
         $userType = $user->profile?->user_type ?? 'any';
-        
+
         return Task::where('status', ContentStatus::Approved)
             ->where(function ($query) use ($userType) {
                 $query->where('target_user_type', TargetUserType::Any)
-                      ->orWhere('target_user_type', $userType);
+                    ->orWhere('target_user_type', $userType);
             })
             ->whereNotIn('id', function ($query) use ($user) {
                 $query->select('task_id')
-                      ->from('user_assigned_tasks')
-                      ->where('user_id', $user->id); // Exclude ALL previously assigned tasks
+                    ->from('user_assigned_tasks')
+                    ->where('user_id', $user->id); // Exclude ALL previously assigned tasks
             })
             ->inRandomOrder()
             ->first();
@@ -96,12 +101,12 @@ class AssignRandomTask
     private function getRandomOutcomeForUser(User $user, string $intendedType): ?Outcome
     {
         $userType = $user->profile?->user_type ?? 'any';
-        
+
         return Outcome::where('status', ContentStatus::Approved)
             ->where('intended_type', $intendedType)
             ->where(function ($query) use ($userType) {
                 $query->where('target_user_type', TargetUserType::Any)
-                      ->orWhere('target_user_type', $userType);
+                    ->orWhere('target_user_type', $userType);
             })
             ->inRandomOrder()
             ->first();

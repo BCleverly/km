@@ -66,6 +66,7 @@ class CompleteTask
             UserOutcome::create([
                 'user_id' => $user->id,
                 'outcome_id' => $activeTask->potentialReward->id,
+                'outcome_type' => 'reward',
                 'task_id' => $activeTask->task->id,
                 'user_assigned_task_id' => $activeTask->id,
                 'status' => 'active',

@@ -26,10 +26,24 @@ class TaskFactory extends Factory
      */
     public function definition(): array
     {
+        $durationTypes = ['minutes', 'hours', 'days', 'weeks'];
+        $durationType = fake()->randomElement($durationTypes);
+        
+        // Set reasonable duration times based on type
+        $durationTime = match ($durationType) {
+            'minutes' => fake()->numberBetween(15, 120), // 15 minutes to 2 hours
+            'hours' => fake()->numberBetween(1, 48),     // 1 hour to 2 days
+            'days' => fake()->numberBetween(1, 7),       // 1 to 7 days
+            'weeks' => fake()->numberBetween(1, 4),      // 1 to 4 weeks
+            default => fake()->numberBetween(1, 24),     // Default to hours
+        };
+
         return [
             'title' => fake()->sentence(4),
             'description' => fake()->paragraph(3),
             'difficulty_level' => fake()->numberBetween(1, 10),
+            'duration_time' => $durationTime,
+            'duration_type' => $durationType,
             'target_user_type' => fake()->randomElement(TargetUserType::cases()),
             'user_id' => User::factory(),
             'status' => ContentStatus::Approved,
@@ -75,6 +89,50 @@ class TaskFactory extends Factory
     {
         return $this->state(fn (array $attributes) => [
             'target_user_type' => $userType,
+        ]);
+    }
+
+    /**
+     * Create a quick task (minutes)
+     */
+    public function quick(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'duration_time' => fake()->numberBetween(15, 60),
+            'duration_type' => 'minutes',
+        ]);
+    }
+
+    /**
+     * Create a short task (hours)
+     */
+    public function short(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'duration_time' => fake()->numberBetween(1, 12),
+            'duration_type' => 'hours',
+        ]);
+    }
+
+    /**
+     * Create a long task (days)
+     */
+    public function long(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'duration_time' => fake()->numberBetween(3, 14),
+            'duration_type' => 'days',
+        ]);
+    }
+
+    /**
+     * Create a very long task (weeks)
+     */
+    public function veryLong(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'duration_time' => fake()->numberBetween(1, 4),
+            'duration_type' => 'weeks',
         ]);
     }
 }

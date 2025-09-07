@@ -37,9 +37,44 @@
                     <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-3">
                         {{ $activeTask->task->title }}
                     </h3>
-                    <p class="text-gray-600 dark:text-gray-300 leading-relaxed">
+                    <p class="text-gray-600 dark:text-gray-300 leading-relaxed mb-4">
                         {{ $activeTask->task->description }}
                     </p>
+                    
+                    {{-- Task Deadline --}}
+                    @if($activeTask->deadline_at)
+                        <div class="flex items-center gap-3 p-4 rounded-lg @if($activeTask->isOverdue()) bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 @elseif($activeTask->isApproachingDeadline()) bg-orange-50 dark:bg-orange-900/20 border border-orange-200 dark:border-orange-800 @else bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 @endif">
+                            <div class="flex-shrink-0">
+                                @if($activeTask->isOverdue())
+                                    <svg class="w-6 h-6 text-red-600 dark:text-red-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z" />
+                                    </svg>
+                                @elseif($activeTask->isApproachingDeadline())
+                                    <svg class="w-6 h-6 text-orange-600 dark:text-orange-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                    </svg>
+                                @else
+                                    <svg class="w-6 h-6 text-blue-600 dark:text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                    </svg>
+                                @endif
+                            </div>
+                            <div class="flex-1">
+                                <p class="text-sm font-semibold @if($activeTask->isOverdue()) text-red-900 dark:text-red-100 @elseif($activeTask->isApproachingDeadline()) text-orange-900 dark:text-orange-100 @else text-blue-900 dark:text-blue-100 @endif">
+                                    Must be completed by: {{ $activeTask->deadline_at->format('M j, Y \a\t g:i A') }}
+                                </p>
+                                <p class="text-sm @if($activeTask->isOverdue()) text-red-700 dark:text-red-300 @elseif($activeTask->isApproachingDeadline()) text-orange-700 dark:text-orange-300 @else text-blue-700 dark:text-blue-300 @endif">
+                                    @if($activeTask->isOverdue())
+                                        <span class="font-medium">⚠️ Task is overdue! Complete it now to avoid automatic failure.</span>
+                                    @elseif($activeTask->isApproachingDeadline())
+                                        <span class="font-medium">⏰ Due soon! {{ $activeTask->time_remaining }}</span>
+                                    @else
+                                        <span>Time remaining: {{ $activeTask->time_remaining }}</span>
+                                    @endif
+                                </p>
+                            </div>
+                        </div>
+                    @endif
                 </div>
 
                 {{-- Potential Outcomes --}}
@@ -157,21 +192,20 @@
                         </span>
                     </button>
                     
-                    <button 
-                        @disabled($remainingSlots <= 0)
+                    <a 
+                        href="{{ route('app.tasks.create') }}"
+                        wire:navigate
                         @class([
-                            'text-white font-medium py-3 px-8 rounded-lg transition-colors duration-200 shadow-sm',
-                            'bg-gray-400 cursor-not-allowed opacity-60' => $remainingSlots <= 0,
+                            'inline-flex items-center gap-2 text-white font-medium py-3 px-8 rounded-lg transition-colors duration-200 shadow-sm',
+                            'bg-gray-400 cursor-not-allowed opacity-60 pointer-events-none' => $remainingSlots <= 0,
                             'bg-gray-600 hover:bg-gray-700 cursor-pointer hover:shadow-md' => $remainingSlots > 0,
                         ])
                     >
-                        <span class="flex items-center gap-2">
-                            <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z" />
-                            </svg>
-                            Create Custom Task
-                        </span>
-                    </button>
+                        <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z" />
+                        </svg>
+                        Create Custom Task
+                    </a>
                 </div>
             </div>
         @endif

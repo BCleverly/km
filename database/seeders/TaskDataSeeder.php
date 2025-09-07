@@ -110,11 +110,16 @@ class TaskDataSeeder extends Seeder
         $tasks = [];
 
         foreach ($tasksData as $index => $taskData) {
+            // Parse duration from the task data
+            $durationInfo = $this->parseDuration($taskData['duration']);
+
             // Create the task
             $task = Task::create([
                 'title' => $taskData['task'],
                 'description' => $this->generateTaskDescription($taskData),
                 'difficulty_level' => $this->calculateDifficultyFromDuration($taskData['duration']),
+                'duration_time' => $durationInfo['time'],
+                'duration_type' => $durationInfo['type'],
                 'target_user_type' => TargetUserType::Any, // Default to Any for imported data
                 'user_id' => $systemUser->id,
                 'status' => ContentStatus::Approved, // Imported data should be approved
@@ -191,6 +196,20 @@ class TaskDataSeeder extends Seeder
         $description .= "\n\nDuration: {$taskData['duration']} day(s)";
 
         return $description;
+    }
+
+    /**
+     * Parse duration string into time and type
+     */
+    private function parseDuration(int $duration): array
+    {
+        // The original data uses days, so we'll convert to appropriate units
+        return match (true) {
+            $duration <= 1 => ['time' => 24, 'type' => 'hours'],      // 1 day = 24 hours
+            $duration <= 3 => ['time' => $duration, 'type' => 'days'], // 2-3 days
+            $duration <= 7 => ['time' => $duration, 'type' => 'days'], // 4-7 days
+            default => ['time' => ceil($duration / 7), 'type' => 'weeks'], // Convert to weeks
+        };
     }
 
     /**

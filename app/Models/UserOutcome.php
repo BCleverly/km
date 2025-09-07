@@ -18,6 +18,7 @@ class UserOutcome extends Model
     protected $fillable = [
         'user_id',
         'outcome_id',
+        'outcome_type',
         'task_id',
         'user_assigned_task_id',
         'status',

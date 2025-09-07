@@ -7,6 +7,7 @@ use App\Livewire\Auth\ResetPassword;
 use App\Livewire\Dashboard;
 use App\Livewire\Homepage;
 use App\Livewire\Tasks\Dashboard as TasksDashboard;
+use App\Livewire\Tasks\CreateCustomTask;
 use App\Livewire\User\Profile;
 use Illuminate\Support\Facades\Route;
 
@@ -32,4 +33,5 @@ Route::middleware('auth')->prefix('app')->name('app.')->group(function () {
     
     // Tasks
     Route::get('/tasks', TasksDashboard::class)->name('tasks');
+    Route::get('/tasks/create', CreateCustomTask::class)->name('tasks.create');
 });
