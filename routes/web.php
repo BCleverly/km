@@ -19,7 +19,7 @@ Route::get('/', Homepage::class);
 Route::middleware('guest')->group(function () {
     Route::get('/login', Login::class)->name('login');
     Route::get('/register', Register::class)->name('register');
-    
+
     // Password Reset Routes
     Route::get('/forgot-password', ForgotPassword::class)->name('password.request');
     Route::get('/reset-password/{token}', ResetPassword::class)->name('password.reset');
@@ -30,8 +30,10 @@ Route::middleware('auth')->prefix('app')->name('app.')->group(function () {
     // Dashboard
     Route::get('/dashboard', Dashboard::class)->name('dashboard');
     Route::get('/profile', Profile::class)->name('profile');
-    
+
     // Tasks
     Route::get('/tasks', TasksDashboard::class)->name('tasks');
     Route::get('/tasks/create', CreateCustomTask::class)->name('tasks.create');
+
+    Route::get('/tasks/community', \App\Livewire\Tasks\TaskCommunityDashboard::class)->name('tasks.community');
 });

@@ -43,7 +43,7 @@
               <li>
                 <ul role="list" class="-mx-2 space-y-2">
                   <li>
-                    <a href="{{ route('app.dashboard') }}" 
+                    <a href="{{ route('app.dashboard') }}"
                        wire:navigate
                        @class([
                          'group flex gap-x-3 rounded-md p-3 text-base font-semibold leading-relaxed',
@@ -57,7 +57,7 @@
                     </a>
                   </li>
                   <li>
-                    <a href="{{ route('app.tasks') }}" 
+                    <a href="{{ route('app.tasks') }}"
                        wire:navigate
                        @class([
                          'group flex gap-x-3 rounded-md p-3 text-base font-semibold leading-relaxed',
@@ -71,7 +71,7 @@
                     </a>
                   </li>
                   <li>
-                    <a href="#" 
+                    <a href="#"
                        wire:navigate
                        @class([
                          'group flex gap-x-3 rounded-md p-3 text-base font-semibold leading-relaxed',
@@ -85,7 +85,7 @@
                     </a>
                   </li>
                   <li>
-                    <a href="#" 
+                    <a href="#"
                        wire:navigate
                        @class([
                          'group flex gap-x-3 rounded-md p-3 text-base font-semibold leading-relaxed',
@@ -101,31 +101,18 @@
                 </ul>
               </li>
               <li>
-                <div class="text-sm font-semibold text-red-100 dark:text-red-100/90 uppercase tracking-wide mb-3">Your teams</div>
+                <div class="text-sm font-semibold text-red-100 dark:text-red-100/90 uppercase tracking-wide mb-3">Community</div>
                 <ul role="list" class="-mx-2 mt-2 space-y-1">
                   <li>
-                    <!-- Current: "bg-red-600 dark:bg-red-800/20 text-white", Default: "text-red-200 dark:text-red-200/80 hover:text-white hover:bg-red-600 dark:hover:bg-red-700/25" -->
-                    <a href="#" class="group flex gap-x-3 rounded-md p-3 text-base font-semibold text-red-100 hover:bg-red-600 hover:text-white dark:text-red-100/90 dark:hover:bg-red-700/25 leading-relaxed transition-colors duration-200">
-                      <span class="flex size-6 shrink-0 items-center justify-center rounded-lg border border-red-400 bg-red-500 text-[0.625rem] font-medium text-white dark:border-red-600/30 dark:bg-red-900/30">H</span>
-                      <span class="truncate">Heroicons</span>
-                    </a>
-                  </li>
-                  <li>
-                    <a href="#" class="group flex gap-x-3 rounded-md p-3 text-base font-semibold text-red-100 hover:bg-red-600 hover:text-white dark:text-red-100/90 dark:hover:bg-red-700/25 leading-relaxed transition-colors duration-200">
+                    <a href="{{ route('app.tasks.community') }}" wire:navigate class="group flex gap-x-3 rounded-md p-3 text-base font-semibold text-red-100 hover:bg-red-600 hover:text-white dark:text-red-100/90 dark:hover:bg-red-700/25 leading-relaxed transition-colors duration-200">
                       <span class="flex size-6 shrink-0 items-center justify-center rounded-lg border border-red-400 bg-red-500 text-[0.625rem] font-medium text-white dark:border-red-600/30 dark:bg-red-900/30">T</span>
-                      <span class="truncate">Tailwind Labs</span>
-                    </a>
-                  </li>
-                  <li>
-                    <a href="#" class="group flex gap-x-3 rounded-md p-3 text-base font-semibold text-red-100 hover:bg-red-600 hover:text-white dark:text-red-100/90 dark:hover:bg-red-700/25 leading-relaxed transition-colors duration-200">
-                      <span class="flex size-6 shrink-0 items-center justify-center rounded-lg border border-red-400 bg-red-500 text-[0.625rem] font-medium text-white dark:border-red-600/30 dark:bg-red-900/30">W</span>
-                      <span class="truncate">Workcation</span>
+                      <span class="truncate">Task Community</span>
                     </a>
                   </li>
                 </ul>
               </li>
               <li class="mt-auto">
-                <a href="#" 
+                <a href="#"
                    wire:navigate
                    @class([
                      'group -mx-2 flex gap-x-3 rounded-md p-3 text-base font-semibold leading-relaxed',
@@ -159,7 +146,7 @@
         <li>
           <ul role="list" class="-mx-2 space-y-1">
             <li>
-              <a href="{{ route('app.dashboard') }}" 
+              <a href="{{ route('app.dashboard') }}"
                  wire:navigate
                  @class([
                    'group flex gap-x-3 rounded-md p-2 text-sm/6 font-semibold',
@@ -173,7 +160,7 @@
               </a>
             </li>
             <li>
-              <a href="{{ route('app.tasks') }}" 
+              <a href="{{ route('app.tasks') }}"
                  wire:navigate
                  @class([
                    'group flex gap-x-3 rounded-md p-2 text-sm/6 font-semibold',
@@ -187,7 +174,7 @@
               </a>
             </li>
             <li>
-              <a href="#" 
+              <a href="#"
                  wire:navigate
                  @class([
                    'group flex gap-x-3 rounded-md p-2 text-sm/6 font-semibold',
@@ -201,7 +188,7 @@
               </a>
             </li>
             <li>
-              <a href="#" 
+              <a href="#"
                  wire:navigate
                  @class([
                    'group flex gap-x-3 rounded-md p-2 text-sm/6 font-semibold',
@@ -217,31 +204,18 @@
           </ul>
         </li>
         <li>
-          <div class="text-xs/6 font-semibold text-red-200 dark:text-red-200/80">Your teams</div>
+          <div class="text-xs/6 font-semibold text-red-200 dark:text-red-200/80">Community</div>
           <ul role="list" class="-mx-2 mt-2 space-y-1">
             <li>
-              <!-- Current: "bg-red-600 dark:bg-red-800/20 text-white", Default: "text-red-200 dark:text-red-200/80 hover:text-white hover:bg-red-600 dark:hover:bg-red-700/25" -->
-                    <a href="#" class="group flex gap-x-3 rounded-md p-3 text-base font-semibold text-red-100 hover:bg-red-600 hover:text-white dark:text-red-100/90 dark:hover:bg-red-700/25 leading-relaxed transition-colors duration-200">
-                <span class="flex size-6 shrink-0 items-center justify-center rounded-lg border border-red-400 bg-red-500 text-[0.625rem] font-medium text-white dark:border-red-600/30 dark:bg-red-900/30">H</span>
-                <span class="truncate">Heroicons</span>
-              </a>
-            </li>
-            <li>
-                    <a href="#" class="group flex gap-x-3 rounded-md p-3 text-base font-semibold text-red-100 hover:bg-red-600 hover:text-white dark:text-red-100/90 dark:hover:bg-red-700/25 leading-relaxed transition-colors duration-200">
+              <a href="{{ route('app.tasks.community') }}" wire:navigate class="group flex gap-x-3 rounded-md p-3 text-base font-semibold text-red-100 hover:bg-red-600 hover:text-white dark:text-red-100/90 dark:hover:bg-red-700/25 leading-relaxed transition-colors duration-200">
                 <span class="flex size-6 shrink-0 items-center justify-center rounded-lg border border-red-400 bg-red-500 text-[0.625rem] font-medium text-white dark:border-red-600/30 dark:bg-red-900/30">T</span>
-                <span class="truncate">Tailwind Labs</span>
-              </a>
-            </li>
-            <li>
-                    <a href="#" class="group flex gap-x-3 rounded-md p-3 text-base font-semibold text-red-100 hover:bg-red-600 hover:text-white dark:text-red-100/90 dark:hover:bg-red-700/25 leading-relaxed transition-colors duration-200">
-                <span class="flex size-6 shrink-0 items-center justify-center rounded-lg border border-red-400 bg-red-500 text-[0.625rem] font-medium text-white dark:border-red-600/30 dark:bg-red-900/30">W</span>
-                <span class="truncate">Workcation</span>
+                <span class="truncate">Task Community</span>
               </a>
             </li>
           </ul>
         </li>
         <li class="mt-auto">
-          <a href="#" 
+          <a href="#"
              wire:navigate
              @class([
                'group -mx-2 flex gap-x-3 rounded-md p-2 text-sm/6 font-semibold',
@@ -306,9 +280,9 @@
               </svg>
             </span>
           </button>
-          
+
           <!-- Dropdown menu -->
-          <div x-show="open" 
+          <div x-show="open"
                x-cloak
                x-transition:enter="transition ease-out duration-100"
                x-transition:enter-start="transform opacity-0 scale-95"
@@ -317,9 +291,9 @@
                x-transition:leave-start="transform opacity-100 scale-100"
                x-transition:leave-end="transform opacity-0 scale-95"
                class="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none dark:bg-gray-800 dark:ring-white/10"
-               role="menu" 
-               aria-orientation="vertical" 
-               aria-labelledby="user-menu-button" 
+               role="menu"
+               aria-orientation="vertical"
+               aria-labelledby="user-menu-button"
                tabindex="-1">
             <a href="{{ route('app.profile') }}" wire:navigate class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700 cursor-pointer transition-colors" role="menuitem" tabindex="-1">Your profile</a>
             <a href="#" wire:navigate class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700 cursor-pointer transition-colors" role="menuitem" tabindex="-1">Settings</a>
@@ -337,6 +311,6 @@
   </main>
 </div>
 
-        
+
     </body>
 </html>
