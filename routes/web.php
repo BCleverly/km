@@ -8,10 +8,15 @@ use App\Livewire\Dashboard;
 use App\Livewire\Homepage;
 use App\Livewire\Tasks\Dashboard as TasksDashboard;
 use App\Livewire\Tasks\CreateCustomTask;
+use App\Livewire\Subscriptions\SubscriptionManager;
 use App\Livewire\User\Profile;
 use Illuminate\Support\Facades\Route;
 
 Route::passkeys();
+
+// Stripe Webhooks
+Route::post('/stripe/webhook', \App\Http\Controllers\Webhooks\StripeWebhookController::class)
+    ->name('stripe.webhook');
 
 Route::get('/', Homepage::class);
 
@@ -36,4 +41,7 @@ Route::middleware('auth')->prefix('app')->name('app.')->group(function () {
     Route::get('/tasks/create', CreateCustomTask::class)->name('tasks.create');
 
     Route::get('/tasks/community', \App\Livewire\Tasks\TaskCommunityDashboard::class)->name('tasks.community');
+
+    // Subscriptions
+    Route::get('/subscription', SubscriptionManager::class)->name('subscription');
 });
