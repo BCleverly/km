@@ -1,0 +1,287 @@
+---
+description: PHP enum usage patterns and best practices for the Kink Master platform
+globs: app/*.php,app/Models/*.php,app/Models/**/*.php
+---
+
+# PHP Enum Patterns & Best Practices
+
+## Enum Usage in Kink Master
+
+This project uses PHP enums extensively for type safety and business logic. All enums follow consistent patterns and are used with Laravel model casts.
+
+## Core Enums
+
+### TargetUserType Enum
+Located in [app/TargetUserType.php](mdc:app/TargetUserType.php)
+
+```php
+enum TargetUserType: int
+{
+    case Male = 1;
+    case Female = 2;
+    case Couple = 3;
+    case Any = 4;
+
+    public function label(): string
+    {
+        return match($this) {
+            self::Male => 'Male',
+            self::Female => 'Female',
+            self::Couple => 'Couple',
+            self::Any => 'Anyone',
+        };
+    }
+
+    public function description(): string
+    {
+        return match($this) {
+            self::Male => 'For individual male users',
+            self::Female => 'For individual female users',
+            self::Couple => 'For couple accounts',
+            self::Any => 'For all user types',
+        };
+    }
+}
+```
+
+### ContentStatus Enum
+Located in [app/ContentStatus.php](mdc:app/ContentStatus.php)
+
+```php
+enum ContentStatus: int
+{
+    case Pending = 1;
+    case Approved = 2;
+    case InReview = 3;
+    case Rejected = 4;
+
+    public function label(): string
+    {
+        return match($this) {
+            self::Pending => 'Pending Review',
+            self::Approved => 'Approved',
+            self::InReview => 'Under Review',
+            self::Rejected => 'Rejected',
+        };
+    }
+
+    public function color(): string
+    {
+        return match($this) {
+            self::Pending => 'yellow',
+            self::Approved => 'green',
+            self::InReview => 'orange',
+            self::Rejected => 'red',
+        };
+    }
+
+    public function isVisible(): bool
+    {
+        return $this === self::Approved;
+    }
+}
+```
+
+## Enum Best Practices
+
+### 1. Always Use Integer Backing Types
+- Use `enum EnumName: int` for database storage
+- Integer values are more efficient and database-friendly
+- Avoid string enums unless absolutely necessary
+
+### 2. Consistent Method Patterns
+Every enum should include:
+- `label()` - Human-readable display name
+- `description()` - Detailed explanation (optional)
+- `color()` - UI color mapping (for status enums)
+- Business logic methods (e.g., `isVisible()`, `isActive()`)
+
+### 3. Model Casting
+Always cast enum fields in models:
+
+```php
+protected function casts(): array
+{
+    return [
+        'user_type' => TargetUserType::class,
+        'status' => ContentStatus::class,
+    ];
+}
+```
+
+### 4. Database Migration Pattern
+Use integer columns with meaningful default values:
+
+```php
+$table->integer('target_user_type')->default(4); // 4 = Any
+$table->integer('status')->default(1); // 1 = Pending
+```
+
+### 5. Query Scopes
+Create query scopes for common enum filtering:
+
+```php
+public function scopeApproved($query)
+{
+    return $query->where('status', ContentStatus::Approved);
+}
+
+public function scopeForUserType($query, TargetUserType $userType)
+{
+    return $query->where('target_user_type', $userType);
+}
+```
+
+### 6. Validation Rules
+Use enum validation in form requests:
+
+```php
+public function rules(): array
+{
+    return [
+        'user_type' => ['required', Rule::enum(TargetUserType::class)],
+        'status' => ['required', Rule::enum(ContentStatus::class)],
+    ];
+}
+```
+
+### 7. Filament Integration
+Use enums in Filament resources:
+
+```php
+Forms\Components\Select::make('user_type')
+    ->options(TargetUserType::class)
+    ->required(),
+
+Tables\Columns\TextColumn::make('status')
+    ->badge()
+    ->color(fn (ContentStatus $state): string => $state->color()),
+```
+
+### 8. Blade Template Usage
+Use enum methods in Blade templates:
+
+```blade
+<span class="badge badge-{{ $task->status->color() }}">
+    {{ $task->status->label() }}
+</span>
+
+@if($task->status->isVisible())
+    <!-- Show content -->
+@endif
+```
+
+## Creating New Enums
+
+### Template for New Enums
+```php
+<?php
+
+declare(strict_types=1);
+
+namespace App;
+
+enum NewEnum: int
+{
+    case Value1 = 1;
+    case Value2 = 2;
+    case Value3 = 3;
+
+    public function label(): string
+    {
+        return match($this) {
+            self::Value1 => 'Value 1',
+            self::Value2 => 'Value 2',
+            self::Value3 => 'Value 3',
+        };
+    }
+
+    public function description(): string
+    {
+        return match($this) {
+            self::Value1 => 'Description for value 1',
+            self::Value2 => 'Description for value 2',
+            self::Value3 => 'Description for value 3',
+        };
+    }
+
+    // Add business logic methods as needed
+    public function isActive(): bool
+    {
+        return $this === self::Value1 || $this === self::Value2;
+    }
+}
+```
+
+### Steps for Adding New Enums
+1. Create enum file in `app/` directory
+2. Add database migration with integer column
+3. Add cast to relevant model(s)
+4. Create query scopes if needed
+5. Add validation rules
+6. Update Filament resources
+7. Add tests for enum functionality
+
+## Common Enum Patterns
+
+### Status Enums
+Always include these methods:
+- `label()` - Display name
+- `color()` - UI color
+- `isActive()` or `isVisible()` - Business logic
+
+### Type Enums
+Always include:
+- `label()` - Display name
+- `description()` - Detailed explanation
+- Business logic methods as needed
+
+### Validation Patterns
+```php
+// In form requests
+'field' => ['required', Rule::enum(YourEnum::class)],
+
+// In controllers
+$enum = YourEnum::from($request->input('field'));
+```
+
+### Database Query Patterns
+```php
+// Using enum values directly
+Model::where('status', ContentStatus::Approved)->get();
+
+// Using query scopes
+Model::approved()->get();
+
+// Using enum methods
+Model::where('status', ContentStatus::Approved)->get();
+```
+
+## Testing Enums
+
+### Unit Tests for Enums
+```php
+it('returns correct label for each enum value', function () {
+    expect(TargetUserType::Male->label())->toBe('Male');
+    expect(TargetUserType::Female->label())->toBe('Female');
+    expect(TargetUserType::Couple->label())->toBe('Couple');
+    expect(TargetUserType::Any->label())->toBe('Anyone');
+});
+
+it('returns correct color for status enum', function () {
+    expect(ContentStatus::Pending->color())->toBe('yellow');
+    expect(ContentStatus::Approved->color())->toBe('green');
+    expect(ContentStatus::InReview->color())->toBe('orange');
+    expect(ContentStatus::Rejected->color())->toBe('red');
+});
+```
+
+### Integration Tests
+```php
+it('can cast enum values in models', function () {
+    $user = User::factory()->create(['user_type' => TargetUserType::Male]);
+    
+    expect($user->user_type)->toBeInstanceOf(TargetUserType::class);
+    expect($user->user_type)->toBe(TargetUserType::Male);
+});
+```

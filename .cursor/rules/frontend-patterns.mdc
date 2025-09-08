@@ -1,0 +1,541 @@
+---
+description: Tailwind CSS and frontend development patterns for the Kink Master platform
+globs: resources/views/**/*.blade.php,resources/css/**/*.css,resources/js/**/*.js
+---
+
+# Frontend Development Patterns & Best Practices
+
+## Frontend Architecture in Kink Master
+
+This project uses Tailwind CSS v4 for styling with a focus on clean, modern design inspired by Linear, Vercel, Craft, and Stripe dashboards. All frontend components follow consistent patterns for maintainability and user experience.
+
+## Design System
+
+### Color Palette
+```css
+/* Primary Colors */
+--primary-50: #eff6ff;
+--primary-500: #3b82f6;
+--primary-600: #2563eb;
+--primary-700: #1d4ed8;
+
+/* Success Colors */
+--success-50: #f0fdf4;
+--success-500: #22c55e;
+--success-600: #16a34a;
+
+/* Warning Colors */
+--warning-50: #fffbeb;
+--warning-500: #f59e0b;
+--warning-600: #d97706;
+
+/* Danger Colors */
+--danger-50: #fef2f2;
+--danger-500: #ef4444;
+--danger-600: #dc2626;
+
+/* Neutral Colors */
+--gray-50: #f9fafb;
+--gray-100: #f3f4f6;
+--gray-500: #6b7280;
+--gray-900: #111827;
+```
+
+### Typography Scale
+```css
+/* Headings */
+.text-4xl { font-size: 2.25rem; line-height: 2.5rem; }
+.text-3xl { font-size: 1.875rem; line-height: 2.25rem; }
+.text-2xl { font-size: 1.5rem; line-height: 2rem; }
+.text-xl { font-size: 1.25rem; line-height: 1.75rem; }
+.text-lg { font-size: 1.125rem; line-height: 1.75rem; }
+
+/* Body Text */
+.text-base { font-size: 1rem; line-height: 1.5rem; }
+.text-sm { font-size: 0.875rem; line-height: 1.25rem; }
+.text-xs { font-size: 0.75rem; line-height: 1rem; }
+```
+
+### Spacing System
+```css
+/* Consistent spacing scale */
+.space-1 { gap: 0.25rem; }
+.space-2 { gap: 0.5rem; }
+.space-4 { gap: 1rem; }
+.space-6 { gap: 1.5rem; }
+.space-8 { gap: 2rem; }
+.space-12 { gap: 3rem; }
+```
+
+## Component Patterns
+
+### Card Components
+```blade
+{{-- Basic Card --}}
+<div class="bg-white rounded-lg border border-gray-200 shadow-sm p-6">
+    <h3 class="text-lg font-semibold text-gray-900 mb-4">Card Title</h3>
+    <p class="text-gray-600">Card content goes here.</p>
+</div>
+
+{{-- Card with Actions --}}
+<div class="bg-white rounded-lg border border-gray-200 shadow-sm">
+    <div class="p-6">
+        <h3 class="text-lg font-semibold text-gray-900 mb-4">Task Details</h3>
+        <p class="text-gray-600 mb-4">Task description here.</p>
+    </div>
+    <div class="px-6 py-4 bg-gray-50 border-t border-gray-200 rounded-b-lg">
+        <div class="flex gap-3">
+            <button class="btn btn-primary">Complete</button>
+            <button class="btn btn-secondary">Fail</button>
+        </div>
+    </div>
+</div>
+
+{{-- Card Grid --}}
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    @foreach($tasks as $task)
+        <div class="bg-white rounded-lg border border-gray-200 shadow-sm p-6 hover:shadow-md transition-shadow">
+            <h3 class="text-lg font-semibold text-gray-900 mb-2">{{ $task->title }}</h3>
+            <p class="text-gray-600 text-sm mb-4">{{ Str::limit($task->description, 100) }}</p>
+            <div class="flex items-center justify-between">
+                <span class="badge badge-{{ $task->difficulty_level <= 3 ? 'success' : ($task->difficulty_level <= 6 ? 'warning' : 'danger') }}">
+                    Level {{ $task->difficulty_level }}
+                </span>
+                <button class="btn btn-sm btn-primary">View</button>
+            </div>
+        </div>
+    @endforeach
+</div>
+```
+
+### Button Components
+```blade
+{{-- Primary Button --}}
+<button class="btn btn-primary">
+    Primary Action
+</button>
+
+{{-- Secondary Button --}}
+<button class="btn btn-secondary">
+    Secondary Action
+</button>
+
+{{-- Danger Button --}}
+<button class="btn btn-danger">
+    Delete
+</button>
+
+{{-- Button with Icon --}}
+<button class="btn btn-primary">
+    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+    </svg>
+    Add Task
+</button>
+
+{{-- Button States --}}
+<button class="btn btn-primary" disabled>
+    <span wire:loading.remove wire:target="save">Save</span>
+    <span wire:loading wire:target="save">Saving...</span>
+</button>
+```
+
+### Form Components
+```blade
+{{-- Form Group --}}
+<div class="space-y-6">
+    <div>
+        <label for="title" class="block text-sm font-medium text-gray-700 mb-2">
+            Task Title
+        </label>
+        <input type="text" 
+               id="title" 
+               wire:model="form.title"
+               class="input @error('form.title') input-error @enderror"
+               placeholder="Enter task title">
+        @error('form.title')
+            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+        @enderror
+    </div>
+
+    <div>
+        <label for="description" class="block text-sm font-medium text-gray-700 mb-2">
+            Description
+        </label>
+        <textarea id="description" 
+                  wire:model="form.description"
+                  rows="4"
+                  class="textarea @error('form.description') textarea-error @enderror"
+                  placeholder="Enter task description"></textarea>
+        @error('form.description')
+            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+        @enderror
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div>
+            <label for="difficulty" class="block text-sm font-medium text-gray-700 mb-2">
+                Difficulty Level
+            </label>
+            <select id="difficulty" 
+                    wire:model="form.difficulty_level"
+                    class="select @error('form.difficulty_level') select-error @enderror">
+                @foreach(range(1, 10) as $level)
+                    <option value="{{ $level }}">Level {{ $level }}</option>
+                @endforeach
+            </select>
+        </div>
+
+        <div>
+            <label for="user_type" class="block text-sm font-medium text-gray-700 mb-2">
+                Target User Type
+            </label>
+            <select id="user_type" 
+                    wire:model="form.target_user_type"
+                    class="select @error('form.target_user_type') select-error @enderror">
+                @foreach(\App\TargetUserType::cases() as $type)
+                    <option value="{{ $type->value }}">{{ $type->label() }}</option>
+                @endforeach
+            </select>
+        </div>
+    </div>
+</div>
+```
+
+### Badge Components
+```blade
+{{-- Status Badges --}}
+<span class="badge badge-{{ $task->status->color() }}">
+    {{ $task->status->label() }}
+</span>
+
+{{-- Difficulty Badges --}}
+<span class="badge badge-{{ $task->difficulty_level <= 3 ? 'success' : ($task->difficulty_level <= 6 ? 'warning' : 'danger') }}">
+    Level {{ $task->difficulty_level }}
+</span>
+
+{{-- User Type Badges --}}
+<span class="badge badge-{{ match($task->target_user_type) {
+    \App\TargetUserType::Male => 'blue',
+    \App\TargetUserType::Female => 'pink',
+    \App\TargetUserType::Couple => 'purple',
+    \App\TargetUserType::Any => 'gray',
+} }}">
+    {{ $task->target_user_type->label() }}
+</span>
+```
+
+## Layout Patterns
+
+### Page Layout
+```blade
+{{-- Main Layout --}}
+<div class="min-h-screen bg-gray-50">
+    {{-- Header --}}
+    <header class="bg-white border-b border-gray-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center">
+                    <a href="/" class="text-xl font-bold text-gray-900">
+                        Kink Master
+                    </a>
+                </div>
+                <nav class="flex items-center space-x-4">
+                    <a href="/dashboard" class="text-gray-600 hover:text-gray-900">Dashboard</a>
+                    <a href="/tasks" class="text-gray-600 hover:text-gray-900">Tasks</a>
+                    <a href="/profile" class="text-gray-600 hover:text-gray-900">Profile</a>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    {{-- Main Content --}}
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {{ $slot }}
+    </main>
+</div>
+```
+
+### Dashboard Layout
+```blade
+{{-- Dashboard Grid --}}
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+    {{-- Main Content --}}
+    <div class="lg:col-span-2 space-y-6">
+        {{-- Current Task --}}
+        @if($user->hasActiveTask())
+            <div class="bg-white rounded-lg border border-gray-200 shadow-sm p-6">
+                <h2 class="text-xl font-semibold text-gray-900 mb-4">Current Task</h2>
+                <div class="space-y-4">
+                    <h3 class="text-lg font-medium text-gray-900">{{ $user->currentTask->title }}</h3>
+                    <p class="text-gray-600">{{ $user->currentTask->description }}</p>
+                    <div class="flex items-center gap-4">
+                        <span class="badge badge-{{ $user->currentTask->difficulty_level <= 3 ? 'success' : ($user->currentTask->difficulty_level <= 6 ? 'warning' : 'danger') }}">
+                            Level {{ $user->currentTask->difficulty_level }}
+                        </span>
+                        <span class="text-sm text-gray-500">
+                            Due: {{ $user->currentTask->deadline->format('M j, Y g:i A') }}
+                        </span>
+                    </div>
+                    <div class="flex gap-3 pt-4">
+                        <button wire:click="completeTask" class="btn btn-success">
+                            I Completed This
+                        </button>
+                        <button wire:click="failTask" class="btn btn-danger">
+                            I Failed This
+                        </button>
+                    </div>
+                </div>
+            </div>
+        @else
+            <div class="bg-white rounded-lg border border-gray-200 shadow-sm p-6 text-center">
+                <h2 class="text-xl font-semibold text-gray-900 mb-4">No Active Task</h2>
+                <p class="text-gray-600 mb-6">Ready for a new challenge?</p>
+                <button wire:click="requestNewTask" class="btn btn-primary">
+                    Get New Task
+                </button>
+            </div>
+        @endif
+    </div>
+
+    {{-- Sidebar --}}
+    <div class="space-y-6">
+        {{-- User Stats --}}
+        <div class="bg-white rounded-lg border border-gray-200 shadow-sm p-6">
+            <h3 class="text-lg font-semibold text-gray-900 mb-4">Your Stats</h3>
+            <div class="space-y-3">
+                <div class="flex justify-between">
+                    <span class="text-gray-600">Tasks Completed</span>
+                    <span class="font-medium">{{ $user->stats()->getCompletedTasksCount() }}</span>
+                </div>
+                <div class="flex justify-between">
+                    <span class="text-gray-600">Success Rate</span>
+                    <span class="font-medium">{{ number_format($user->stats()->getSuccessRate(), 1) }}%</span>
+                </div>
+            </div>
+        </div>
+
+        {{-- Recent Activity --}}
+        <div class="bg-white rounded-lg border border-gray-200 shadow-sm p-6">
+            <h3 class="text-lg font-semibold text-gray-900 mb-4">Recent Activity</h3>
+            <div class="space-y-3">
+                @foreach($user->recentTaskActivities(5) as $activity)
+                    <div class="flex items-center gap-3">
+                        <div class="w-2 h-2 bg-blue-500 rounded-full"></div>
+                        <div class="flex-1">
+                            <p class="text-sm text-gray-900">{{ $activity->title }}</p>
+                            <p class="text-xs text-gray-500">{{ $activity->activity_at->diffForHumans() }}</p>
+                        </div>
+                    </div>
+                @endforeach
+            </div>
+        </div>
+    </div>
+</div>
+```
+
+## Responsive Design Patterns
+
+### Mobile-First Approach
+```blade
+{{-- Responsive Grid --}}
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+    {{-- Content --}}
+</div>
+
+{{-- Responsive Text --}}
+<h1 class="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900">
+    Responsive Heading
+</h1>
+
+{{-- Responsive Spacing --}}
+<div class="p-4 sm:p-6 lg:p-8">
+    {{-- Content --}}
+</div>
+
+{{-- Responsive Navigation --}}
+<nav class="hidden md:flex items-center space-x-4">
+    {{-- Desktop Navigation --}}
+</nav>
+
+<button class="md:hidden">
+    {{-- Mobile Menu Button --}}
+</button>
+```
+
+### Breakpoint Usage
+```css
+/* Mobile First Breakpoints */
+/* sm: 640px */
+/* md: 768px */
+/* lg: 1024px */
+/* xl: 1280px */
+/* 2xl: 1536px */
+
+/* Example Usage */
+.responsive-card {
+    @apply p-4 sm:p-6 lg:p-8;
+    @apply text-sm sm:text-base lg:text-lg;
+    @apply grid-cols-1 sm:grid-cols-2 lg:grid-cols-3;
+}
+```
+
+## Dark Mode Support
+
+### Dark Mode Classes
+```blade
+{{-- Dark Mode Toggle --}}
+<button @click="darkMode = !darkMode" 
+        class="p-2 rounded-lg bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300">
+    <svg x-show="!darkMode" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path>
+    </svg>
+    <svg x-show="darkMode" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path>
+    </svg>
+</button>
+
+{{-- Dark Mode Components --}}
+<div class="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-lg p-6">
+    <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Card Title</h3>
+    <p class="text-gray-600 dark:text-gray-300">Card content with dark mode support.</p>
+</div>
+```
+
+## Animation and Transitions
+
+### Smooth Transitions
+```blade
+{{-- Hover Effects --}}
+<div class="bg-white rounded-lg border border-gray-200 shadow-sm p-6 hover:shadow-md transition-shadow duration-200">
+    {{-- Content --}}
+</div>
+
+{{-- Loading States --}}
+<div wire:loading wire:target="save" class="opacity-50 transition-opacity duration-200">
+    {{-- Content --}}
+</div>
+
+{{-- Alpine.js Transitions --}}
+<div x-show="isOpen" 
+     x-transition:enter="transition ease-out duration-200"
+     x-transition:enter-start="opacity-0 transform scale-95"
+     x-transition:enter-end="opacity-100 transform scale-100"
+     x-transition:leave="transition ease-in duration-150"
+     x-transition:leave-start="opacity-100 transform scale-100"
+     x-transition:leave-end="opacity-0 transform scale-95">
+    {{-- Content --}}
+</div>
+```
+
+## Utility Classes
+
+### Custom Utility Classes
+```css
+/* In resources/css/app.css */
+@layer utilities {
+    .btn {
+        @apply inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 transition-colors duration-200;
+    }
+    
+    .btn-primary {
+        @apply bg-blue-600 text-white hover:bg-blue-700 focus:ring-blue-500;
+    }
+    
+    .btn-secondary {
+        @apply bg-gray-600 text-white hover:bg-gray-700 focus:ring-gray-500;
+    }
+    
+    .btn-danger {
+        @apply bg-red-600 text-white hover:bg-red-700 focus:ring-red-500;
+    }
+    
+    .btn-success {
+        @apply bg-green-600 text-white hover:bg-green-700 focus:ring-green-500;
+    }
+    
+    .input {
+        @apply block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500;
+    }
+    
+    .input-error {
+        @apply border-red-300 focus:ring-red-500 focus:border-red-500;
+    }
+    
+    .badge {
+        @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium;
+    }
+    
+    .badge-success {
+        @apply bg-green-100 text-green-800;
+    }
+    
+    .badge-warning {
+        @apply bg-yellow-100 text-yellow-800;
+    }
+    
+    .badge-danger {
+        @apply bg-red-100 text-red-800;
+    }
+    
+    .badge-blue {
+        @apply bg-blue-100 text-blue-800;
+    }
+    
+    .badge-pink {
+        @apply bg-pink-100 text-pink-800;
+    }
+    
+    .badge-purple {
+        @apply bg-purple-100 text-purple-800;
+    }
+    
+    .badge-gray {
+        @apply bg-gray-100 text-gray-800;
+    }
+}
+```
+
+## Best Practices
+
+### 1. Design Consistency
+- Use consistent spacing with the spacing scale
+- Maintain consistent color usage across components
+- Follow the established typography hierarchy
+- Use consistent border radius and shadows
+
+### 2. Component Reusability
+- Create reusable component classes
+- Use consistent naming conventions
+- Build components that work across different contexts
+- Document component usage and variations
+
+### 3. Performance
+- Use utility classes over custom CSS when possible
+- Minimize custom CSS to reduce bundle size
+- Use efficient selectors and avoid deep nesting
+- Optimize images and assets
+
+### 4. Accessibility
+- Use semantic HTML elements
+- Provide proper contrast ratios
+- Include focus states for interactive elements
+- Use ARIA attributes where appropriate
+
+### 5. Responsive Design
+- Design mobile-first
+- Test across different screen sizes
+- Use responsive utilities consistently
+- Consider touch targets for mobile devices
+
+### 6. Dark Mode
+- Design with dark mode in mind from the start
+- Use consistent dark mode color schemes
+- Test dark mode across all components
+- Provide easy dark mode toggle
+
+### 7. Animation and Transitions
+- Use subtle, purposeful animations
+- Maintain consistent timing and easing
+- Avoid excessive motion for accessibility
+- Use transitions to enhance user experience
