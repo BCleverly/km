@@ -1,4 +1,5 @@
-<div x-data="{ activeTab: 'browse' }">
+<div x-data="{ activeTab: 'browse' }" 
+     x-on:switch-tab.window="activeTab = $event.detail.tab">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <!-- Header -->
         <div class="mb-8">
@@ -67,17 +68,17 @@
         <div>
             <!-- Browse Tab -->
             <div x-show="activeTab === 'browse'" x-transition>
-                @include('livewire.tasks.partials.browse-tasks')
+                <livewire:tasks.browse-tasks />
             </div>
 
             <!-- Submit Task Tab -->
             <div x-show="activeTab === 'submit-task'" x-transition>
-                @include('livewire.tasks.partials.submit-task')
+                <livewire:tasks.submit-task />
             </div>
 
             <!-- Submit Outcome Tab -->
             <div x-show="activeTab === 'submit-outcome'" x-transition>
-                @include('livewire.tasks.partials.submit-outcome')
+                <livewire:tasks.submit-outcome />
             </div>
         </div>
 

@@ -180,7 +180,7 @@
                         @class([
                             'text-white font-medium py-3 px-8 rounded-lg transition-colors duration-200 shadow-s',
                             'bg-gray-400 cursor-not-allowed opacity-60' => $remainingSlots <= 0,
-                            'bg-blue-600 hover:bg-blue-700 cursor-pointer hover:shadow-md' => $remainingSlots > 0,
+                            'bg-red-600 hover:bg-red-700 cursor-pointer hover:shadow-md' => $remainingSlots > 0,
                         ])
                     >
                         <span class="flex items-center gap-2">
@@ -477,7 +477,7 @@
 
                 {{-- View All Activities Link --}}
                 <div class="mt-6 text-center">
-                    <a href="#" class="text-sm text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 font-medium cursor-pointer transition-colors duration-200">
+                    <a href="#" class="text-sm text-red-600 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300 font-medium cursor-pointer transition-colors duration-200">
                         View all activity →
                     </a>
                 </div>

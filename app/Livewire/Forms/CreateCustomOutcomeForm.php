@@ -29,7 +29,6 @@ class CreateCustomOutcomeForm extends Form
     #[Validate('required|in:reward,punishment')]
     public string $intendedType = 'reward';
 
-    public bool $isPremium = false;
 
     public function rules(): array
     {
@@ -39,7 +38,6 @@ class CreateCustomOutcomeForm extends Form
             'difficultyLevel' => 'required|integer|min:1|max:6',
             'targetUserType' => 'required',
             'intendedType' => 'required|in:reward,punishment',
-            'isPremium' => 'boolean',
         ];
     }
 
@@ -79,7 +77,7 @@ class CreateCustomOutcomeForm extends Form
             'user_id' => $user->id,
             'status' => ContentStatus::Pending,
             'intended_type' => $this->intendedType,
-            'is_premium' => $this->isPremium,
+            'is_premium' => false,
         ]);
     }
 
@@ -90,6 +88,5 @@ class CreateCustomOutcomeForm extends Form
         $this->difficultyLevel = 3;
         $this->targetUserType = TargetUserType::Any;
         $this->intendedType = 'reward';
-        $this->isPremium = false;
     }
 }

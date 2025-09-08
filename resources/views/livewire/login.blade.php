@@ -191,7 +191,7 @@
                     <button 
                         type="button"
                         wire:click="quickLogin('reviewer')"
-                        class="px-3 py-2 text-xs font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-md transition-colors"
+                        class="px-3 py-2 text-xs font-medium text-white bg-red-600 hover:bg-red-700 rounded-md transition-colors cursor-pointer"
                         wire:loading.attr="disabled"
                         wire:target="quickLogin"
                     >

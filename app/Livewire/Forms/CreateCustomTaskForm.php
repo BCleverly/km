@@ -33,7 +33,6 @@ class CreateCustomTaskForm extends Form
     #[Validate('required')]
     public TargetUserType $targetUserType = TargetUserType::Any;
 
-    public bool $isPremium = false;
 
     public function rules(): array
     {
@@ -44,7 +43,6 @@ class CreateCustomTaskForm extends Form
             'durationTime' => 'required|integer|min:1|max:999',
             'durationType' => 'required|in:minutes,hours,days,weeks',
             'targetUserType' => 'required',
-            'isPremium' => 'boolean',
         ];
     }
 
@@ -88,7 +86,7 @@ class CreateCustomTaskForm extends Form
             'target_user_type' => $this->targetUserType,
             'user_id' => $user->id,
             'status' => ContentStatus::Pending,
-            'is_premium' => $this->isPremium,
+            'is_premium' => false,
         ]);
     }
 
@@ -100,6 +98,5 @@ class CreateCustomTaskForm extends Form
         $this->durationTime = 1;
         $this->durationType = 'hours';
         $this->targetUserType = TargetUserType::Any;
-        $this->isPremium = false;
     }
 }
