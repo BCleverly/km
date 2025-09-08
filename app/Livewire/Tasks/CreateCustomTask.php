@@ -321,7 +321,6 @@ class CreateCustomTask extends Component
         }
 
         return Outcome::approved()
-            ->where('intended_type', 'reward')
             ->where(function ($query) use ($user) {
                 $query->where('target_user_type', TargetUserType::Any)
                       ->orWhere('target_user_type', $user->user_type);
@@ -331,7 +330,8 @@ class CreateCustomTask extends Component
             ->mapWithKeys(function (Outcome $outcome) {
                 return [$outcome->id => [
                     'title' => $outcome->title,
-                    'description' => $outcome->description
+                    'description' => $outcome->description,
+                    'intended_type' => $outcome->intended_type
                 ]];
             })
             ->toArray();
@@ -346,7 +346,6 @@ class CreateCustomTask extends Component
         }
 
         return Outcome::approved()
-            ->where('intended_type', 'punishment')
             ->where(function ($query) use ($user) {
                 $query->where('target_user_type', TargetUserType::Any)
                       ->orWhere('target_user_type', $user->user_type);
@@ -356,7 +355,8 @@ class CreateCustomTask extends Component
             ->mapWithKeys(function (Outcome $outcome) {
                 return [$outcome->id => [
                     'title' => $outcome->title,
-                    'description' => $outcome->description
+                    'description' => $outcome->description,
+                    'intended_type' => $outcome->intended_type
                 ]];
             })
             ->toArray();

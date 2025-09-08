@@ -252,7 +252,7 @@
                                 value="existing" 
                                 class="h-4 w-4 text-red-600 focus:ring-red-500 border-gray-300"
                             >
-                            <span class="ml-2 text-sm text-gray-700 dark:text-gray-300">Use existing reward from community</span>
+                            <span class="ml-2 text-sm text-gray-700 dark:text-gray-300">Use existing outcome from community</span>
                         </label>
                         <label class="flex items-center">
                             <input 
@@ -271,7 +271,7 @@
                 <div x-show="rewardSelection === 'existing'">
                     <div>
                         <label for="rewardAutocomplete" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                            Search & Select Reward
+                            Search & Select Outcome (will be used as reward)
                         </label>
                         
                         <div class="relative" x-data="{ showDropdown: false }">
@@ -282,7 +282,7 @@
                                 x-on:focus="showDropdown = true"
                                 x-on:blur="setTimeout(() => showDropdown = false, 150)"
                                 class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
-                                placeholder="Type to search or click to see all rewards..."
+                                placeholder="Type to search or click to see all outcomes..."
                                 autocomplete="off"
                             >
                             
@@ -294,7 +294,14 @@
                                         wire:click="selectReward({{ $id }}, '{{ addslashes($reward['title']) }}')"
                                         class="px-3 py-2 text-left hover:bg-gray-100 dark:hover:bg-gray-600 focus:outline-none focus:bg-gray-100 dark:focus:bg-gray-600 cursor-pointer text-gray-900 dark:text-white"
                                     >
-                                        <div class="font-medium">{{ $reward['title'] }}</div>
+                                        <div class="flex items-center justify-between">
+                                            <div class="font-medium">{{ $reward['title'] }}</div>
+                                            <span class="ml-2 px-2 py-1 text-xs rounded-full 
+                                                @if($reward['intended_type'] === 'reward') bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-300
+                                                @else bg-red-100 text-red-800 dark:bg-red-900/20 dark:text-red-300 @endif">
+                                                {{ ucfirst($reward['intended_type']) }}
+                                            </span>
+                                        </div>
                                         @if($reward['description'])
                                             <div class="text-sm text-gray-500 dark:text-gray-400 mt-1">{{ Str::limit($reward['description'], 80) }}</div>
                                         @endif
@@ -313,8 +320,15 @@
                                         <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
                                     </svg>
                                     <div class="flex-1">
-                                        <div class="text-sm font-medium text-green-700 dark:text-green-300">
-                                            Selected: {{ $selectedReward['title'] }}
+                                        <div class="flex items-center justify-between">
+                                            <div class="text-sm font-medium text-green-700 dark:text-green-300">
+                                                Selected: {{ $selectedReward['title'] }}
+                                            </div>
+                                            <span class="ml-2 px-2 py-1 text-xs rounded-full 
+                                                @if($selectedReward['intended_type'] === 'reward') bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-300
+                                                @else bg-red-100 text-red-800 dark:bg-red-900/20 dark:text-red-300 @endif">
+                                                {{ ucfirst($selectedReward['intended_type']) }}
+                                            </span>
                                         </div>
                                         @if($selectedReward['description'])
                                             <div class="text-xs text-green-600 dark:text-green-400 mt-1">
@@ -411,7 +425,7 @@
                                 value="existing" 
                                 class="h-4 w-4 text-red-600 focus:ring-red-500 border-gray-300"
                             >
-                            <span class="ml-2 text-sm text-gray-700 dark:text-gray-300">Use existing punishment from community</span>
+                            <span class="ml-2 text-sm text-gray-700 dark:text-gray-300">Use existing outcome from community</span>
                         </label>
                         <label class="flex items-center">
                             <input 
@@ -430,7 +444,7 @@
                 <div x-show="punishmentSelection === 'existing'">
                     <div>
                         <label for="punishmentAutocomplete" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                            Search & Select Punishment
+                            Search & Select Outcome (will be used as punishment)
                         </label>
                         
                         <div class="relative" x-data="{ showDropdown: false }">
@@ -441,7 +455,7 @@
                                 x-on:focus="showDropdown = true"
                                 x-on:blur="setTimeout(() => showDropdown = false, 150)"
                                 class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
-                                placeholder="Type to search or click to see all punishments..."
+                                placeholder="Type to search or click to see all outcomes..."
                                 autocomplete="off"
                             >
                             
@@ -453,7 +467,14 @@
                                         wire:click="selectPunishment({{ $id }}, '{{ addslashes($punishment['title']) }}')"
                                         class="px-3 py-2 text-left hover:bg-gray-100 dark:hover:bg-gray-600 focus:outline-none focus:bg-gray-100 dark:focus:bg-gray-600 cursor-pointer text-gray-900 dark:text-white"
                                     >
-                                        <div class="font-medium">{{ $punishment['title'] }}</div>
+                                        <div class="flex items-center justify-between">
+                                            <div class="font-medium">{{ $punishment['title'] }}</div>
+                                            <span class="ml-2 px-2 py-1 text-xs rounded-full 
+                                                @if($punishment['intended_type'] === 'reward') bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-300
+                                                @else bg-red-100 text-red-800 dark:bg-red-900/20 dark:text-red-300 @endif">
+                                                {{ ucfirst($punishment['intended_type']) }}
+                                            </span>
+                                        </div>
                                         @if($punishment['description'])
                                             <div class="text-sm text-gray-500 dark:text-gray-400 mt-1">{{ Str::limit($punishment['description'], 80) }}</div>
                                         @endif
@@ -472,8 +493,15 @@
                                         <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
                                     </svg>
                                     <div class="flex-1">
-                                        <div class="text-sm font-medium text-green-700 dark:text-green-300">
-                                            Selected: {{ $selectedPunishment['title'] }}
+                                        <div class="flex items-center justify-between">
+                                            <div class="text-sm font-medium text-green-700 dark:text-green-300">
+                                                Selected: {{ $selectedPunishment['title'] }}
+                                            </div>
+                                            <span class="ml-2 px-2 py-1 text-xs rounded-full 
+                                                @if($selectedPunishment['intended_type'] === 'reward') bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-300
+                                                @else bg-red-100 text-red-800 dark:bg-red-900/20 dark:text-red-300 @endif">
+                                                {{ ucfirst($selectedPunishment['intended_type']) }}
+                                            </span>
                                         </div>
                                         @if($selectedPunishment['description'])
                                             <div class="text-xs text-green-600 dark:text-green-400 mt-1">
