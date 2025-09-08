@@ -6,6 +6,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use App\Enums\SubscriptionPlan;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Cashier\Billable;
@@ -266,5 +267,184 @@ class User extends Authenticatable implements HasPassKeys
         return $this->activeOutcomes()
             ->orderBy('assigned_at', 'asc')
             ->first();
+    }
+
+    /**
+     * Get the user's active subscription.
+     */
+    public function activeSubscription(): ?\App\Models\Subscription
+    {
+        return $this->subscriptions()
+            ->where('stripe_status', 'active')
+            ->orWhere(function ($query) {
+                $query->whereNotNull('trial_ends_at')
+                      ->where('trial_ends_at', '>', now());
+            })
+            ->first();
+    }
+
+    /**
+     * Get the user's current subscription plan.
+     */
+    public function getCurrentPlan(): SubscriptionPlan
+    {
+        $subscription = $this->activeSubscription();
+        
+        if (!$subscription || !$subscription->plan) {
+            return SubscriptionPlan::FREE;
+        }
+
+        return $subscription->plan;
+    }
+
+    /**
+     * Check if the user has an active subscription.
+     */
+    public function hasActiveSubscription(): bool
+    {
+        return $this->activeSubscription() !== null;
+    }
+
+    /**
+     * Check if the user is on trial.
+     */
+    public function onTrial(): bool
+    {
+        $subscription = $this->activeSubscription();
+        return $subscription && $subscription->onTrial();
+    }
+
+    /**
+     * Check if the user has a specific subscription plan.
+     */
+    public function hasPlan(SubscriptionPlan $plan): bool
+    {
+        return $this->getCurrentPlan() === $plan;
+    }
+
+    /**
+     * Check if the user can perform a specific action based on their subscription.
+     */
+    public function canPerformAction(string $action): bool
+    {
+        $subscription = $this->activeSubscription();
+        
+        if (!$subscription) {
+            // Free plan limits
+            $limits = config('subscription.limits.free', []);
+            return $limits[$action] ?? false;
+        }
+
+        return $subscription->can($action);
+    }
+
+    /**
+     * Get the user's subscription limits.
+     */
+    public function getSubscriptionLimits(): array
+    {
+        $subscription = $this->activeSubscription();
+        
+        if (!$subscription) {
+            return config('subscription.limits.free', []);
+        }
+
+        return $subscription->limits;
+    }
+
+    /**
+     * Check if the user can create content.
+     */
+    public function canCreateContent(): bool
+    {
+        return $this->canPerformAction('can_create_content');
+    }
+
+    /**
+     * Check if the user can access premium content.
+     */
+    public function canAccessPremiumContent(): bool
+    {
+        return $this->canPerformAction('can_access_premium_content');
+    }
+
+    /**
+     * Check if the user can assign partner tasks.
+     */
+    public function canAssignPartnerTasks(): bool
+    {
+        return $this->canPerformAction('can_assign_partner_tasks');
+    }
+
+    /**
+     * Get the maximum number of active outcomes for this user's subscription.
+     */
+    public function getMaxActiveOutcomesForSubscription(): int
+    {
+        $limits = $this->getSubscriptionLimits();
+        return $limits['max_active_outcomes'] ?? 1;
+    }
+
+    /**
+     * Get the maximum number of tasks per day for this user's subscription.
+     */
+    public function getMaxTasksPerDayForSubscription(): ?int
+    {
+        $limits = $this->getSubscriptionLimits();
+        return $limits['max_tasks_per_day'] ?? null;
+    }
+
+    /**
+     * Check if the user has reached their subscription's task limit for today.
+     */
+    public function hasReachedDailyTaskLimit(): bool
+    {
+        $maxTasks = $this->getMaxTasksPerDayForSubscription();
+        
+        if ($maxTasks === null) {
+            return false; // Unlimited
+        }
+
+        $todayTasks = $this->assignedTasks()
+            ->whereDate('created_at', today())
+            ->count();
+
+        return $todayTasks >= $maxTasks;
+    }
+
+    /**
+     * Get the user's subscription status for display.
+     */
+    public function getSubscriptionStatusAttribute(): string
+    {
+        if (!$this->hasActiveSubscription()) {
+            return 'Free';
+        }
+
+        $subscription = $this->activeSubscription();
+        
+        if ($subscription->onTrial()) {
+            return 'Trial';
+        }
+
+        return $subscription->plan_name;
+    }
+
+    /**
+     * Get the user's subscription expiry date.
+     */
+    public function getSubscriptionExpiryAttribute(): ?\Carbon\Carbon
+    {
+        $subscription = $this->activeSubscription();
+        
+        if (!$subscription) {
+            return null;
+        }
+
+        if ($subscription->onTrial()) {
+            return $subscription->trial_ends_at;
+        }
+
+        return $subscription->ends_at;
     }
 }

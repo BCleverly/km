@@ -111,6 +111,19 @@
                   </li>
                 </ul>
               </li>
+              <li>
+                <div class="text-sm font-semibold text-red-100 dark:text-red-100/90 uppercase tracking-wide mb-3">Account</div>
+                <ul role="list" class="-mx-2 mt-2 space-y-1">
+                  <li>
+                    <a href="{{ route('app.subscription') }}" wire:navigate class="group flex gap-x-3 rounded-md p-3 text-base font-semibold text-red-100 hover:bg-red-600 hover:text-white dark:text-red-100/90 dark:hover:bg-red-700/25 leading-relaxed transition-colors duration-200">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" data-slot="icon" aria-hidden="true" class="size-6 shrink-0 text-white">
+                        <path d="M2.25 8.25h19.5M2.25 9h19.5m-16.5 5.25h6m-6 2.25h3m-3.75 3h15a2.25 2.25 0 002.25-2.25V6.75A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25v10.5A2.25 2.25 0 004.5 19.5z" stroke-linecap="round" stroke-linejoin="round" />
+                      </svg>
+                      <span class="truncate">Subscription</span>
+                    </a>
+                  </li>
+                </ul>
+              </li>
               <li class="mt-auto">
                 <a href="#"
                    wire:navigate
@@ -210,6 +223,19 @@
               <a href="{{ route('app.tasks.community') }}" wire:navigate class="group flex gap-x-3 rounded-md p-3 text-base font-semibold text-red-100 hover:bg-red-600 hover:text-white dark:text-red-100/90 dark:hover:bg-red-700/25 leading-relaxed transition-colors duration-200">
                 <span class="flex size-6 shrink-0 items-center justify-center rounded-lg border border-red-400 bg-red-500 text-[0.625rem] font-medium text-white dark:border-red-600/30 dark:bg-red-900/30">T</span>
                 <span class="truncate">Task Community</span>
+              </a>
+            </li>
+          </ul>
+        </li>
+        <li>
+          <div class="text-xs/6 font-semibold text-red-200 dark:text-red-200/80">Account</div>
+          <ul role="list" class="-mx-2 mt-2 space-y-1">
+            <li>
+              <a href="{{ route('app.subscription') }}" wire:navigate class="group flex gap-x-3 rounded-md p-3 text-base font-semibold text-red-100 hover:bg-red-600 hover:text-white dark:text-red-100/90 dark:hover:bg-red-700/25 leading-relaxed transition-colors duration-200">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" data-slot="icon" aria-hidden="true" class="size-6 shrink-0 text-white">
+                  <path d="M2.25 8.25h19.5M2.25 9h19.5m-16.5 5.25h6m-6 2.25h3m-3.75 3h15a2.25 2.25 0 002.25-2.25V6.75A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25v10.5A2.25 2.25 0 004.5 19.5z" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+                <span class="truncate">Subscription</span>
               </a>
             </li>
           </ul>
