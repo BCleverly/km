@@ -247,23 +247,15 @@ class TaskDataSeeder extends Seeder
      */
     private function attachTagsToTask(Task $task, array $tagsData, User $systemUser): void
     {
-        $tagIds = [];
-
         foreach ($tagsData as $typeKey => $tagsOfType) {
             if (is_array($tagsOfType)) {
                 foreach ($tagsOfType as $tagData) {
                     if (isset($tagData) && !empty(trim($tagData))) {
-                        $tag = $this->findOrCreateTag($tagData, $typeKey, $systemUser);
-                        if ($tag) {
-                            $tagIds[] = $tag->id;
-                        }
+                        // Use Spatie Tags method to attach tags with type
+                        $task->attachTag($tagData, $typeKey);
                     }
                 }
             }
-        }
-
-        if (!empty($tagIds)) {
-            $task->syncTags($tagIds);
         }
     }
 
@@ -272,48 +264,16 @@ class TaskDataSeeder extends Seeder
      */
     private function attachTagsToOutcome(Outcome $outcome, array $tagsData, User $systemUser): void
     {
-        $tagIds = [];
-
         foreach ($tagsData as $typeKey => $tagsOfType) {
             if (is_array($tagsOfType)) {
                 foreach ($tagsOfType as $tagData) {
                     if (isset($tagData) && !empty(trim($tagData))) {
-                        $tag = $this->findOrCreateTag($tagData, $typeKey, $systemUser);
-                        if ($tag) {
-                            $tagIds[] = $tag->id;
-                        }
+                        // Use Spatie Tags method to attach tags with type
+                        $outcome->attachTag($tagData, $typeKey);
                     }
                 }
             }
         }
-
-        if (!empty($tagIds)) {
-            $outcome->syncTags($tagIds);
-        }
     }
 
-    /**
-     * Find or create a tag with the given name and type
-     */
-    private function findOrCreateTag(string $name, string $type, User $systemUser): ?Tag
-    {
-        // First, try to find an existing tag with this name and type
-        $tag = Tag::where('name', $name)
-            ->where('type', $type)
-            ->first();
-
-        if (!$tag) {
-            // Create a new tag
-            $tag = Tag::create([
-                'name' => $name,
-                'type' => $type,
-                'status' => ContentStatus::Approved, // Imported tags should be approved
-                'created_by' => $systemUser->id,
-                'approved_by' => $systemUser->id,
-                'approved_at' => now(),
-            ]);
-        }
-
-        return $tag;
-    }
 }
