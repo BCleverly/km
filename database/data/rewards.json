@@ -4,13 +4,21 @@
         "title": "Finish it",
         "description": "You have one hour to orgasm as many times as possible.",
         "difficulty_level": 1,
-        "status": 1
+        "status": 1,
+        "tags": {
+            "target_kink": [],
+            "required_accessories": []
+        }
     },
     {
         "id": 2,
         "title": "Nipple tickle",
         "description": "Sit back and relax and start your play session off with eyes closed massaging your nipples. Feel free to suck and lick them as much as you want.",
         "difficulty_level": 1,
-        "status": 1
+        "status": 1,
+        "tags": {
+            "target_kink": [],
+            "required_accessories": []
+        }
     }
 ]

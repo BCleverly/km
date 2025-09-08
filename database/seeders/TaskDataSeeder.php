@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use App\Models\User;
 use App\Models\Tasks\Task;
 use App\Models\Tasks\Outcome;
+use App\Models\Models\Tag;
 use App\ContentStatus;
 use App\TargetUserType;
 use Illuminate\Database\Seeder;
@@ -77,6 +78,11 @@ class TaskDataSeeder extends Seeder
                 'intended_type' => 'reward',
             ]);
 
+            // Attach tags if they exist
+            if (!empty($rewardData['tags'])) {
+                $this->attachTagsToOutcome($outcome, $rewardData['tags'], $systemUser);
+            }
+
             $outcomes['reward_' . $rewardData['id']] = $outcome;
         }
 
@@ -94,6 +100,11 @@ class TaskDataSeeder extends Seeder
                 'is_premium' => false,
                 'intended_type' => 'punishment',
             ]);
+
+            // Attach tags if they exist
+            if (!empty($punishmentData['tags'])) {
+                $this->attachTagsToOutcome($outcome, $punishmentData['tags'], $systemUser);
+            }
 
             $outcomes['punishment_' . $punishmentData['id']] = $outcome;
         }
@@ -151,6 +162,11 @@ class TaskDataSeeder extends Seeder
                 if (!empty($punishmentIds)) {
                     $task->recommendedPunishments()->attach($punishmentIds);
                 }
+            }
+
+            // Attach tags if they exist
+            if (!empty($taskData['tags'])) {
+                $this->attachTagsToTask($task, $taskData['tags'], $systemUser);
             }
 
             $tasks[] = $task;
@@ -224,5 +240,80 @@ class TaskDataSeeder extends Seeder
             $duration <= 7 => 7,  // Hard
             default => 9,         // Very Hard
         };
+    }
+
+    /**
+     * Attach tags to a task from the JSON data
+     */
+    private function attachTagsToTask(Task $task, array $tagsData, User $systemUser): void
+    {
+        $tagIds = [];
+
+        foreach ($tagsData as $typeKey => $tagsOfType) {
+            if (is_array($tagsOfType)) {
+                foreach ($tagsOfType as $tagData) {
+                    if (isset($tagData) && !empty(trim($tagData))) {
+                        $tag = $this->findOrCreateTag($tagData, $typeKey, $systemUser);
+                        if ($tag) {
+                            $tagIds[] = $tag->id;
+                        }
+                    }
+                }
+            }
+        }
+
+        if (!empty($tagIds)) {
+            $task->syncTags($tagIds);
+        }
+    }
+
+    /**
+     * Attach tags to an outcome from the JSON data
+     */
+    private function attachTagsToOutcome(Outcome $outcome, array $tagsData, User $systemUser): void
+    {
+        $tagIds = [];
+
+        foreach ($tagsData as $typeKey => $tagsOfType) {
+            if (is_array($tagsOfType)) {
+                foreach ($tagsOfType as $tagData) {
+                    if (isset($tagData) && !empty(trim($tagData))) {
+                        $tag = $this->findOrCreateTag($tagData, $typeKey, $systemUser);
+                        if ($tag) {
+                            $tagIds[] = $tag->id;
+                        }
+                    }
+                }
+            }
+        }
+
+        if (!empty($tagIds)) {
+            $outcome->syncTags($tagIds);
+        }
+    }
+
+    /**
+     * Find or create a tag with the given name and type
+     */
+    private function findOrCreateTag(string $name, string $type, User $systemUser): ?Tag
+    {
+        // First, try to find an existing tag with this name and type
+        $tag = Tag::where('name', $name)
+            ->where('type', $type)
+            ->first();
+
+        if (!$tag) {
+            // Create a new tag
+            $tag = Tag::create([
+                'name' => $name,
+                'type' => $type,
+                'status' => ContentStatus::Approved, // Imported tags should be approved
+                'created_by' => $systemUser->id,
+                'approved_by' => $systemUser->id,
+                'approved_at' => now(),
+            ]);
+        }
+
+        return $tag;
     }
 }

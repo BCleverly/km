@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Models\Tasks;
 
 use App\ContentStatus;
+use App\Models\Models\Tag;
 use App\TargetUserType;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -12,11 +13,13 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\MorphToMany;
+use Spatie\Tags\HasTags;
 
 class Outcome extends Model
 {
     /** @use HasFactory<\Database\Factories\OutcomeFactory> */
-    use HasFactory;
+    use HasFactory, HasTags;
 
     protected static function newFactory()
     {
@@ -133,5 +136,23 @@ class Outcome extends Model
     public function getIntendedTypeLabelAttribute(): string
     {
         return $this->intended_type === 'reward' ? 'Reward' : 'Punishment';
+    }
+
+    /**
+     * Get the tag class name for this model
+     */
+    public static function getTagClassName(): string
+    {
+        return Tag::class;
+    }
+
+    /**
+     * Override the tags relationship to use our custom tag model
+     */
+    public function tags(): MorphToMany
+    {
+        return $this
+            ->morphToMany(self::getTagClassName(), 'taggable', 'taggables', null, 'tag_id')
+            ->orderBy('order_column');
     }
 }

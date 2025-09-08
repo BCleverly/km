@@ -136,4 +136,27 @@ return [
         'max_active_outcomes' => env('MAX_ACTIVE_OUTCOMES', 2),
     ],
 
+    /*
+    |--------------------------------------------------------------------------
+    | Tag System Configuration
+    |--------------------------------------------------------------------------
+    |
+    | Configuration for the tag system used by Tasks and Outcomes.
+    | Each type represents a category of tags that can be applied.
+    |
+    */
+
+    'tag_types' => [
+        'target_kink' => [
+            'name' => 'Target Kink',
+            'description' => 'Tags that describe the specific kink or fetish this content targets',
+            'required' => false,
+        ],
+        'required_accessories' => [
+            'name' => 'Required Accessories',
+            'description' => 'Tags for items or accessories needed to complete this task/outcome',
+            'required' => false,
+        ],
+    ],
+
 ];

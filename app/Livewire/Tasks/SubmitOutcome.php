@@ -16,6 +16,7 @@ use Livewire\Component;
 class SubmitOutcome extends Component
 {
     public CreateCustomOutcomeForm $outcomeForm;
+    
 
     #[Computed]
     public function userTypes(): array
@@ -44,6 +45,33 @@ class SubmitOutcome extends Component
         
         session()->flash('message', 'Your outcome has been submitted for review!');
         $this->outcomeForm->resetForm();
+    }
+
+    public function createTag(string $type, string $name): void
+    {
+        if (empty(trim($name))) {
+            session()->flash('error', 'Tag name cannot be empty.');
+            return;
+        }
+
+        $tagId = $this->outcomeForm->createTag($type, trim($name));
+
+        if ($tagId) {
+            // Add the new tag to the selected tags for this type
+            if (!isset($this->outcomeForm->tags[$type])) {
+                $this->outcomeForm->tags[$type] = [];
+            }
+            $this->outcomeForm->tags[$type][] = $tagId;
+
+            session()->flash('message', 'New tag created and added! It will be reviewed before becoming visible to others.');
+        } else {
+            session()->flash('error', 'Failed to create tag. Please try again.');
+        }
+    }
+
+    public function removeTag(string $type, int $tagId): void
+    {
+        $this->outcomeForm->removeTag($type, $tagId);
     }
 
     public function render(): View
