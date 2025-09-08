@@ -16,7 +16,7 @@ return new class extends Migration
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->string('username')->unique();
             $table->text('about')->nullable();
-            $table->string('theme_preference')->default('system')->after('about');
+            $table->string('theme_preference')->default('system');
             $table->timestamps();
         });
     }
