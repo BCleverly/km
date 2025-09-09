@@ -20,7 +20,6 @@ it('displays the registration form elements', function () {
         ->assertSee('Username')
         ->assertSee('Email address')
         ->assertSee('Password')
-        ->assertSee('How did you hear about us?')
         ->assertSee('Sign up →')
         ->assertSee('Sign in to your account');
 });
@@ -106,7 +105,7 @@ it('creates user successfully with valid data', function () {
         ->set('form.email', 'test@example.com')
         ->set('form.password', 'password123')
         ->call('register')
-        ->assertRedirect('/dashboard');
+        ->assertRedirect('/app/dashboard');
 
     $this->assertDatabaseHas('users', [
         'name' => 'John Doe',
