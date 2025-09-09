@@ -234,6 +234,88 @@
   </div>
 </div>
 
+<!-- Notification System -->
+<div x-data="notificationManager()" class="fixed top-4 right-4 z-[10000] space-y-2">
+  <template x-for="notification in notifications" :key="notification.id">
+    <div 
+      x-show="notification.visible" 
+      x-transition:enter="transition ease-out duration-300"
+      x-transition:enter-start="opacity-0 transform translate-x-full"
+      x-transition:enter-end="opacity-100 transform translate-x-0"
+      x-transition:leave="transition ease-in duration-200"
+      x-transition:leave-start="opacity-100 transform translate-x-0"
+      x-transition:leave-end="opacity-0 transform translate-x-full"
+      class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg p-4 max-w-sm"
+    >
+      <div class="flex items-start">
+        <div class="flex-shrink-0">
+          <svg x-show="notification.type === 'success'" class="h-5 w-5 text-green-400" fill="currentColor" viewBox="0 0 20 20">
+            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+          </svg>
+          <svg x-show="notification.type === 'error'" class="h-5 w-5 text-red-400" fill="currentColor" viewBox="0 0 20 20">
+            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/>
+          </svg>
+          <svg x-show="notification.type === 'info'" class="h-5 w-5 text-blue-400" fill="currentColor" viewBox="0 0 20 20">
+            <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/>
+          </svg>
+        </div>
+        <div class="ml-3 flex-1">
+          <p class="text-sm font-medium text-gray-900 dark:text-white" x-text="notification.message"></p>
+        </div>
+        <div class="ml-4 flex-shrink-0">
+          <button @click="removeNotification(notification.id)" class="inline-flex text-gray-400 hover:text-gray-600 dark:hover:text-gray-300">
+            <span class="sr-only">Close</span>
+            <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </template>
+</div>
+
+<script>
+function notificationManager() {
+  return {
+    notifications: [],
+    
+    init() {
+      // Listen for Livewire events
+      Livewire.on('show-notification', (data) => {
+        this.addNotification(data[0]);
+      });
+    },
+    
+    addNotification(data) {
+      const notification = {
+        id: Date.now() + Math.random(),
+        message: data.message,
+        type: data.type || 'info',
+        visible: true
+      };
+      
+      this.notifications.push(notification);
+      
+      // Auto-remove after 4 seconds
+      setTimeout(() => {
+        this.removeNotification(notification.id);
+      }, 4000);
+    },
+    
+    removeNotification(id) {
+      const index = this.notifications.findIndex(n => n.id === id);
+      if (index > -1) {
+        this.notifications[index].visible = false;
+        setTimeout(() => {
+          this.notifications.splice(index, 1);
+        }, 200);
+      }
+    }
+  }
+}
+</script>
+
 <div class="lg:pl-72">
   <div class="sticky top-0 z-40 flex h-16 shrink-0 items-center gap-x-4 border-b border-gray-200 bg-white px-4 shadow-xs sm:gap-x-6 sm:px-6 lg:px-8 dark:border-white/10 dark:bg-gray-900 dark:shadow-none">
     <button type="button" command="show-modal" commandfor="sidebar" class="-m-2.5 p-2.5 text-gray-700 hover:text-gray-900 lg:hidden dark:text-gray-400 dark:hover:text-white cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors duration-200">

@@ -168,14 +168,23 @@
 
             </div>
             
-            <!-- Author Footer -->
+                <!-- Author Footer -->
             <div class="px-6 py-4 border-t border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-700/50">
-                <div class="flex items-center text-xs text-gray-500 dark:text-gray-400">
-                    <span class="font-medium text-gray-700 dark:text-gray-300">{{ ucfirst($contentType) }}</span>
-                    <span class="mx-2">•</span>
-                    <span>By {{ $item->author->name ?? 'Anonymous' }}</span>
-                    <span class="mx-2">•</span>
-                    <span>{{ $item->created_at->diffForHumans() }}</span>
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center text-xs text-gray-500 dark:text-gray-400">
+                        <span class="font-medium text-gray-700 dark:text-gray-300">{{ ucfirst($contentType) }}</span>
+                        <span class="mx-2">•</span>
+                        <span>By {{ $item->author->name ?? 'Anonymous' }}</span>
+                        <span class="mx-2">•</span>
+                        <span>{{ $item->created_at->diffForHumans() }}</span>
+                    </div>
+                    
+                    <!-- Reaction Button -->
+                    <livewire:components.reaction-button 
+                        :model-type="$contentType" 
+                        :model-id="$item->id" 
+                        :key="'reaction-' . $contentType . '-' . $item->id"
+                    />
                 </div>
             </div>
         </div>
