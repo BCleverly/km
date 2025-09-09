@@ -15,6 +15,7 @@
         "laravel/tinker": "^2.10.1",
         "livewire/livewire": "^3.6",
         "lorisleiva/laravel-actions": "^2.9",
+        "maatwebsite/excel": "^3.1",
         "qirolab/laravel-reactions": "^3.1",
         "spatie/emoji": "^4.1",
         "spatie/laravel-activitylog": "^4.10",

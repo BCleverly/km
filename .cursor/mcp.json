@@ -6,11 +6,10 @@
         "playwright-mcp": {
             "command": "npx",
             "args": [
-              "-y",
-              "playwright-mcp"
+                "-y",
+                "playwright-mcp"
             ]
-          },
-       
+        },
         "Context7": {
             "url": "https://mcp.context7.com/mcp",
             "headers": []
