@@ -68,9 +68,15 @@
                 and every challenge is an opportunity to grow and explore.
             </p>
             <div class="flex flex-col sm:flex-row gap-4 justify-center">
-                <a href="/register" class="bg-red-600 hover:bg-red-700 text-white px-8 py-4 rounded-lg font-semibold text-lg transition-all transform hover:scale-105" wire:navigate>
-                    Start Your Journey
-                </a>
+                @auth
+                    <a href="/app/dashboard" class="bg-red-600 hover:bg-red-700 text-white px-8 py-4 rounded-lg font-semibold text-lg transition-all transform hover:scale-105" wire:navigate>
+                        Go to App
+                    </a>
+                @else
+                    <a href="/register" class="bg-red-600 hover:bg-red-700 text-white px-8 py-4 rounded-lg font-semibold text-lg transition-all transform hover:scale-105" wire:navigate>
+                        Start Your Journey
+                    </a>
+                @endauth
                 <a href="#how-it-works" class="border border-gray-300 hover:border-gray-400 text-gray-700 hover:text-gray-900 px-8 py-4 rounded-lg font-semibold text-lg transition-colors">
                     Learn More
                 </a>
@@ -281,9 +287,15 @@
         <p class="text-xl text-red-100 mb-8 max-w-2xl mx-auto">
             Join thousands of users who have transformed their daily routines into exciting adventures
         </p>
-        <a href="/register" class="bg-white hover:bg-gray-100 text-red-600 px-8 py-4 rounded-lg font-semibold text-lg transition-all transform hover:scale-105 inline-block" wire:navigate>
-            Get Started Today
-        </a>
+        @auth
+            <a href="/app/dashboard" class="bg-white hover:bg-gray-100 text-red-600 px-8 py-4 rounded-lg font-semibold text-lg transition-all transform hover:scale-105 inline-block" wire:navigate>
+                Go to App
+            </a>
+        @else
+            <a href="/register" class="bg-white hover:bg-gray-100 text-red-600 px-8 py-4 rounded-lg font-semibold text-lg transition-all transform hover:scale-105 inline-block" wire:navigate>
+                Get Started Today
+            </a>
+        @endauth
     </div>
 </section>
 
