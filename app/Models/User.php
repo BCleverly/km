@@ -3,6 +3,7 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
@@ -15,8 +16,10 @@ use Spatie\LaravelPasskeys\Models\Concerns\InteractsWithPasskeys;
 use Spatie\Permission\Traits\HasRoles;
 use Qirolab\Laravel\Reactions\Traits\Reacts;
 use Qirolab\Laravel\Reactions\Contracts\ReactsInterface;
+use Filament\Models\Contracts\FilamentUser;
+use Filament\Panel;
 
-class User extends Authenticatable implements HasPassKeys, ReactsInterface
+class User extends Authenticatable implements HasPassKeys, ReactsInterface, FilamentUser
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use Billable, HasApiTokens, HasFactory, HasRoles, InteractsWithPasskeys, Notifiable, Reacts;
@@ -57,6 +60,25 @@ class User extends Authenticatable implements HasPassKeys, ReactsInterface
             'password' => 'hashed',
             'user_type' => \App\TargetUserType::class,
         ];
+    }
+
+    public function canAccessPanel(Panel $panel): bool
+    {
+        if (app()->isProduction()){
+            return str_ends_with($this->email, '@bencleverly.dev');# && $this->hasVerifiedEmail();
+        }
+        
+        return true;
+    }
+
+    /**
+     * Get the user type label.
+     */
+    protected function userTypeLabel(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => $this->user_type?->label() ?? 'User',
+        );
     }
 
     /**
@@ -271,4 +293,5 @@ class User extends Authenticatable implements HasPassKeys, ReactsInterface
             ->orderBy('assigned_at', 'asc')
             ->first();
     }
+    
 }

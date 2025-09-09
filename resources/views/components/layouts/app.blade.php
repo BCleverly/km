@@ -17,7 +17,10 @@
         @googlefonts
 
     </head>
-    <body class="h-full  dark:bg-gray-900">
+    <body @class([
+      'debug-screens' => !app()->isProduction(),
+      'h-full  dark:bg-gray-900'
+      ])>
     <el-dialog>
   <dialog id="sidebar" class="backdrop:bg-transparent lg:hidden">
     <el-dialog-backdrop class="fixed inset-0 bg-gray-900/80 transition-opacity duration-300 ease-linear data-closed:opacity-0"></el-dialog-backdrop>

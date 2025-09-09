@@ -1,7 +1,7 @@
 <div>
     <!-- Filters -->
     <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6 mb-8">
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-4">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 xl:grid-cols-8 2xl:grid-cols-10 gap-4">
         <!-- Content Type -->
         <div>
             <label for="contentType" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
@@ -19,7 +19,7 @@
         </div>
 
         <!-- Search -->
-        <div class="lg:col-span-2">
+        <div class="lg:col-span-2 xl:col-span-3 2xl:col-span-4">
             <label for="search" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                 Search
             </label>
@@ -80,17 +80,17 @@
 </div>
 
 <!-- Tasks Grid -->
-<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-2 2xl:grid-cols-3 gap-4 xl:gap-5 2xl:gap-6 mb-8">
     @forelse($this->content as $item)
         <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden hover:shadow-md transition-shadow flex flex-col">
-            <div class="p-6 flex-1 flex flex-col">
+            <div class="p-4 xl:p-5 2xl:p-6 flex-1 flex flex-col">
                 <!-- Task Header -->
                 <div class="flex items-start justify-between mb-4">
                     <div class="flex-1">
-                        <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">
+                        <h3 class="text-base xl:text-lg font-semibold text-gray-900 dark:text-white mb-2 line-clamp-2">
                             {{ $item->title }}
                         </h3>
-                        <div class="flex items-center space-x-2 text-sm text-gray-500 dark:text-gray-400">
+                        <div class="flex items-center flex-wrap gap-1.5 text-sm text-gray-500 dark:text-gray-400">
                             <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200">
                                 {{ $item->target_user_type->label() }}
                             </span>
