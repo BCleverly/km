@@ -23,6 +23,9 @@ class Profile extends Component
         $user = auth()->user();
         $profile = $user->profile;
 
+        // Store the old theme preference to check if it changed
+        $oldThemePreference = $profile?->theme_preference ?? 'system';
+
         // Custom validation for username uniqueness and file uploads
         $this->form->validate([
             'name' => 'required|string|max:255',
@@ -50,6 +53,22 @@ class Profile extends Component
                 'about' => $this->form->about,
                 'theme_preference' => $this->form->theme_preference,
             ]);
+        }
+
+        // If theme preference changed, dispatch events to sync with global theme selector
+        if ($oldThemePreference !== $this->form->theme_preference) {
+            // Update session to match the new preference
+            session(['theme' => $this->form->theme_preference]);
+            
+            // Dispatch Livewire event
+            $this->dispatch('theme-changed', theme: $this->form->theme_preference);
+            
+            // Dispatch JavaScript event for global theme selector
+            $this->js("
+                document.dispatchEvent(new CustomEvent('theme-changed', { 
+                    detail: { theme: '{$this->form->theme_preference}' } 
+                }));
+            ");
         }
 
         // Handle profile picture upload
@@ -243,6 +262,7 @@ class Profile extends Component
         // and check if conversions are ready
         $this->dispatch('$refresh');
     }
+
 
     public function render()
     {

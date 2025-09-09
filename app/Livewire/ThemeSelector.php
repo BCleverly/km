@@ -11,11 +11,21 @@ class ThemeSelector extends Component
     public function mount(): void
     {
         // Get theme from user profile, session, or default to system
-        if (auth()->check() && auth()->user()->profile) {
-            $this->theme = auth()->user()->profile->theme_preference ?? 'system';
+        if (auth()->check()) {
+            $user = auth()->user();
+            $profile = $user->profile;
+            
+            if ($profile && $profile->theme_preference) {
+                $this->theme = $profile->theme_preference;
+            } else {
+                $this->theme = session('theme', 'system');
+            }
         } else {
             $this->theme = session('theme', 'system');
         }
+        
+        // Ensure session is in sync with the loaded theme
+        session(['theme' => $this->theme]);
     }
 
     protected $listeners = ['theme-changed' => 'updateTheme'];
@@ -24,6 +34,14 @@ class ThemeSelector extends Component
     {
         $this->theme = $theme;
         session(['theme' => $theme]);
+
+        // Update user profile if authenticated and the theme changed
+        if (auth()->check() && auth()->user()->profile) {
+            $currentProfileTheme = auth()->user()->profile->theme_preference ?? 'system';
+            if ($currentProfileTheme !== $theme) {
+                auth()->user()->profile->update(['theme_preference' => $theme]);
+            }
+        }
 
         // Force a re-render to update the icon
         $this->render();
