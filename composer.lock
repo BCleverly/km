@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "cb1fe5b78dd93465116bbb1acb54e40f",
+    "content-hash": "6cd99c41b2d6370f4bf2fc7915f1d173",
     "packages": [
         {
             "name": "anourvalar/eloquent-serialize",
@@ -5953,6 +5953,86 @@
                 "source": "https://github.com/pusher/pusher-http-php/tree/7.2.7"
             },
             "time": "2025-01-06T10:56:20+00:00"
+        },
+        {
+            "name": "qirolab/laravel-reactions",
+            "version": "3.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/qirolab/laravel-reactions.git",
+                "reference": "e1c6ffc2914ee46a26e572bce8d11b43bbeedfa6"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/qirolab/laravel-reactions/zipball/e1c6ffc2914ee46a26e572bce8d11b43bbeedfa6",
+                "reference": "e1c6ffc2914ee46a26e572bce8d11b43bbeedfa6",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/database": "^8.0|^9.0|^10.0|^11.0|^12.0",
+                "illuminate/events": "^8.0|^9.0|^10.0|^11.0|^12.0",
+                "illuminate/support": "^8.0|^9.0|^10.0|^11.0|^12.0",
+                "php": ">=7.3"
+            },
+            "require-dev": {
+                "orchestra/testbench": "^6.0|^7.0|^8.0|^9.0|^10.0",
+                "phpunit/phpunit": "^8.5|^9.0|^10.5|^11.5.3",
+                "vimeo/psalm": "^4.0|^5.22|^6.6"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Qirolab\\Laravel\\Reactions\\ReactionsServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Qirolab\\Laravel\\Reactions\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Harish Kumar",
+                    "email": "harish@qirolab.com",
+                    "homepage": "https://qirolab.com",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Implement reactions (like, dislike, love, emotion etc) on Laravel Eloquent models.",
+            "homepage": "https://qirolab.com",
+            "keywords": [
+                "Rate",
+                "Rating",
+                "Unlike",
+                "dislike",
+                "eloquent",
+                "emotion",
+                "favorite",
+                "favourite",
+                "kudos",
+                "laravel",
+                "like",
+                "love",
+                "reaction",
+                "star"
+            ],
+            "support": {
+                "issues": "https://github.com/qirolab/laravel-reactions/issues",
+                "source": "https://github.com/qirolab/laravel-reactions/tree/3.1.0"
+            },
+            "funding": [
+                {
+                    "url": "https://www.buymeacoffee.com/qirolab",
+                    "type": "other"
+                }
+            ],
+            "time": "2025-02-26T08:51:01+00:00"
         },
         {
             "name": "ralouphie/getallheaders",

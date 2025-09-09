@@ -13,11 +13,13 @@ use Laravel\Sanctum\HasApiTokens;
 use Spatie\LaravelPasskeys\Models\Concerns\HasPasskeys;
 use Spatie\LaravelPasskeys\Models\Concerns\InteractsWithPasskeys;
 use Spatie\Permission\Traits\HasRoles;
+use Qirolab\Laravel\Reactions\Traits\Reacts;
+use Qirolab\Laravel\Reactions\Contracts\ReactsInterface;
 
-class User extends Authenticatable implements HasPassKeys
+class User extends Authenticatable implements HasPassKeys, ReactsInterface
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
-    use Billable, HasApiTokens, HasFactory, HasRoles, InteractsWithPasskeys, Notifiable;
+    use Billable, HasApiTokens, HasFactory, HasRoles, InteractsWithPasskeys, Notifiable, Reacts;
 
     /**
      * The attributes that are mass assignable.

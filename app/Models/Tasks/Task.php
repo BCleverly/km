@@ -15,11 +15,13 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Spatie\Tags\HasTags;
+use Qirolab\Laravel\Reactions\Traits\Reactable;
+use Qirolab\Laravel\Reactions\Contracts\ReactableInterface;
 
-class Task extends Model
+class Task extends Model implements ReactableInterface
 {
     /** @use HasFactory<\Database\Factories\TaskFactory> */
-    use HasFactory, HasTags;
+    use HasFactory, HasTags, Reactable;
 
     protected static function newFactory()
     {
