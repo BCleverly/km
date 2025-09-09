@@ -13,10 +13,16 @@
                 <a href="#features" class="text-gray-600 hover:text-gray-900 transition-colors">Features</a>
                 <a href="#how-it-works" class="text-gray-600 hover:text-gray-900 transition-colors">How It Works</a>
                 <a href="#pricing" class="text-gray-600 hover:text-gray-900 transition-colors">Pricing</a>
-                <a href="/login" class="text-gray-600 hover:text-gray-900 transition-colors" wire:navigate>Sign In</a>
-                <a href="/register" class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg font-medium transition-colors" wire:navigate>
-                    Get Started
-                </a>
+                @auth
+                    <a href="/app/dashboard" class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg font-medium transition-colors" wire:navigate>
+                        Go to App
+                    </a>
+                @else
+                    <a href="/login" class="text-gray-600 hover:text-gray-900 transition-colors" wire:navigate>Sign In</a>
+                    <a href="/register" class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg font-medium transition-colors" wire:navigate>
+                        Get Started
+                    </a>
+                @endauth
             </div>
             
             <!-- Mobile menu button -->
@@ -36,8 +42,12 @@
                 <a href="#features" class="block px-3 py-2 text-base font-medium text-gray-700 hover:text-gray-900">Features</a>
                 <a href="#how-it-works" class="block px-3 py-2 text-base font-medium text-gray-700 hover:text-gray-900">How It Works</a>
                 <a href="#pricing" class="block px-3 py-2 text-base font-medium text-gray-700 hover:text-gray-900">Pricing</a>
-                <a href="/login" class="block px-3 py-2 text-base font-medium text-gray-700 hover:text-gray-900" wire:navigate>Sign In</a>
-                <a href="/register" class="block px-3 py-2 text-base font-medium text-gray-700 hover:text-gray-900" wire:navigate>Get Started</a>
+                @auth
+                    <a href="/app/dashboard" class="block px-3 py-2 text-base font-medium text-gray-700 hover:text-gray-900" wire:navigate>Go to App</a>
+                @else
+                    <a href="/login" class="block px-3 py-2 text-base font-medium text-gray-700 hover:text-gray-900" wire:navigate>Sign In</a>
+                    <a href="/register" class="block px-3 py-2 text-base font-medium text-gray-700 hover:text-gray-900" wire:navigate>Get Started</a>
+                @endauth
             </div>
         </div>
         @endif
