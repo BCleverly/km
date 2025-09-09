@@ -20,15 +20,23 @@
             @foreach($reactions as $reaction)
                 <span class="flex items-center gap-1">
                     @if($reaction['type'] == 'like')
-                        <!-- Thumbs up -->
-                        <svg class="w-4 h-4 {{ $userReaction && $userReaction->type == 'like' ? 'text-green-600 dark:text-green-400' : 'text-gray-500 dark:text-gray-400' }}" fill="currentColor" viewBox="0 0 20 20">
-                            <path d="M2 10.5a1.5 1.5 0 113 0v6a1.5 1.5 0 01-3 0v-6zM6 10.333v5.818a2 2 0 001.106 1.79l.05.025A4 4 0 008.943 18h5.416a2 2 0 001.962-1.608l1.2-6A2 2 0 0015.56 8H12V4a2 2 0 00-2-2 1 1 0 00-1 1v.667a4 4 0 01-.8 2.4L6.8 7.933a4 4 0 00-.8 2.4z"/>
-                        </svg>
+                        <!-- Thumbs up emoji -->
+                        <span class="text-xl">{{ \Spatie\Emoji\Emoji::thumbsUp() }}</span>
                     @elseif($reaction['type'] == 'dislike')
-                        <!-- Thumbs down -->
-                        <svg class="w-4 h-4 {{ $userReaction && $userReaction->type == 'dislike' ? 'text-red-600 dark:text-red-400' : 'text-gray-500 dark:text-gray-400' }}" fill="currentColor" viewBox="0 0 20 20">
-                            <path d="M18 9.5a1.5 1.5 0 11-3 0v-6a1.5 1.5 0 013 0v-6zM14 9.667v5.818a2 2 0 01-1.106 1.79l-.05.025A4 4 0 0111.057 18H5.64a2 2 0 01-1.962-1.608l-1.2-6A2 2 0 014.44 8H8V4a2 2 0 012-2 1 1 0 011 1v.667a4 4 0 00.8 2.4l1.4 1.866a4 4 0 01.8 2.4z"/>
-                        </svg>
+                        <!-- Thumbs down emoji -->
+                        <span class="text-xl">{{ \Spatie\Emoji\Emoji::thumbsDown() }}</span>
+                    @elseif($reaction['type'] == 'blush')
+                        <!-- Blush emoji -->
+                        <span class="text-xl">{{ \Spatie\Emoji\Emoji::smilingFaceWithSmilingEyes() }}</span>
+                    @elseif($reaction['type'] == 'eggplant')
+                        <!-- Eggplant emoji -->
+                        <span class="text-xl">{{ \Spatie\Emoji\Emoji::eggplant() }}</span>
+                    @elseif($reaction['type'] == 'heart')
+                        <!-- Heart emoji -->
+                        <span class="text-xl">{{ \Spatie\Emoji\Emoji::redHeart() }}</span>
+                    @elseif($reaction['type'] == 'drool')
+                        <!-- Drool emoji -->
+                        <span class="text-xl">{{ \Spatie\Emoji\Emoji::droolingFace() }}</span>
                     @endif
                     <span class="text-xs">{{ $reaction['count'] }}</span>
                 </span>
@@ -38,12 +46,10 @@
         <!-- Show thumbs up button when no reactions -->
         <button 
             @click="showModal = true"
+            title="Like"
             class="flex items-center gap-1 px-3 py-1.5 text-sm text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
         >
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 10h4.764a2 2 0 011.789 2.894l-3.5 7A2 2 0 0115.263 21h-4.017c-.163 0-.326-.02-.485-.06L7 20m7-10V18m-7-8a2 2 0 01-2-2V5a2 2 0 012-2h2.343M11 7v6a2 2 0 102 0V7a2 2 0 10-2 0z"/>
-            </svg>
-            <span class="text-xs">Like</span>
+            <span class="text-xl">{{ \Spatie\Emoji\Emoji::thumbsUp() }}</span>
         </button>
     @endif
 
@@ -57,29 +63,24 @@
         x-transition:leave-start="opacity-100 scale-100"
         x-transition:leave-end="opacity-0 scale-95"
         @click.away="showModal = false"
-        class="absolute bottom-full right-0 mb-2 z-[9999] bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-xl p-3 min-w-[200px]"
+        class="absolute bottom-full right-0 mb-2 z-[9999] bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-xl p-3 w-auto"
         style="display: none;"
     >
         <div class="space-y-2">
-            <h4 class="text-sm font-medium text-gray-900 dark:text-white mb-2">React to this content</h4>
-            
-            <div class="flex items-center gap-3">
+            <div class="flex items-center gap-2">
                 <!-- Thumbs Up -->
                 <button 
                     wire:click="addReaction('like')"
                     wire:loading.attr="disabled"
                     wire:target="addReaction"
-                    class="flex items-center gap-2 px-3 py-2 text-sm rounded-lg transition-colors {{ $userReaction && $userReaction->type == 'like' ? 'bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-200' : 'hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300' }} disabled:opacity-50 disabled:cursor-not-allowed"
+                    title="Like"
+                    class="flex items-center justify-center w-10 h-10 text-sm rounded-lg transition-colors {{ $userReaction && $userReaction->type == 'like' ? 'bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-200' : 'hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300' }} disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                    <svg wire:loading.remove wire:target="addReaction" class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                        <path d="M2 10.5a1.5 1.5 0 113 0v6a1.5 1.5 0 01-3 0v-6zM6 10.333v5.818a2 2 0 001.106 1.79l.05.025A4 4 0 008.943 18h5.416a2 2 0 001.962-1.608l1.2-6A2 2 0 0015.56 8H12V4a2 2 0 00-2-2 1 1 0 00-1 1v.667a4 4 0 01-.8 2.4L6.8 7.933a4 4 0 00-.8 2.4z"/>
-                    </svg>
+                    <span wire:loading.remove wire:target="addReaction" class="text-xl">{{ \Spatie\Emoji\Emoji::thumbsUp() }}</span>
                     <svg wire:loading wire:target="addReaction" class="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24">
                         <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                         <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                     </svg>
-                    <span wire:loading.remove wire:target="addReaction">Like</span>
-                    <span wire:loading wire:target="addReaction">Adding...</span>
                 </button>
 
                 <!-- Thumbs Down -->
@@ -87,17 +88,74 @@
                     wire:click="addReaction('dislike')"
                     wire:loading.attr="disabled"
                     wire:target="addReaction"
-                    class="flex items-center gap-2 px-3 py-2 text-sm rounded-lg transition-colors {{ $userReaction && $userReaction->type == 'dislike' ? 'bg-red-100 text-red-700 dark:bg-red-900 dark:text-red-200' : 'hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300' }} disabled:opacity-50 disabled:cursor-not-allowed"
+                    title="Dislike"
+                    class="flex items-center justify-center w-10 h-10 text-sm rounded-lg transition-colors {{ $userReaction && $userReaction->type == 'dislike' ? 'bg-red-100 text-red-700 dark:bg-red-900 dark:text-red-200' : 'hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300' }} disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                    <svg wire:loading.remove wire:target="addReaction" class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                        <path d="M18 9.5a1.5 1.5 0 11-3 0v-6a1.5 1.5 0 013 0v-6zM14 9.667v5.818a2 2 0 01-1.106 1.79l-.05.025A4 4 0 0111.057 18H5.64a2 2 0 01-1.962-1.608l-1.2-6A2 2 0 014.44 8H8V4a2 2 0 012-2 1 1 0 011 1v.667a4 4 0 00.8 2.4l1.4 1.866a4 4 0 01.8 2.4z"/>
-                    </svg>
+                    <span wire:loading.remove wire:target="addReaction" class="text-xl">{{ \Spatie\Emoji\Emoji::thumbsDown() }}</span>
                     <svg wire:loading wire:target="addReaction" class="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24">
                         <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                         <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                     </svg>
-                    <span wire:loading.remove wire:target="addReaction">Dislike</span>
-                    <span wire:loading wire:target="addReaction">Adding...</span>
+                </button>
+
+                <!-- Blush -->
+                <button 
+                    wire:click="addReaction('blush')"
+                    wire:loading.attr="disabled"
+                    wire:target="addReaction"
+                    title="Blush"
+                    class="flex items-center justify-center w-10 h-10 text-sm rounded-lg transition-colors {{ $userReaction && $userReaction->type == 'blush' ? 'bg-pink-100 text-pink-700 dark:bg-pink-900 dark:text-pink-200' : 'hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300' }} disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                    <span wire:loading.remove wire:target="addReaction" class="text-xl">{{ \Spatie\Emoji\Emoji::smilingFaceWithSmilingEyes() }}</span>
+                    <svg wire:loading wire:target="addReaction" class="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24">
+                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                </button>
+
+                <!-- Eggplant -->
+                <button 
+                    wire:click="addReaction('eggplant')"
+                    wire:loading.attr="disabled"
+                    wire:target="addReaction"
+                    title="Eggplant"
+                    class="flex items-center justify-center w-10 h-10 text-sm rounded-lg transition-colors {{ $userReaction && $userReaction->type == 'eggplant' ? 'bg-purple-100 text-purple-700 dark:bg-purple-900 dark:text-purple-200' : 'hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300' }} disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                    <span wire:loading.remove wire:target="addReaction" class="text-xl">{{ \Spatie\Emoji\Emoji::eggplant() }}</span>
+                    <svg wire:loading wire:target="addReaction" class="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24">
+                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                </button>
+
+                <!-- Heart -->
+                <button 
+                    wire:click="addReaction('heart')"
+                    wire:loading.attr="disabled"
+                    wire:target="addReaction"
+                    title="Heart"
+                    class="flex items-center justify-center w-10 h-10 text-sm rounded-lg transition-colors {{ $userReaction && $userReaction->type == 'heart' ? 'bg-red-100 text-red-700 dark:bg-red-900 dark:text-red-200' : 'hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300' }} disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                    <span wire:loading.remove wire:target="addReaction" class="text-xl">{{ \Spatie\Emoji\Emoji::redHeart() }}</span>
+                    <svg wire:loading wire:target="addReaction" class="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24">
+                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                </button>
+
+                <!-- Drool -->
+                <button 
+                    wire:click="addReaction('drool')"
+                    wire:loading.attr="disabled"
+                    wire:target="addReaction"
+                    title="Drool"
+                    class="flex items-center justify-center w-10 h-10 text-sm rounded-lg transition-colors {{ $userReaction && $userReaction->type == 'drool' ? 'bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-200' : 'hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300' }} disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                    <span wire:loading.remove wire:target="addReaction" class="text-xl">{{ \Spatie\Emoji\Emoji::droolingFace() }}</span>
+                    <svg wire:loading wire:target="addReaction" class="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24">
+                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
                 </button>
             </div>
 

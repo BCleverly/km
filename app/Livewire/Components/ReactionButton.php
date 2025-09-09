@@ -106,7 +106,16 @@ class ReactionButton extends Component
         $user->reactTo($model, $type);
 
         // Provide feedback
-        $reactionType = $type === 'like' ? 'liked' : 'disliked';
+        $reactionLabels = [
+            'like' => 'liked',
+            'dislike' => 'disliked',
+            'blush' => 'blushed at',
+            'eggplant' => 'reacted with eggplant to',
+            'heart' => 'loved',
+            'drool' => 'drooled over',
+        ];
+        
+        $reactionType = $reactionLabels[$type] ?? $type;
         $message = $wasChanging ? "Reaction changed to {$reactionType}" : "Content {$reactionType}";
 
         $this->dispatch('show-notification', [
