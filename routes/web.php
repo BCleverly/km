@@ -25,6 +25,14 @@ Route::middleware('guest')->group(function () {
     Route::get('/reset-password/{token}', ResetPassword::class)->name('password.reset');
 });
 
+// Logout Route (Authenticated users only)
+Route::post('/logout', function () {
+    auth()->logout();
+    request()->session()->invalidate();
+    request()->session()->regenerateToken();
+    return redirect('/');
+})->middleware('auth')->name('logout');
+
 // Application Routes (Authenticated users only)
 Route::middleware('auth')->prefix('app')->name('app.')->group(function () {
     // Dashboard

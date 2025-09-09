@@ -379,7 +379,10 @@ function notificationManager() {
                tabindex="-1">
             <a href="{{ route('app.profile') }}" wire:navigate class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700 cursor-pointer transition-colors" role="menuitem" tabindex="-1">Your profile</a>
             <a href="#" wire:navigate class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700 cursor-pointer transition-colors" role="menuitem" tabindex="-1">Settings</a>
-            <a href="#" wire:navigate class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700 cursor-pointer transition-colors" role="menuitem" tabindex="-1">Sign out</a>
+            <form method="POST" action="{{ route('logout') }}" class="block">
+                @csrf
+                <button type="submit" class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700 cursor-pointer transition-colors" role="menuitem" tabindex="-1">Sign out</button>
+            </form>
           </div>
         </div>
       </div>

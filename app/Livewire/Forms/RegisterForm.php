@@ -22,6 +22,6 @@ class RegisterForm extends Form
     #[Validate('required|string|min:8')]
     public string $password = '';
 
-    #[Validate('required|string|in:search,advertisement,referral,other')]
-    public string $hear_about = '';
+    #[Validate('nullable|string|in:search,advertisement,referral,other')]
+    public ?string $hear_about = null;
 }

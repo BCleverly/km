@@ -31,6 +31,7 @@ class User extends Authenticatable implements HasPassKeys, ReactsInterface
         'email',
         'password',
         'user_type',
+        'username'
     ];
 
     /**

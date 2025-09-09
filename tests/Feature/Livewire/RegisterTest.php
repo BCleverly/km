@@ -32,9 +32,8 @@ it('has proper form validation', function () {
         ->set('form.username', '')
         ->set('form.email', '')
         ->set('form.password', '')
-        ->set('form.hear_about', '')
         ->call('register')
-        ->assertHasErrors(['form.first_name', 'form.last_name', 'form.username', 'form.email', 'form.password', 'form.hear_about']);
+        ->assertHasErrors(['form.first_name', 'form.last_name', 'form.username', 'form.email', 'form.password']);
 });
 
 it('validates email format', function () {
@@ -44,7 +43,6 @@ it('validates email format', function () {
         ->set('form.username', 'johndoe')
         ->set('form.email', 'invalid-email')
         ->set('form.password', 'password123')
-        ->set('form.hear_about', 'search')
         ->call('register')
         ->assertHasErrors(['form.email']);
 });
@@ -58,7 +56,6 @@ it('validates unique email', function () {
         ->set('form.username', 'johndoe')
         ->set('form.email', 'test@example.com')
         ->set('form.password', 'password123')
-        ->set('form.hear_about', 'search')
         ->call('register')
         ->assertHasErrors(['form.email']);
 });
@@ -72,7 +69,6 @@ it('validates unique username', function () {
         ->set('form.username', 'johndoe')
         ->set('form.email', 'test@example.com')
         ->set('form.password', 'password123')
-        ->set('form.hear_about', 'search')
         ->call('register')
         ->assertHasErrors(['form.username']);
 });
@@ -84,7 +80,6 @@ it('validates username format', function () {
         ->set('form.username', 'john doe!')
         ->set('form.email', 'test@example.com')
         ->set('form.password', 'password123')
-        ->set('form.hear_about', 'search')
         ->call('register')
         ->assertHasErrors(['form.username']);
 });
@@ -96,22 +91,10 @@ it('validates password requirements', function () {
         ->set('form.username', 'johndoe')
         ->set('form.email', 'test@example.com')
         ->set('form.password', '123')
-        ->set('form.hear_about', 'search')
         ->call('register')
         ->assertHasErrors(['form.password']);
 });
 
-it('validates hear_about field', function () {
-    Livewire::test(Register::class)
-        ->set('form.first_name', 'John')
-        ->set('form.last_name', 'Doe')
-        ->set('form.username', 'johndoe')
-        ->set('form.email', 'test@example.com')
-        ->set('form.password', 'password123')
-        ->set('form.hear_about', 'invalid')
-        ->call('register')
-        ->assertHasErrors(['form.hear_about']);
-});
 
 it('creates user successfully with valid data', function () {
     Event::fake();
@@ -122,7 +105,6 @@ it('creates user successfully with valid data', function () {
         ->set('form.username', 'johndoe')
         ->set('form.email', 'test@example.com')
         ->set('form.password', 'password123')
-        ->set('form.hear_about', 'search')
         ->call('register')
         ->assertRedirect('/dashboard');
 
@@ -145,7 +127,6 @@ it('dispatches registered event', function () {
         ->set('form.username', 'johndoe')
         ->set('form.email', 'test@example.com')
         ->set('form.password', 'password123')
-        ->set('form.hear_about', 'search')
         ->call('register');
 
     Event::assertDispatched(Registered::class);
@@ -158,7 +139,6 @@ it('logs in user after registration', function () {
         ->set('form.username', 'johndoe')
         ->set('form.email', 'test@example.com')
         ->set('form.password', 'password123')
-        ->set('form.hear_about', 'search')
         ->call('register');
 
     expect(auth()->check())->toBeTrue();
@@ -172,7 +152,6 @@ it('displays loading state during registration', function () {
         ->set('form.username', 'johndoe')
         ->set('form.email', 'test@example.com')
         ->set('form.password', 'password123')
-        ->set('form.hear_about', 'search')
         ->call('register')
         ->assertSee('Creating account...', false);
 });
@@ -185,12 +164,20 @@ it('has proper navigation links', function () {
         ->assertSee('href="/privacy"', false);
 });
 
-it('displays social login options', function () {
+it('displays disabled social login options', function () {
     Livewire::test(Register::class)
         ->assertSee('Passkey')
         ->assertSee('Google')
         ->assertSee('Facebook')
-        ->assertSee('Or continue with');
+        ->assertSee('Or continue with')
+        ->assertSee('disabled', false)
+        ->assertSee('cursor-not-allowed', false);
+});
+
+it('hides the hear about us dropdown', function () {
+    Livewire::test(Register::class)
+        ->assertDontSee('How did you hear about us?')
+        ->assertDontSee('Select an option');
 });
 
 it('has proper red color scheme', function () {
@@ -226,7 +213,6 @@ it('has proper form accessibility', function () {
         ->assertSee('for="username"', false)
         ->assertSee('for="email"', false)
         ->assertSee('for="password"', false)
-        ->assertSee('for="hear_about"', false)
         ->assertSee('autocomplete="given-name"', false)
         ->assertSee('autocomplete="family-name"', false)
         ->assertSee('autocomplete="username"', false)
@@ -234,10 +220,3 @@ it('has proper form accessibility', function () {
         ->assertSee('autocomplete="new-password"', false);
 });
 
-it('has hear about options', function () {
-    Livewire::test(Register::class)
-        ->assertSee('Search engine (Google, Bing, etc.)')
-        ->assertSee('Social media advertisement')
-        ->assertSee('Friend or family referral')
-        ->assertSee('Other');
-});
