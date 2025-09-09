@@ -159,7 +159,7 @@
                 <!-- Outcomes (for tasks only) -->
                 @if($contentType === 'tasks' && $item->recommendedOutcomes->count() > 0)
                     <div class="space-y-2">
-                        <h4 class="text-sm font-medium text-gray-700 dark:text-gray-300">Outcomes:</h4>
+                        <h4 class="text-sm font-medium text-gray-700 dark:text-gray-300">Suggested outcomes:</h4>
                         <div class="space-y-1">
                             @foreach($item->recommendedOutcomes as $outcome)
                                 <div class="flex items-center justify-between text-xs">
@@ -180,6 +180,8 @@
                 <!-- Author -->
                 <div class="mt-4 pt-4 border-t border-gray-200 dark:border-gray-700">
                     <div class="flex items-center text-xs text-gray-500 dark:text-gray-400">
+                        <span class="font-medium text-gray-700 dark:text-gray-300">{{ ucfirst($contentType) }}</span>
+                        <span class="mx-2">•</span>
                         <span>By {{ $item->author->name ?? 'Anonymous' }}</span>
                         <span class="mx-2">•</span>
                         <span>{{ $item->created_at->diffForHumans() }}</span>
