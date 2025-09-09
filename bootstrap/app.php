@@ -19,6 +19,11 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withSchedule(function (Schedule $schedule): void {
         //        $schedule->command('activitylog:clean --days=7')->daily();
     })
+    ->withCommands([
+        // Register custom production setup commands
+        \App\Console\Commands\SetupProduction::class,
+        \App\Console\Commands\CreateAdminUser::class,
+    ])
     ->withExceptions(function (Exceptions $exceptions): void {
         //
     })->create();
