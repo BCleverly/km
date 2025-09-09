@@ -66,17 +66,6 @@
             </select>
         </div>
 
-        <!-- Premium Filter -->
-        <div class="flex items-end">
-            <label class="flex items-center">
-                <input
-                    type="checkbox"
-                    wire:model.live="showPremium"
-                    class="rounded border-gray-300 text-blue-600 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
-                >
-                <span class="ml-2 text-sm text-gray-700 dark:text-gray-300">Show Premium</span>
-            </label>
-        </div>
     </div>
 
     <!-- Clear Filters -->
@@ -93,8 +82,8 @@
 <!-- Tasks Grid -->
 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
     @forelse($this->content as $item)
-        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden hover:shadow-md transition-shadow">
-            <div class="p-6">
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden hover:shadow-md transition-shadow flex flex-col">
+            <div class="p-6 flex-1 flex flex-col">
                 <!-- Task Header -->
                 <div class="flex items-start justify-between mb-4">
                     <div class="flex-1">
@@ -177,15 +166,16 @@
                     </div>
                 @endif
 
-                <!-- Author -->
-                <div class="mt-4 pt-4 border-t border-gray-200 dark:border-gray-700">
-                    <div class="flex items-center text-xs text-gray-500 dark:text-gray-400">
-                        <span class="font-medium text-gray-700 dark:text-gray-300">{{ ucfirst($contentType) }}</span>
-                        <span class="mx-2">•</span>
-                        <span>By {{ $item->author->name ?? 'Anonymous' }}</span>
-                        <span class="mx-2">•</span>
-                        <span>{{ $item->created_at->diffForHumans() }}</span>
-                    </div>
+            </div>
+            
+            <!-- Author Footer -->
+            <div class="px-6 py-4 border-t border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-700/50">
+                <div class="flex items-center text-xs text-gray-500 dark:text-gray-400">
+                    <span class="font-medium text-gray-700 dark:text-gray-300">{{ ucfirst($contentType) }}</span>
+                    <span class="mx-2">•</span>
+                    <span>By {{ $item->author->name ?? 'Anonymous' }}</span>
+                    <span class="mx-2">•</span>
+                    <span>{{ $item->created_at->diffForHumans() }}</span>
                 </div>
             </div>
         </div>
