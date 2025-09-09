@@ -14,7 +14,7 @@ class TasksTable
     {
         return $table
             ->columns([
-                TextColumn::make('title'),
+                TextColumn::make('title')->searchable(),
             ])
             ->filters([
                 //
