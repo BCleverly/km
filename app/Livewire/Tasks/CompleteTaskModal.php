@@ -90,6 +90,7 @@ class CompleteTaskModal extends Component
                 
                 // Dispatch event to refresh dashboard and close modal
                 $this->dispatch('task-completed');
+                $this->dispatch('close-modal');
             } else {
                 $this->dispatch('notify', [
                     'type' => 'error',
@@ -123,6 +124,7 @@ class CompleteTaskModal extends Component
 
         $this->clearAssignedTask();
         $this->dispatch('task-failed', ['taskId' => $this->assignedTask->id]);
+        $this->dispatch('close-modal');
     }
 
     public function render(): View

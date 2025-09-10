@@ -25,15 +25,7 @@ class DatabaseSeeder extends Seeder
         // Seed roles and permissions first
         $this->call([
             RolesAndPermissionsSeeder::class,
-        ]);
-
-        // Import task data from JSON files
-        $this->call([
             TaskDataSeeder::class,
-        ]);
-
-        // Seed content (fantasies and stories)
-        $this->call([
             FantasySeeder::class,
             StorySeeder::class,
         ]);
@@ -112,12 +104,11 @@ class DatabaseSeeder extends Seeder
         $user->assignRole('User');
 
         // Create test users for each subscription level
-        $this->createTestUsers();
+        if (app()->isLocal()) {
+            $this->createTestUsers();
+        }
 
-        // Create additional regular users
-        User::factory(10)->create()->each(function ($user) {
-            $user->assignRole('User');
-        });
+
     }
 
     /**
@@ -125,25 +116,7 @@ class DatabaseSeeder extends Seeder
      */
     private function createTestUsers(): void
     {
-        // Solo (Free) User
-        $soloUser = User::firstOrCreate(
-            ['email' => 'solo@example.com'],
-            [
-                'name' => 'Solo User',
-                'email' => 'solo@example.com',
-                'password' => bcrypt('password'),
-                'user_type' => \App\TargetUserType::Male,
-            ]
-        );
-        $soloUser->profile()->firstOrCreate(
-            ['user_id' => $soloUser->id],
-            [
-                'username' => 'solo',
-                'about' => 'Free tier solo user',
-                'theme_preference' => 'light',
-            ]
-        );
-        $soloUser->assignRole('User');
+
 
         // Couple (Free) Users
         $coupleUser1 = User::firstOrCreate(
@@ -187,60 +160,6 @@ class DatabaseSeeder extends Seeder
 
         // Link the couple users
         $coupleUser1->update(['partner_id' => $coupleUser2->id]);
-
-        // Premium User
-        $premiumUser = User::firstOrCreate(
-            ['email' => 'premium@example.com'],
-            [
-                'name' => 'Premium User',
-                'email' => 'premium@example.com',
-                'password' => bcrypt('password'),
-                'user_type' => \App\TargetUserType::Female,
-            ]
-        );
-        $premiumUser->profile()->firstOrCreate(
-            ['user_id' => $premiumUser->id],
-            [
-                'username' => 'premium',
-                'about' => 'Premium subscription user',
-                'theme_preference' => 'system',
-            ]
-        );
-        $premiumUser->assignRole('User');
-        
-        // Create premium subscription
-        $premiumUser->subscriptions()->create([
-            'type' => 'premium',
-            'stripe_id' => 'sub_premium_test',
-            'stripe_status' => 'active',
-        ]);
-
-        // Lifetime User
-        $lifetimeUser = User::firstOrCreate(
-            ['email' => 'lifetime@example.com'],
-            [
-                'name' => 'Lifetime User',
-                'email' => 'lifetime@example.com',
-                'password' => bcrypt('password'),
-                'user_type' => \App\TargetUserType::Any,
-            ]
-        );
-        $lifetimeUser->profile()->firstOrCreate(
-            ['user_id' => $lifetimeUser->id],
-            [
-                'username' => 'lifetime',
-                'about' => 'Lifetime subscription user',
-                'theme_preference' => 'light',
-            ]
-        );
-        $lifetimeUser->assignRole('User');
-        
-        // Create lifetime subscription
-        $lifetimeUser->subscriptions()->create([
-            'type' => 'lifetime',
-            'stripe_id' => 'sub_lifetime_test',
-            'stripe_status' => 'active',
-        ]);
     }
 
 }

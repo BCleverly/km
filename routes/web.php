@@ -9,6 +9,8 @@ use App\Livewire\Homepage;
 use App\Livewire\Tasks\Dashboard as TasksDashboard;
 use App\Livewire\Tasks\CreateCustomTask;
 use App\Livewire\User\Profile;
+use App\Livewire\User\PublicProfile;
+use App\Livewire\User\Settings;
 use App\Livewire\Fantasies\ListFantasies;
 use App\Livewire\Fantasies\CreateFantasy;
 use App\Livewire\Stories\ListStories;
@@ -43,7 +45,10 @@ Route::post('/logout', function () {
 Route::middleware('auth')->prefix('app')->name('app.')->group(function () {
     // Dashboard
     Route::get('/dashboard', Dashboard::class)->name('dashboard');
-    Route::get('/profile', Profile::class)->name('profile');
+    
+    // Profile & Settings
+    Route::get('/profile/{username}', PublicProfile::class)->name('profile');
+    Route::get('/settings', Settings::class)->name('settings');
 
     // Tasks
     Route::get('/tasks', TasksDashboard::class)->name('tasks');

@@ -186,7 +186,7 @@ class User extends Authenticatable implements HasPassKeys, ReactsInterface, Fila
     public function recentTaskActivities(int $limit = 10): HasMany
     {
         return $this->taskActivities()
-            ->with(['task', 'userAssignedTask'])
+            ->with(['task', 'userAssignedTask.media'])
             ->orderBy('activity_at', 'desc')
             ->limit($limit);
     }

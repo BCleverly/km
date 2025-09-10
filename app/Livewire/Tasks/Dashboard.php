@@ -8,6 +8,7 @@ use App\Actions\Tasks\AssignRandomTask;
 use App\Actions\Tasks\CompleteTask;
 use App\Actions\Tasks\FailTask;
 use Livewire\Attributes\Title;
+use Livewire\Attributes\On;
 use Livewire\Component;
 
 #[Title('Tasks Dashboard')]
@@ -35,6 +36,26 @@ class Dashboard extends Component
             'maxActiveOutcomes' => $maxActiveOutcomes,
             'remainingSlots' => $remainingSlots,
         ]);
+    }
+
+    /**
+     * Handle task completion event from modal
+     */
+    #[On('task-completed')]
+    public function handleTaskCompleted()
+    {
+        // Force refresh of the component to update active task and recent activities
+        $this->dispatch('$refresh');
+    }
+
+    /**
+     * Handle task failure event from modal
+     */
+    #[On('task-failed')]
+    public function handleTaskFailed()
+    {
+        // Force refresh of the component to update active task and recent activities
+        $this->dispatch('$refresh');
     }
 
     /**

@@ -482,7 +482,17 @@
 
                                 {{-- Completion Image Display --}}
                                 @if($activity->userAssignedTask && $activity->userAssignedTask->has_completion_image)
-                                    @livewire('tasks.completion-image-display', ['assignedTask' => $activity->userAssignedTask])
+                                    @php
+                                        $completionImage = $activity->userAssignedTask->getFirstMedia('completion_images');
+                                    @endphp
+                                    @if($completionImage)
+                                        <div class="mt-3">
+                                            <img src="{{ $completionImage->getUrl('medium') }}" 
+                                                 alt="Task completion image" 
+                                                 class="w-full max-w-xs rounded-lg shadow-sm border border-gray-200 dark:border-gray-600 cursor-pointer hover:shadow-md transition-shadow"
+                                                 onclick="openImageModal('{{ $completionImage->getUrl('large') }}')">
+                                        </div>
+                                    @endif
                                 @endif
                             </div>
                         </div>
@@ -511,4 +521,39 @@
 
         {{-- Task Completion Modal --}}
         <livewire:tasks.complete-task-modal />
+
+        {{-- Image Modal --}}
+        <div id="imageModal" class="fixed inset-0 z-50 hidden overflow-y-auto" x-data="{ show: false, imageUrl: '' }" x-show="show" x-cloak>
+            <div class="flex items-center justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:block sm:p-0">
+                {{-- Backdrop --}}
+                <div class="fixed inset-0 transition-opacity bg-gray-500 bg-opacity-75" @click="show = false"></div>
+
+                {{-- Modal Content --}}
+                <div class="inline-block w-full max-w-4xl overflow-hidden text-left align-bottom transition-all transform bg-white dark:bg-gray-800 rounded-lg shadow-xl sm:my-8 sm:align-middle">
+                    <div class="relative">
+                        {{-- Close Button --}}
+                        <button @click="show = false" 
+                                class="absolute top-4 right-4 z-10 p-2 text-white bg-black bg-opacity-50 rounded-full hover:bg-opacity-75 transition-all">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                            </svg>
+                        </button>
+                        
+                        {{-- Image --}}
+                        <img :src="imageUrl" 
+                             alt="Task completion image" 
+                             class="w-full h-auto max-h-[80vh] object-contain">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script>
+        function openImageModal(imageUrl) {
+            const modal = document.getElementById('imageModal');
+            const alpineData = Alpine.$data(modal);
+            alpineData.imageUrl = imageUrl;
+            alpineData.show = true;
+        }
+        </script>
 </div>
