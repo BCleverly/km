@@ -14,7 +14,9 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
-        //
+        $middleware->alias([
+            'couple.subscription' => \App\Http\Middleware\EnsureCoupleSubscription::class,
+        ]);
     })
     ->withSchedule(function (Schedule $schedule): void {
         //        $schedule->command('activitylog:clean --days=7')->daily();
