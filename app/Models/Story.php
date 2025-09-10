@@ -13,10 +13,11 @@ use Qirolab\Laravel\Reactions\Traits\Reactable;
 use Qirolab\Laravel\Reactions\Contracts\ReactableInterface;
 use Spatie\Activitylog\Traits\LogsActivity;
 use Spatie\Activitylog\LogOptions;
+use App\Traits\Commentable;
 
 class Story extends Model implements ReactableInterface
 {
-    use HasFactory, Reactable, LogsActivity;
+    use HasFactory, Reactable, LogsActivity, Commentable;
 
     protected $fillable = [
         'title',

@@ -14,6 +14,7 @@ use App\Livewire\Fantasies\CreateFantasy;
 use App\Livewire\Stories\ListStories;
 use App\Livewire\Stories\ShowStory;
 use App\Livewire\Stories\CreateStory;
+use App\Livewire\Comments\CommentsDemo;
 use Illuminate\Support\Facades\Route;
 
 Route::passkeys();
@@ -58,4 +59,7 @@ Route::middleware('auth')->prefix('app')->name('app.')->group(function () {
     Route::get('/stories', ListStories::class)->name('stories.index');
     Route::get('/stories/create', CreateStory::class)->name('stories.create');
     Route::get('/stories/{story:slug}', ShowStory::class)->name('stories.show');
+
+    // Comments Demo
+    Route::get('/comments-demo', CommentsDemo::class)->name('comments.demo');
 });
