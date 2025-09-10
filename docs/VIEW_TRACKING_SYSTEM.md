@@ -9,6 +9,7 @@ The view tracking system provides robust, abuse-resistant view counting for cont
 ### Abuse Prevention
 - **Session Limits**: Maximum 3 views per content per session
 - **Daily Limits**: Maximum 100 views per user per day
+- **Daily View Prevention**: One view per content per user per day (prevents refresh abuse)
 - **Cooldown Period**: 5-minute cooldown between views of the same content
 - **Session Duration**: 24-hour session tracking
 
@@ -41,6 +42,7 @@ The view tracking system provides robust, abuse-resistant view counting for cont
 {model_type}:views:{model_id}           # View count for specific content (scoped)
 viewed:{user_key}:{model_type}:{model_id}  # Session view tracking
 daily_views:{user_key}:{date}           # Daily view limits
+daily_viewed:{user_key}:{model_type}:{model_id}:{date}  # Daily view prevention
 cooldown:{user_key}:{model_type}:{model_id}  # Cooldown tracking
 ```
 
@@ -48,6 +50,7 @@ cooldown:{user_key}:{model_type}:{model_id}  # Cooldown tracking
 - `story:views:123` - View count for story ID 123
 - `fantasy:views:456` - View count for fantasy ID 456
 - `task:views:789` - View count for task ID 789
+- `daily_viewed:user:1:story:123:2025-01-15` - User 1 viewed story 123 on 2025-01-15
 
 ## Usage
 
@@ -285,6 +288,9 @@ beforeEach(function () {
 redis-cli keys "*:views:*"
 redis-cli keys "story:views:*"
 redis-cli keys "fantasy:views:*"
+
+# Check daily viewed tracking
+redis-cli keys "daily_viewed:*"
 
 # Check abuse stats
 php artisan views:sync --stats

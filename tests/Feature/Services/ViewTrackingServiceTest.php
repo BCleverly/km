@@ -91,6 +91,29 @@ it('enforces cooldown period between views', function () {
     expect($result)->toBeFalse();
 });
 
+it('prevents multiple views of same content per day', function () {
+    $user = User::factory()->create();
+    $story = Story::factory()->create();
+    
+    $service = app(ViewTrackingService::class);
+    
+    // First view should be tracked
+    $result = $service->trackView('story', $story->id, $user->id);
+    expect($result)->toBeTrue();
+    
+    // Wait for cooldown to expire (simulate by clearing cooldown key)
+    $cooldownKey = 'cooldown:user:' . $user->id . ':story:' . $story->id;
+    Redis::del($cooldownKey);
+    
+    // Second view should still be blocked because user already viewed today
+    $result = $service->trackView('story', $story->id, $user->id);
+    expect($result)->toBeFalse();
+    
+    // View count should still be 1
+    $viewCount = $service->getViewCount('story', $story->id);
+    expect($viewCount)->toBe(1);
+});
+
 it('can get view counts for multiple models', function () {
     $user = User::factory()->create();
     $fantasy1 = Fantasy::factory()->create();
@@ -158,4 +181,28 @@ it('uses scoped Redis keys for different model types', function () {
     // Verify key format
     expect($fantasyKeys[0])->toStartWith('fantasy:views:');
     expect($storyKeys[0])->toStartWith('story:views:');
+});
+
+it('allows viewing different content on the same day', function () {
+    $user = User::factory()->create();
+    $story1 = Story::factory()->create();
+    $story2 = Story::factory()->create();
+    
+    $service = app(ViewTrackingService::class);
+    
+    // View first story
+    $result1 = $service->trackView('story', $story1->id, $user->id);
+    expect($result1)->toBeTrue();
+    
+    // Clear cooldown to simulate time passing
+    $cooldownKey1 = 'cooldown:user:' . $user->id . ':story:' . $story1->id;
+    Redis::del($cooldownKey1);
+    
+    // View second story (should be allowed)
+    $result2 = $service->trackView('story', $story2->id, $user->id);
+    expect($result2)->toBeTrue();
+    
+    // Both stories should have 1 view each
+    expect($service->getViewCount('story', $story1->id))->toBe(1);
+    expect($service->getViewCount('story', $story2->id))->toBe(1);
 });

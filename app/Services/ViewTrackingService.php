@@ -12,6 +12,7 @@ class ViewTrackingService
 {
     private const SESSION_PREFIX = 'viewed:';
     private const DAILY_LIMIT_PREFIX = 'daily_views:';
+    private const DAILY_VIEWED_PREFIX = 'daily_viewed:';
     
     // Abuse prevention settings
     private const MAX_VIEWS_PER_SESSION = 3; // Max views per session per content
@@ -40,6 +41,16 @@ class ViewTrackingService
         // Check if user/session has already viewed this content too many times
         if (!$this->canViewContent($userKey, $modelType, $modelId)) {
             Log::info('View tracking blocked: Session limit exceeded', [
+                'model_type' => $modelType,
+                'model_id' => $modelId,
+                'user_key' => $userKey,
+            ]);
+            return false;
+        }
+
+        // Check if user has already viewed this content today
+        if ($this->hasViewedToday($userKey, $modelType, $modelId)) {
+            Log::info('View tracking blocked: Already viewed today', [
                 'model_type' => $modelType,
                 'model_id' => $modelId,
                 'user_key' => $userKey,
@@ -173,12 +184,22 @@ class ViewTrackingService
     }
 
     /**
+     * Check if user has already viewed this content today
+     */
+    private function hasViewedToday(string $userKey, string $modelType, int $modelId): bool
+    {
+        $dailyViewedKey = self::DAILY_VIEWED_PREFIX . $userKey . ':' . $modelType . ':' . $modelId . ':' . Carbon::today()->format('Y-m-d');
+        return Redis::exists($dailyViewedKey);
+    }
+
+    /**
      * Record a view for tracking
      */
     private function recordView(string $userKey, string $modelType, int $modelId): void
     {
         $sessionKey = self::SESSION_PREFIX . $userKey . ':' . $modelType . ':' . $modelId;
         $cooldownKey = 'cooldown:' . $userKey . ':' . $modelType . ':' . $modelId;
+        $dailyViewedKey = self::DAILY_VIEWED_PREFIX . $userKey . ':' . $modelType . ':' . $modelId . ':' . Carbon::today()->format('Y-m-d');
         
         // Increment session view count
         Redis::incr($sessionKey);
@@ -186,6 +207,9 @@ class ViewTrackingService
         
         // Set cooldown
         Redis::setex($cooldownKey, self::VIEW_COOLDOWN_MINUTES * 60, time());
+        
+        // Mark as viewed today (expires at end of day + 1 day for safety)
+        Redis::setex($dailyViewedKey, 2 * 24 * 3600, time());
     }
 
     /**
@@ -287,6 +311,12 @@ class ViewTrackingService
         if (!empty($cooldownKeys)) {
             Redis::del($cooldownKeys);
         }
+
+        // Clear daily viewed data
+        $dailyViewedKeys = Redis::keys(self::DAILY_VIEWED_PREFIX . '*');
+        if (!empty($dailyViewedKeys)) {
+            Redis::del($dailyViewedKeys);
+        }
     }
 
     /**
@@ -312,6 +342,7 @@ class ViewTrackingService
             'total_view_keys' => count(Redis::keys('*:views:*')),
             'total_session_keys' => count(Redis::keys(self::SESSION_PREFIX . '*')),
             'total_daily_limit_keys' => count(Redis::keys(self::DAILY_LIMIT_PREFIX . '*')),
+            'total_daily_viewed_keys' => count(Redis::keys(self::DAILY_VIEWED_PREFIX . '*')),
         ];
     }
 }
