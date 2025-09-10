@@ -40,7 +40,6 @@ class StoryFactory extends Factory
             'user_id' => User::factory(),
             'status' => ContentStatus::Approved,
             'report_count' => fake()->numberBetween(0, 5),
-            'is_premium' => fake()->boolean(20), // 20% chance of being premium
         ];
     }
 
@@ -75,12 +74,12 @@ class StoryFactory extends Factory
     }
 
     /**
-     * Create a premium story
+     * Create a draft story
      */
-    public function premium(): static
+    public function draft(): static
     {
         return $this->state(fn (array $attributes) => [
-            'is_premium' => true,
+            'status' => ContentStatus::Draft,
         ]);
     }
 

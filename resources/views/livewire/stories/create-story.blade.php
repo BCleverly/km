@@ -80,19 +80,6 @@
                 </div>
             </div>
 
-            <!-- Premium Option -->
-            <div class="mb-6">
-                <label class="flex items-center">
-                    <input
-                        type="checkbox"
-                        wire:model="is_premium"
-                        class="rounded border-gray-300 text-blue-600 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
-                    >
-                    <span class="ml-2 text-sm text-gray-700 dark:text-gray-300">
-                        Make this a premium story (requires premium subscription)
-                    </span>
-                </label>
-            </div>
 
             <!-- Guidelines -->
             <div class="mb-6 p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
@@ -100,26 +87,41 @@
                 <ul class="text-sm text-blue-700 dark:text-blue-300 space-y-1">
                     <li>• Write engaging and well-structured stories</li>
                     <li>• Keep content respectful and consensual</li>
-                    <li>• Minimum 100 words per story</li>
-                    <li>• All stories are reviewed before publication</li>
+                    <li>• Minimum 100 words required for submission</li>
+                    <li>• Save as draft to continue writing later</li>
+                    <li>• All submitted stories are reviewed before publication</li>
                     <li>• Use proper formatting and paragraphs</li>
                 </ul>
             </div>
 
-            <!-- Submit Button -->
-            <div class="flex items-center justify-end gap-4">
+            <!-- Action Buttons -->
+            <div class="flex items-center justify-between gap-4">
                 <a href="{{ route('app.stories.index') }}" 
                    class="px-4 py-2 text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors">
                     Cancel
                 </a>
-                <button
-                    type="submit"
-                    class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                    wire:loading.attr="disabled"
-                >
-                    <span wire:loading.remove>Submit Story</span>
-                    <span wire:loading>Submitting...</span>
-                </button>
+                <div class="flex items-center gap-3">
+                    <button
+                        type="button"
+                        wire:click="saveAsDraft"
+                        class="bg-gray-600 hover:bg-gray-700 text-white px-6 py-2 rounded-lg font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                        wire:loading.attr="disabled"
+                        wire:target="saveAsDraft"
+                    >
+                        <span wire:loading.remove wire:target="saveAsDraft">Save as Draft</span>
+                        <span wire:loading wire:target="saveAsDraft">Saving...</span>
+                    </button>
+                    <button
+                        type="button"
+                        wire:click="submitForReview"
+                        class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                        wire:loading.attr="disabled"
+                        wire:target="submitForReview"
+                    >
+                        <span wire:loading.remove wire:target="submitForReview">Submit for Review</span>
+                        <span wire:loading wire:target="submitForReview">Submitting...</span>
+                    </button>
+                </div>
             </div>
         </form>
     </div>

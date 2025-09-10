@@ -28,17 +28,6 @@
                 >
             </div>
 
-            <!-- Premium Filter -->
-            <div>
-                <label class="flex items-center">
-                    <input
-                        type="checkbox"
-                        wire:model.live="showPremium"
-                        class="rounded border-gray-300 text-blue-600 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
-                    >
-                    <span class="ml-2 text-sm text-gray-700 dark:text-gray-300">Show Premium</span>
-                </label>
-            </div>
 
             <!-- Clear Filters -->
             <div class="flex items-end">
@@ -90,14 +79,6 @@
                         </span>
                     </div>
 
-                    <!-- Premium Badge -->
-                    @if($story->is_premium)
-                        <div class="mb-4">
-                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200">
-                                Premium
-                            </span>
-                        </div>
-                    @endif
 
                     <!-- Read More Button -->
                     <div class="mt-auto">

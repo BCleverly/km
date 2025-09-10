@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\ContentStatus;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -28,18 +29,16 @@ class Story extends Model implements ReactableInterface
         'status',
         'view_count',
         'report_count',
-        'is_premium',
     ];
 
     protected function casts(): array
     {
         return [
-            'is_premium' => 'boolean',
             'word_count' => 'integer',
             'reading_time_minutes' => 'integer',
             'view_count' => 'integer',
             'report_count' => 'integer',
-            'status' => 'integer',
+            'status' => ContentStatus::class,
         ];
     }
 
@@ -91,11 +90,19 @@ class Story extends Model implements ReactableInterface
     }
 
     /**
+     * Scope to get draft stories.
+     */
+    public function scopeDraft($query)
+    {
+        return $query->where('status', ContentStatus::Draft);
+    }
+
+    /**
      * Scope to get approved stories.
      */
     public function scopeApproved($query)
     {
-        return $query->where('status', 2);
+        return $query->where('status', ContentStatus::Approved);
     }
 
     /**
@@ -103,7 +110,7 @@ class Story extends Model implements ReactableInterface
      */
     public function scopePending($query)
     {
-        return $query->where('status', 1);
+        return $query->where('status', ContentStatus::Pending);
     }
 
     /**
@@ -111,7 +118,7 @@ class Story extends Model implements ReactableInterface
      */
     public function scopeRejected($query)
     {
-        return $query->where('status', 4);
+        return $query->where('status', ContentStatus::Rejected);
     }
 
     /**
@@ -119,23 +126,15 @@ class Story extends Model implements ReactableInterface
      */
     public function scopeInReview($query)
     {
-        return $query->where('status', 3);
+        return $query->where('status', ContentStatus::InReview);
     }
 
     /**
-     * Scope to get public stories (approved and not premium).
+     * Scope to get public stories (approved).
      */
     public function scopePublic($query)
     {
-        return $query->approved()->where('is_premium', false);
-    }
-
-    /**
-     * Scope to get premium stories.
-     */
-    public function scopePremium($query)
-    {
-        return $query->where('is_premium', true);
+        return $query->approved();
     }
 
     /**
@@ -143,13 +142,15 @@ class Story extends Model implements ReactableInterface
      */
     public function getStatusLabelAttribute(): string
     {
-        return match ($this->status) {
-            1 => 'Pending',
-            2 => 'Approved',
-            3 => 'In Review',
-            4 => 'Rejected',
-            default => 'Unknown',
-        };
+        return $this->status->label();
+    }
+
+    /**
+     * Check if the story is a draft.
+     */
+    public function isDraft(): bool
+    {
+        return $this->status === ContentStatus::Draft;
     }
 
     /**
@@ -157,7 +158,7 @@ class Story extends Model implements ReactableInterface
      */
     public function isApproved(): bool
     {
-        return $this->status === 2;
+        return $this->status === ContentStatus::Approved;
     }
 
     /**
@@ -165,7 +166,7 @@ class Story extends Model implements ReactableInterface
      */
     public function isPending(): bool
     {
-        return $this->status === 1;
+        return $this->status === ContentStatus::Pending;
     }
 
     /**
@@ -173,7 +174,7 @@ class Story extends Model implements ReactableInterface
      */
     public function isRejected(): bool
     {
-        return $this->status === 4;
+        return $this->status === ContentStatus::Rejected;
     }
 
     /**
@@ -181,7 +182,7 @@ class Story extends Model implements ReactableInterface
      */
     public function isInReview(): bool
     {
-        return $this->status === 3;
+        return $this->status === ContentStatus::InReview;
     }
 
     /**
