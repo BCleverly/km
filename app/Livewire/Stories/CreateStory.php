@@ -60,7 +60,7 @@ class CreateStory extends Component
         $this->resetForm();
 
         // Redirect to stories list
-        $this->redirectRoute('stories.index');
+        $this->redirectRoute('app.stories.index');
     }
 
     public function submitForReview(): void
@@ -102,7 +102,7 @@ class CreateStory extends Component
         $this->resetForm();
 
         // Redirect to stories list
-        $this->redirectRoute('stories.index');
+        $this->redirectRoute('app.stories.index');
     }
 
     private function resetForm(): void
