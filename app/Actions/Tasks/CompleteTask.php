@@ -17,8 +17,9 @@ class CompleteTask
 {
     use AsAction;
 
-    public function handle(User $user, ?UploadedFile $completionImage = null, ?string $completionNote = null): array
+    public function handle(User $user, mixed $completionImage = null, ?string $completionNote = null): array
     {
+        
         $activeTask = $user->assignedTasks()
             ->where('status', TaskStatus::Assigned)
             ->with(['task', 'potentialReward', 'potentialPunishment'])
@@ -31,14 +32,14 @@ class CompleteTask
                 'task' => null,
             ];
         }
-
+        
         // Check if user can upload images (premium feature)
         $hasImage = false;
         if ($completionImage && $user->canUploadCompletionImages()) {
             $hasImage = true;
         }
-
-        // Update task status to completed
+        
+        //Update task status to completed
         $activeTask->update([
             'status' => TaskStatus::Completed,
             'completed_at' => now(),
@@ -48,6 +49,7 @@ class CompleteTask
             'completion_note' => $completionNote,
         ]);
 
+        
         // Handle image upload if provided and user has premium
         if ($completionImage && $user->canUploadCompletionImages()) {
             $activeTask->addMedia($completionImage->getRealPath())

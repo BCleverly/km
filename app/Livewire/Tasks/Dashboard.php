@@ -62,25 +62,22 @@ class Dashboard extends Component
     }
 
     /**
-     * Complete the current active task
-     */
-    public function completeTask()
-    {
-        $user = auth()->user();
-        $result = CompleteTask::run($user);
-        
-        $this->dispatch('notify', [
-            'type' => $result['success'] ? 'success' : 'error',
-            'message' => $result['message']
-        ]);
-    }
-
-    /**
      * Show the completion modal with image upload
      */
     public function showCompletionModal()
     {
-        $this->dispatch('show-completion-modal');
+        $user = auth()->user();
+        $activeTask = $user->stats()->getActiveTask();
+        
+        if (!$activeTask) {
+            $this->dispatch('notify', [
+                'type' => 'error',
+                'message' => 'No active task found'
+            ]);
+            return;
+        }
+        
+        $this->dispatch('show-completion-modal', $activeTask);
     }
 
     /**

@@ -510,58 +510,5 @@
     </div>
 
         {{-- Task Completion Modal --}}
-        @if($activeTask)
-            <div x-data="{ showModal: false }"
-                 x-on:show-completion-modal.window="showModal = true"
-                 x-on:task-completed.window="showModal = false"
-                 x-on:task-failed.window="showModal = false"
-                 x-cloak>
-            
-            {{-- Modal Backdrop --}}
-            <div x-show="showModal" 
-                 x-transition:enter="transition ease-out duration-300"
-                 x-transition:enter-start="opacity-0"
-                 x-transition:enter-end="opacity-100"
-                 x-transition:leave="transition ease-in duration-200"
-                 x-transition:leave-start="opacity-100"
-                 x-transition:leave-end="opacity-0"
-                 class="fixed inset-0 bg-gray-500 bg-opacity-75 z-50"
-                 x-on:click="showModal = false">
-            </div>
-
-            {{-- Modal Content --}}
-            <div x-show="showModal" 
-                 x-transition:enter="transition ease-out duration-300"
-                 x-transition:enter-start="opacity-0 transform scale-95"
-                 x-transition:enter-end="opacity-100 transform scale-100"
-                 x-transition:leave="transition ease-in duration-200"
-                 x-transition:leave-start="opacity-100 transform scale-100"
-                 x-transition:leave-end="opacity-0 transform scale-95"
-                 class="fixed inset-0 z-50 overflow-y-auto"
-                 x-on:click.away="showModal = false">
-                
-                <div class="flex min-h-full items-center justify-center p-4">
-                    <div class="relative w-full max-w-2xl bg-white dark:bg-gray-800 rounded-lg shadow-xl">
-                        {{-- Modal Header --}}
-                        <div class="flex items-center justify-between p-6 border-b border-gray-200 dark:border-gray-700">
-                            <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
-                                Complete Task
-                            </h3>
-                            <button @click="showModal = false" 
-                                    class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300">
-                                <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                                </svg>
-                            </button>
-                        </div>
-
-                        {{-- Modal Body --}}
-                        <div class="p-6">
-                            @livewire('tasks.complete-task-with-image', ['assignedTask' => $activeTask])
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    @endif
+        <livewire:tasks.complete-task-modal />
 </div>

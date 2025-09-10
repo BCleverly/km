@@ -6,18 +6,17 @@ namespace App\Livewire\Tasks;
 
 use App\Actions\Tasks\CompleteTask;
 use App\Models\Tasks\UserAssignedTask;
-use App\TaskStatus;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Attributes\Validate;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 
-class CompleteTaskWithImage extends Component
+class CompleteTaskModal extends Component
 {
     use WithFileUploads;
 
-    public UserAssignedTask $assignedTask;
+    public ?UserAssignedTask $assignedTask = null;
     
     #[Validate('nullable|image|max:10240')] // 10MB max
     public $completionImage = null;
@@ -28,10 +27,25 @@ class CompleteTaskWithImage extends Component
     public bool $showImageUpload = false;
     public bool $isSubmitting = false;
 
-    public function mount(UserAssignedTask $assignedTask): void
+    protected $listeners = [
+        'show-completion-modal' => 'setAssignedTask',
+    ];
+
+    public function mount(): void
+    {
+        $this->showImageUpload = auth()->user()?->canUploadCompletionImages() ?? false;
+    }
+
+    public function setAssignedTask(UserAssignedTask $assignedTask): void
     {
         $this->assignedTask = $assignedTask;
-        $this->showImageUpload = auth()->user()->canUploadCompletionImages();
+        $this->reset(['completionImage', 'completionNote', 'isSubmitting']);
+    }
+
+    public function clearAssignedTask(): void
+    {
+        $this->assignedTask = null;
+        $this->reset(['completionImage', 'completionNote', 'isSubmitting']);
     }
 
     public function updatedCompletionImage(): void
@@ -41,6 +55,10 @@ class CompleteTaskWithImage extends Component
 
     public function completeTask(): void
     {
+        if (!$this->assignedTask) {
+            return;
+        }
+
         $this->isSubmitting = true;
         
         try {
@@ -53,7 +71,7 @@ class CompleteTaskWithImage extends Component
                 $this->isSubmitting = false;
                 return;
             }
-
+            
             // Call the CompleteTask action
             $result = CompleteTask::run(
                 user: $user,
@@ -67,11 +85,10 @@ class CompleteTaskWithImage extends Component
                     'message' => $result['message']
                 ]);
                 
-                // Reset form
-                $this->completionImage = null;
-                $this->completionNote = '';
+                // Clear assigned task and reset form
+                $this->clearAssignedTask();
                 
-                // Redirect to dashboard or refresh
+                // Dispatch event to refresh dashboard and close modal
                 $this->dispatch('task-completed');
             } else {
                 $this->dispatch('notify', [
@@ -85,7 +102,7 @@ class CompleteTaskWithImage extends Component
         } catch (\Exception $e) {
             \Log::error('Task completion error: ' . $e->getMessage(), [
                 'user_id' => Auth::id(),
-                'task_id' => $this->assignedTask->id,
+                'task_id' => $this->assignedTask?->id,
                 'trace' => $e->getTraceAsString()
             ]);
             
@@ -98,8 +115,18 @@ class CompleteTaskWithImage extends Component
         }
     }
 
+    public function failTask(): void
+    {
+        if (!$this->assignedTask) {
+            return;
+        }
+
+        $this->clearAssignedTask();
+        $this->dispatch('task-failed', ['taskId' => $this->assignedTask->id]);
+    }
+
     public function render(): View
     {
-        return view('livewire.tasks.complete-task-with-image');
+        return view('livewire.tasks.complete-task-modal');
     }
 }
