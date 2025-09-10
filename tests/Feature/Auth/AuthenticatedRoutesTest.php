@@ -81,6 +81,6 @@ it('uses correct route names', function () {
     expect(route('app.profile'))->toBe('http://localhost/app/profile');
     expect(route('app.tasks'))->toBe('http://localhost/app/tasks');
     expect(route('app.submit'))->toBe('http://localhost/app/submit');
-    expect(route('app.stories'))->toBe('http://localhost/app/stories');
+    expect(route('app.stories.index'))->toBe('http://localhost/app/stories');
     expect(route('app.settings'))->toBe('http://localhost/app/settings');
 });
