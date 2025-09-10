@@ -21,7 +21,6 @@ return new class extends Migration
             $table->integer('reading_time_minutes')->default(0); // Calculated reading time
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->integer('status')->default(1); // 1=pending, 2=approved, 3=in_review, 4=rejected
-            $table->integer('view_count')->default(0);
             $table->integer('report_count')->default(0);
             $table->boolean('is_premium')->default(false);
             $table->timestamps();

@@ -32,7 +32,6 @@ class FantasyFactory extends Factory
             'word_count' => str_word_count($content),
             'user_id' => User::factory(),
             'status' => ContentStatus::Approved,
-            'view_count' => fake()->numberBetween(0, 1000),
             'report_count' => fake()->numberBetween(0, 5),
             'is_premium' => fake()->boolean(20), // 20% chance of being premium
         ];

@@ -39,7 +39,6 @@ class StoryFactory extends Factory
             'reading_time_minutes' => max(1, ceil($wordCount / 200)), // 200 words per minute
             'user_id' => User::factory(),
             'status' => ContentStatus::Approved,
-            'view_count' => fake()->numberBetween(0, 1000),
             'report_count' => fake()->numberBetween(0, 5),
             'is_premium' => fake()->boolean(20), // 20% chance of being premium
         ];

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Livewire\Stories;
 
 use App\Models\Story;
+use App\Services\ViewTrackingService;
 use Illuminate\Contracts\View\View;
 use Livewire\Attributes\Computed;
 use Livewire\Component;
@@ -13,12 +14,13 @@ class ShowStory extends Component
 {
     public Story $story;
 
-    public function mount(Story $story): void
+    public function mount(Story $story, ViewTrackingService $viewTrackingService): void
     {
         $this->story = $story;
         
-        // Increment view count
-        $this->story->incrementViewCount();
+        // Track view with abuse prevention
+        $userId = auth()->id();
+        $viewTrackingService->trackView('story', $story->id, $userId);
     }
 
     #[Computed]

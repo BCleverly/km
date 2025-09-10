@@ -87,7 +87,7 @@
                             <span class="mx-2">•</span>
                             <span>{{ $fantasy->created_at->diffForHumans() }}</span>
                             <span class="mx-2">•</span>
-                            <span>{{ $fantasy->view_count }} views</span>
+                            <span>{{ $fantasy->getViewCount() }} views</span>
                         </div>
                         
                         <div class="flex items-center gap-2">
