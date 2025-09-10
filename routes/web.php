@@ -9,6 +9,11 @@ use App\Livewire\Homepage;
 use App\Livewire\Tasks\Dashboard as TasksDashboard;
 use App\Livewire\Tasks\CreateCustomTask;
 use App\Livewire\User\Profile;
+use App\Livewire\Fantasies\ListFantasies;
+use App\Livewire\Fantasies\CreateFantasy;
+use App\Livewire\Stories\ListStories;
+use App\Livewire\Stories\ShowStory;
+use App\Livewire\Stories\CreateStory;
 use Illuminate\Support\Facades\Route;
 
 Route::passkeys();
@@ -44,4 +49,13 @@ Route::middleware('auth')->prefix('app')->name('app.')->group(function () {
     Route::get('/tasks/create', CreateCustomTask::class)->name('tasks.create');
 
     Route::get('/tasks/community', \App\Livewire\Tasks\TaskCommunityDashboard::class)->name('tasks.community');
+
+    // Fantasies
+    Route::get('/fantasies', ListFantasies::class)->name('fantasies.index');
+    Route::get('/fantasies/create', CreateFantasy::class)->name('fantasies.create');
+
+    // Stories
+    Route::get('/stories', ListStories::class)->name('stories.index');
+    Route::get('/stories/create', CreateStory::class)->name('stories.create');
+    Route::get('/stories/{story:slug}', ShowStory::class)->name('stories.show');
 });
