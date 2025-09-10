@@ -403,7 +403,7 @@ The transformation has taught me that change is not just possible, but inevitabl
                 'user_id' => $users->random()->id,
                 'status' => ContentStatus::Approved->value,
                 'is_premium' => false,
-                'view_count' => fake()->numberBetween(0, 2000),
+                'view_count' => rand(0, 2000),
                 'report_count' => 0,
             ]);
         }
