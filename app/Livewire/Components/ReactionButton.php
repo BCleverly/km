@@ -6,6 +6,8 @@ namespace App\Livewire\Components;
 
 use App\Models\Tasks\Outcome;
 use App\Models\Tasks\Task;
+use App\Models\Fantasy;
+use App\Models\Story;
 use Illuminate\Database\Eloquent\Model;
 use Livewire\Attributes\Locked;
 use Livewire\Component;
@@ -30,6 +32,8 @@ class ReactionButton extends Component
             return match ($this->modelType) {
                 'task', 'tasks' => Task::find($this->modelId),
                 'outcome', 'outcomes' => Outcome::find($this->modelId),
+                'fantasy', 'fantasies' => Fantasy::find($this->modelId),
+                'story', 'stories' => Story::find($this->modelId),
                 default => null,
             };
         } catch (\Exception $e) {

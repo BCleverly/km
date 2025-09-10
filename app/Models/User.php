@@ -164,6 +164,22 @@ class User extends Authenticatable implements HasPassKeys, ReactsInterface, Fila
     }
 
     /**
+     * Get the user's fantasies
+     */
+    public function fantasies(): HasMany
+    {
+        return $this->hasMany(\App\Models\Fantasy::class);
+    }
+
+    /**
+     * Get the user's stories
+     */
+    public function stories(): HasMany
+    {
+        return $this->hasMany(\App\Models\Story::class);
+    }
+
+    /**
      * Get the user's recent task activities
      */
     public function recentTaskActivities(int $limit = 10): HasMany
