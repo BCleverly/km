@@ -10,7 +10,6 @@ use Carbon\Carbon;
 
 class ViewTrackingService
 {
-    private const VIEW_PREFIX = 'views:';
     private const SESSION_PREFIX = 'viewed:';
     private const DAILY_LIMIT_PREFIX = 'daily_views:';
     
@@ -107,8 +106,8 @@ class ViewTrackingService
     {
         $syncedCount = 0;
         
-        // Get all view keys from Redis
-        $viewKeys = Redis::keys(self::VIEW_PREFIX . '*');
+        // Get all view keys from Redis (scoped by model type)
+        $viewKeys = Redis::keys('*:views:*');
         
         foreach ($viewKeys as $key) {
             $viewCount = (int) Redis::get($key);
@@ -216,7 +215,7 @@ class ViewTrackingService
      */
     private function getViewKey(string $modelType, int $modelId): string
     {
-        return self::VIEW_PREFIX . $modelType . ':' . $modelId;
+        return $modelType . ':views:' . $modelId;
     }
 
     /**
@@ -224,7 +223,8 @@ class ViewTrackingService
      */
     private function parseViewKey(string $key): ?array
     {
-        $pattern = '/^' . preg_quote(self::VIEW_PREFIX, '/') . '(.+):(\d+)$/';
+        // Pattern: {model_type}:views:{model_id}
+        $pattern = '/^(.+):views:(\d+)$/';
         
         if (preg_match($pattern, $key, $matches)) {
             return [
@@ -270,8 +270,8 @@ class ViewTrackingService
      */
     private function clearViewTrackingData(): void
     {
-        // Clear view counts
-        $viewKeys = Redis::keys(self::VIEW_PREFIX . '*');
+        // Clear view counts (scoped by model type)
+        $viewKeys = Redis::keys('*:views:*');
         if (!empty($viewKeys)) {
             Redis::del($viewKeys);
         }
@@ -309,7 +309,7 @@ class ViewTrackingService
             'max_daily_views_per_user' => self::MAX_DAILY_VIEWS_PER_USER,
             'view_cooldown_minutes' => self::VIEW_COOLDOWN_MINUTES,
             'session_duration_hours' => self::SESSION_DURATION_HOURS,
-            'total_view_keys' => count(Redis::keys(self::VIEW_PREFIX . '*')),
+            'total_view_keys' => count(Redis::keys('*:views:*')),
             'total_session_keys' => count(Redis::keys(self::SESSION_PREFIX . '*')),
             'total_daily_limit_keys' => count(Redis::keys(self::DAILY_LIMIT_PREFIX . '*')),
         ];

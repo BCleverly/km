@@ -112,6 +112,13 @@ it('can get view counts for multiple models', function () {
     expect($viewCounts)->toHaveKey($fantasy2->id);
     expect($viewCounts[$fantasy1->id])->toBe(2);
     expect($viewCounts[$fantasy2->id])->toBe(1);
+    
+    // Verify Redis keys are scoped properly
+    $fantasyKeys = Redis::keys('fantasy:views:*');
+    $storyKeys = Redis::keys('story:views:*');
+    
+    expect($fantasyKeys)->toHaveCount(2);
+    expect($storyKeys)->toHaveCount(1);
 });
 
 it('can get abuse prevention statistics', function () {
@@ -126,4 +133,29 @@ it('can get abuse prevention statistics', function () {
     expect($stats['max_views_per_session'])->toBe(3);
     expect($stats['max_daily_views_per_user'])->toBe(100);
     expect($stats['view_cooldown_minutes'])->toBe(5);
+});
+
+it('uses scoped Redis keys for different model types', function () {
+    $user = User::factory()->create();
+    $fantasy = Fantasy::factory()->create();
+    $story = Story::factory()->create();
+    
+    $service = app(ViewTrackingService::class);
+    
+    // Track views for different model types
+    $service->trackView('fantasy', $fantasy->id, $user->id);
+    $service->trackView('story', $story->id, $user->id);
+    
+    // Check that keys are properly scoped
+    $fantasyKeys = Redis::keys('fantasy:views:*');
+    $storyKeys = Redis::keys('story:views:*');
+    $allViewKeys = Redis::keys('*:views:*');
+    
+    expect($fantasyKeys)->toHaveCount(1);
+    expect($storyKeys)->toHaveCount(1);
+    expect($allViewKeys)->toHaveCount(2);
+    
+    // Verify key format
+    expect($fantasyKeys[0])->toStartWith('fantasy:views:');
+    expect($storyKeys[0])->toStartWith('story:views:');
 });

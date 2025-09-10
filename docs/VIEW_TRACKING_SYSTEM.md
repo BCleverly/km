@@ -38,11 +38,16 @@ The view tracking system provides robust, abuse-resistant view counting for cont
 ### Redis Keys Structure
 
 ```
-views:{model_type}:{model_id}           # View count for specific content
+{model_type}:views:{model_id}           # View count for specific content (scoped)
 viewed:{user_key}:{model_type}:{model_id}  # Session view tracking
 daily_views:{user_key}:{date}           # Daily view limits
 cooldown:{user_key}:{model_type}:{model_id}  # Cooldown tracking
 ```
+
+**Examples:**
+- `story:views:123` - View count for story ID 123
+- `fantasy:views:456` - View count for fantasy ID 456
+- `task:views:789` - View count for task ID 789
 
 ## Usage
 
@@ -276,8 +281,10 @@ beforeEach(function () {
 ### Debug Commands
 
 ```bash
-# Check Redis keys
-redis-cli keys "views:*"
+# Check Redis keys (scoped by model type)
+redis-cli keys "*:views:*"
+redis-cli keys "story:views:*"
+redis-cli keys "fantasy:views:*"
 
 # Check abuse stats
 php artisan views:sync --stats
