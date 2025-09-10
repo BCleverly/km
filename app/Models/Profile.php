@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Services\SecureImageService;
+use App\Traits\HasSecureMedia;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -11,7 +13,7 @@ use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
 class Profile extends Model implements HasMedia
 {
-    use HasFactory, InteractsWithMedia;
+    use HasFactory, InteractsWithMedia, HasSecureMedia;
 
     protected $fillable = [
         'user_id',
@@ -40,6 +42,22 @@ class Profile extends Model implements HasMedia
         $this->addMediaCollection('cover_photos')
             ->acceptsMimeTypes(['image/jpeg', 'image/png', 'image/gif', 'image/webp'])
             ->singleFile();
+
+        // Register secure media collections
+        $this->registerSecureMediaCollections();
+    }
+
+    /**
+     * Get secure media collections configuration
+     */
+    protected function getSecureMediaCollections(): array
+    {
+        $service = app(SecureImageService::class);
+        
+        return [
+            $service->createSecureMediaCollection('profile_pictures', ['image/jpeg', 'image/png', 'image/gif', 'image/webp'], true),
+            $service->createSecureMediaCollection('cover_photos', ['image/jpeg', 'image/png', 'image/gif', 'image/webp'], true),
+        ];
     }
 
     /**
@@ -79,6 +97,14 @@ class Profile extends Model implements HasMedia
      */
     public function getProfilePictureUrlAttribute(): string
     {
+        // Try secure image URL first
+        $secureUrl = $this->getSecureImageUrl('profile_pictures', 'profile_medium');
+        
+        if ($secureUrl) {
+            return $secureUrl;
+        }
+
+        // Fallback to regular media URL
         $media = $this->getFirstMedia('profile_pictures');
 
         if ($media) {
@@ -100,6 +126,14 @@ class Profile extends Model implements HasMedia
      */
     public function getCoverPhotoUrlAttribute(): ?string
     {
+        // Try secure image URL first
+        $secureUrl = $this->getSecureImageUrl('cover_photos', 'cover_medium');
+        
+        if ($secureUrl) {
+            return $secureUrl;
+        }
+
+        // Fallback to regular media URL
         $media = $this->getFirstMedia('cover_photos');
 
         if ($media) {
