@@ -28,13 +28,11 @@ class Story extends Model implements ReactableInterface
         'status',
         'view_count',
         'report_count',
-        'is_premium',
     ];
 
     protected function casts(): array
     {
         return [
-            'is_premium' => 'boolean',
             'word_count' => 'integer',
             'reading_time_minutes' => 'integer',
             'view_count' => 'integer',
@@ -91,6 +89,14 @@ class Story extends Model implements ReactableInterface
     }
 
     /**
+     * Scope to get draft stories.
+     */
+    public function scopeDraft($query)
+    {
+        return $query->where('status', 0);
+    }
+
+    /**
      * Scope to get approved stories.
      */
     public function scopeApproved($query)
@@ -123,19 +129,11 @@ class Story extends Model implements ReactableInterface
     }
 
     /**
-     * Scope to get public stories (approved and not premium).
+     * Scope to get public stories (approved).
      */
     public function scopePublic($query)
     {
-        return $query->approved()->where('is_premium', false);
-    }
-
-    /**
-     * Scope to get premium stories.
-     */
-    public function scopePremium($query)
-    {
-        return $query->where('is_premium', true);
+        return $query->approved();
     }
 
     /**
@@ -144,12 +142,21 @@ class Story extends Model implements ReactableInterface
     public function getStatusLabelAttribute(): string
     {
         return match ($this->status) {
+            0 => 'Draft',
             1 => 'Pending',
             2 => 'Approved',
             3 => 'In Review',
             4 => 'Rejected',
             default => 'Unknown',
         };
+    }
+
+    /**
+     * Check if the story is a draft.
+     */
+    public function isDraft(): bool
+    {
+        return $this->status === 0;
     }
 
     /**

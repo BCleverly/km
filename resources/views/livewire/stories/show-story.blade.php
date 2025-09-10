@@ -46,14 +46,6 @@
             </div>
         </div>
 
-        <!-- Premium Badge -->
-        @if($story->is_premium)
-            <div class="mb-4">
-                <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200">
-                    Premium Story
-                </span>
-            </div>
-        @endif
     </div>
 
     <!-- Story Summary -->

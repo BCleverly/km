@@ -21,7 +21,26 @@ it('can list stories', function () {
         ->assertSee('Write Story');
 });
 
-it('can create a story', function () {
+it('can create a story as draft', function () {
+    $user = User::factory()->create();
+    
+    Livewire::actingAs($user)
+        ->test(CreateStory::class)
+        ->set('title', 'Test Story')
+        ->set('summary', 'This is a test story summary.')
+        ->set('content', 'This is a test story content.')
+        ->call('saveAsDraft')
+        ->assertRedirect(route('app.stories.index'));
+
+    $this->assertDatabaseHas('stories', [
+        'title' => 'Test Story',
+        'summary' => 'This is a test story summary.',
+        'user_id' => $user->id,
+        'status' => 0, // Draft
+    ]);
+});
+
+it('can submit a story for review', function () {
     $user = User::factory()->create();
     
     Livewire::actingAs($user)
@@ -29,7 +48,7 @@ it('can create a story', function () {
         ->set('title', 'Test Story')
         ->set('summary', 'This is a test story summary.')
         ->set('content', 'This is a test story with enough words to meet the minimum requirements. It should be at least 100 words long to pass validation. This content is being written to ensure we meet the word count requirement for the story creation test.')
-        ->call('save')
+        ->call('submitForReview')
         ->assertRedirect(route('app.stories.index'));
 
     $this->assertDatabaseHas('stories', [
@@ -40,7 +59,7 @@ it('can create a story', function () {
     ]);
 });
 
-it('validates story content minimum length', function () {
+it('validates story content minimum length for submission', function () {
     $user = User::factory()->create();
     
     Livewire::actingAs($user)
@@ -48,8 +67,26 @@ it('validates story content minimum length', function () {
         ->set('title', 'Test Story')
         ->set('summary', 'Test summary')
         ->set('content', 'Short content')
-        ->call('save')
+        ->call('submitForReview')
         ->assertHasErrors(['content']);
+});
+
+it('allows saving draft with minimal content', function () {
+    $user = User::factory()->create();
+    
+    Livewire::actingAs($user)
+        ->test(CreateStory::class)
+        ->set('title', 'Test Story')
+        ->set('summary', 'Test summary')
+        ->set('content', 'Short content')
+        ->call('saveAsDraft')
+        ->assertRedirect(route('app.stories.index'));
+
+    $this->assertDatabaseHas('stories', [
+        'title' => 'Test Story',
+        'user_id' => $user->id,
+        'status' => 0, // Draft
+    ]);
 });
 
 it('can show a story', function () {
