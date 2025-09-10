@@ -1,5 +1,5 @@
 <div class="space-y-4">
-    @if($parentId)
+    @if($this->isReply)
         <div class="text-sm text-gray-600 dark:text-gray-400">
             Replying to a comment...
         </div>
@@ -60,7 +60,7 @@
     <!-- Comment Input -->
     <div class="space-y-3">
         <textarea wire:model="content" 
-                  placeholder="{{ $parentId ? 'Leave a reply...' : 'Leave a comment...' }}"
+                  placeholder="{{ $this->placeholder }}"
                   class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white"
                   rows="4"></textarea>
         
@@ -103,7 +103,7 @@
 
     <!-- Submit Button -->
     <div class="flex justify-end">
-        @if($parentId)
+        @if($this->isReply)
             <div class="flex space-x-2">
                 <button type="button" 
                         wire:click="$dispatch('cancel-reply')"
@@ -113,14 +113,14 @@
                 <button type="button" 
                         wire:click="submit"
                         class="px-4 py-2 text-sm bg-blue-600 text-white rounded hover:bg-blue-700">
-                    Reply
+                    {{ $this->submitButtonText }}
                 </button>
             </div>
         @else
             <button type="button" 
                     wire:click="submit"
                     class="px-6 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
-                Comment
+                {{ $this->submitButtonText }}
             </button>
         @endif
     </div>

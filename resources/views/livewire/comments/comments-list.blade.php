@@ -5,22 +5,22 @@
         </div>
     @endif
 
-    @if($comments->count() > 0)
+    @if($this->comments->count() > 0)
         <div class="space-y-4">
             <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
-                Comments ({{ $comments->total() }})
+                Comments ({{ $this->comments->total() }})
             </h3>
             
-            @foreach($comments as $comment)
+            @foreach($this->comments as $comment)
                 <div wire:key="comment-{{ $comment->id }}">
                     <livewire:comments.comment-item :comment="$comment" :key="'comment-item-' . $comment->id" />
                 </div>
             @endforeach
         </div>
 
-        @if($comments->hasPages())
+        @if($this->comments->hasPages())
             <div class="mt-6">
-                {{ $comments->links() }}
+                {{ $this->comments->links() }}
             </div>
         @endif
     @else

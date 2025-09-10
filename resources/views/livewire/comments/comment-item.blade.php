@@ -24,14 +24,14 @@
             </div>
         </div>
 
-        @if($this->canEdit() || $this->canDelete())
+        @if($this->canEdit || $this->canDelete)
             <div class="flex items-center space-x-2">
-                @if($this->canEdit())
+                @if($this->canEdit)
                     <button wire:click="startEdit" class="text-xs text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300">
                         Edit
                     </button>
                 @endif
-                @if($this->canDelete())
+                @if($this->canDelete)
                     <button wire:click="deleteComment" 
                             wire:confirm="Are you sure you want to delete this comment?"
                             class="text-xs text-red-600 hover:text-red-800 dark:text-red-400 dark:hover:text-red-300">
@@ -76,7 +76,7 @@
     </div>
 
     <!-- Reply Button -->
-    @if($this->canReply())
+    @if($this->canReply)
         <div class="mb-4">
             <button wire:click="$dispatch('start-reply', { parentId: {{ $comment->id }} })" 
                     class="text-sm text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300">
@@ -86,9 +86,9 @@
     @endif
 
     <!-- Replies -->
-    @if($replies->count() > 0)
+    @if($this->replies->count() > 0)
         <div class="space-y-3">
-            @foreach($replies as $reply)
+            @foreach($this->replies as $reply)
                 <div wire:key="reply-{{ $reply->id }}">
                     <livewire:comments.comment-item :comment="$reply" :key="'reply-item-' . $reply->id" />
                 </div>

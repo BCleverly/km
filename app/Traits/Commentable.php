@@ -6,6 +6,7 @@ namespace App\Traits;
 
 use App\Models\Comment;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
+use Illuminate\Support\Facades\Cache;
 
 trait Commentable
 {
@@ -35,18 +36,28 @@ trait Commentable
 
     /**
      * Get the total count of approved comments for this model.
+     * Cached for performance.
      */
     public function getCommentsCountAttribute(): int
     {
-        return $this->approvedComments()->count();
+        $cacheKey = "comments_count_{$this->getMorphClass()}_{$this->id}";
+        
+        return Cache::remember($cacheKey, 300, function () {
+            return $this->approvedComments()->count();
+        });
     }
 
     /**
      * Get the total count of all comments (including unapproved) for this model.
+     * Cached for performance.
      */
     public function getAllCommentsCountAttribute(): int
     {
-        return $this->comments()->count();
+        $cacheKey = "all_comments_count_{$this->getMorphClass()}_{$this->id}";
+        
+        return Cache::remember($cacheKey, 300, function () {
+            return $this->comments()->count();
+        });
     }
 
     /**
@@ -54,11 +65,26 @@ trait Commentable
      */
     public function addComment(string $content, ?int $parentId = null, ?int $userId = null): Comment
     {
-        return $this->comments()->create([
+        $comment = $this->comments()->create([
             'content' => $content,
             'user_id' => $userId ?? auth()->id(),
             'parent_id' => $parentId,
         ]);
+        
+        // Clear cache after adding comment
+        $this->clearCommentsCache();
+        
+        return $comment;
+    }
+
+    /**
+     * Clear cached comment data for this model.
+     */
+    public function clearCommentsCache(): void
+    {
+        $morphClass = $this->getMorphClass();
+        Cache::forget("comments_count_{$morphClass}_{$this->id}");
+        Cache::forget("all_comments_count_{$morphClass}_{$this->id}");
     }
 
     /**

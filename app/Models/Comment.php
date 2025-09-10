@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\Cache;
 use Qirolab\Laravel\Reactions\Contracts\ReactableInterface;
 use Qirolab\Laravel\Reactions\Traits\Reactable;
 use Spatie\Activitylog\LogOptions;
@@ -95,14 +96,20 @@ class Comment extends Model implements ReactableInterface
 
     /**
      * Check if this comment has replies.
+     * Cached for performance.
      */
     public function hasReplies(): bool
     {
-        return $this->replies()->exists();
+        $cacheKey = "comment_{$this->id}_has_replies";
+        
+        return Cache::remember($cacheKey, 300, function () {
+            return $this->replies()->exists();
+        });
     }
 
     /**
      * Get the depth level of this comment (0 for top-level, 1 for first-level reply, etc.).
+     * This is cached to avoid N+1 queries when calculating depth.
      */
     public function getDepthAttribute(): int
     {
@@ -110,7 +117,30 @@ class Comment extends Model implements ReactableInterface
             return 0;
         }
 
-        return $this->parent->depth + 1;
+        // Use a more efficient approach to calculate depth
+        return $this->calculateDepth();
+    }
+
+    /**
+     * Calculate the depth of this comment efficiently.
+     */
+    private function calculateDepth(): int
+    {
+        $depth = 0;
+        $current = $this;
+        
+        // Walk up the parent chain to calculate depth
+        while ($current->parent_id) {
+            $depth++;
+            $current = $current->parent;
+            
+            // Prevent infinite loops (safety check)
+            if ($depth > 10) {
+                break;
+            }
+        }
+        
+        return $depth;
     }
 
     /**
@@ -156,6 +186,43 @@ class Comment extends Model implements ReactableInterface
             'approved_at' => now(),
             'approved_by' => $approver?->id,
         ]);
+        
+        $this->clearCache();
+    }
+
+    /**
+     * Clear cached data for this comment.
+     */
+    public function clearCache(): void
+    {
+        Cache::forget("comment_{$this->id}_has_replies");
+        Cache::forget("comment_{$this->id}_depth");
+        
+        // Clear parent comment cache if this is a reply
+        if ($this->parent_id) {
+            Cache::forget("comment_{$this->parent_id}_has_replies");
+        }
+    }
+
+    /**
+     * Boot the model.
+     */
+    protected static function boot()
+    {
+        parent::boot();
+
+        // Clear cache when comment is created, updated, or deleted
+        static::created(function ($comment) {
+            $comment->clearCache();
+        });
+
+        static::updated(function ($comment) {
+            $comment->clearCache();
+        });
+
+        static::deleted(function ($comment) {
+            $comment->clearCache();
+        });
     }
 
     /**

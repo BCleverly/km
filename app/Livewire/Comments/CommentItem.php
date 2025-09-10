@@ -7,12 +7,16 @@ namespace App\Livewire\Comments;
 use App\Models\Comment;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\Auth;
+use Livewire\Attributes\Computed;
+use Livewire\Attributes\Locked;
 use Livewire\Attributes\On;
 use Livewire\Component;
 
 class CommentItem extends Component
 {
+    #[Locked]
     public Comment $comment;
+    
     public bool $showReplies = true;
     public bool $isEditing = false;
     public string $editContent = '';
@@ -24,15 +28,41 @@ class CommentItem extends Component
         $this->editContent = $this->comment->content;
     }
 
-    public function render(): View
+    #[Computed]
+    public function replies()
     {
-        $replies = $this->showReplies 
+        return $this->showReplies 
             ? $this->comment->replies()->with('user')->orderBy('created_at', 'asc')->get()
             : collect();
+    }
 
-        return view('livewire.comments.comment-item', [
-            'replies' => $replies,
-        ]);
+    #[Computed]
+    public function canEdit(): bool
+    {
+        return Auth::check() && (
+            Auth::user()->id === $this->comment->user_id ||
+            Auth::user()->hasPermissionTo('edit comments')
+        );
+    }
+
+    #[Computed]
+    public function canDelete(): bool
+    {
+        return Auth::check() && (
+            Auth::user()->id === $this->comment->user_id ||
+            Auth::user()->hasPermissionTo('delete comments')
+        );
+    }
+
+    #[Computed]
+    public function canReply(): bool
+    {
+        return Auth::check() && $this->comment->depth < 3; // Limit nesting depth
+    }
+
+    public function render(): View
+    {
+        return view('livewire.comments.comment-item');
     }
 
     public function startEdit(): void
@@ -84,26 +114,6 @@ class CommentItem extends Component
         $this->showReplies = !$this->showReplies;
     }
 
-    public function canEdit(): bool
-    {
-        return Auth::check() && (
-            Auth::user()->id === $this->comment->user_id ||
-            Auth::user()->hasPermissionTo('edit comments')
-        );
-    }
-
-    public function canDelete(): bool
-    {
-        return Auth::check() && (
-            Auth::user()->id === $this->comment->user_id ||
-            Auth::user()->hasPermissionTo('delete comments')
-        );
-    }
-
-    public function canReply(): bool
-    {
-        return Auth::check() && $this->comment->depth < 3; // Limit nesting depth
-    }
 
     #[On('reply-added')]
     public function refreshReplies(): void

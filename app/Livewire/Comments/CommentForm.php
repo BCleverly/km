@@ -8,12 +8,16 @@ use App\Models\Comment;
 use Illuminate\Contracts\View\View;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
+use Livewire\Attributes\Computed;
+use Livewire\Attributes\Locked;
 use Livewire\Attributes\On;
 use Livewire\Component;
 
 class CommentForm extends Component
 {
+    #[Locked]
     public Model $commentable;
+    
     public ?int $parentId = null;
     public string $content = '';
     public bool $showPreview = false;
@@ -23,6 +27,24 @@ class CommentForm extends Component
     {
         $this->commentable = $commentable;
         $this->parentId = $parentId;
+    }
+
+    #[Computed]
+    public function isReply(): bool
+    {
+        return !is_null($this->parentId);
+    }
+
+    #[Computed]
+    public function placeholder(): string
+    {
+        return $this->isReply ? 'Leave a reply...' : 'Leave a comment...';
+    }
+
+    #[Computed]
+    public function submitButtonText(): string
+    {
+        return $this->isReply ? 'Reply' : 'Comment';
     }
 
     public function render(): View

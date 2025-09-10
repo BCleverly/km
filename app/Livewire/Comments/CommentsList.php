@@ -7,6 +7,8 @@ namespace App\Livewire\Comments;
 use App\Models\Comment;
 use Illuminate\Contracts\View\View;
 use Illuminate\Database\Eloquent\Model;
+use Livewire\Attributes\Computed;
+use Livewire\Attributes\Locked;
 use Livewire\Attributes\On;
 use Livewire\Component;
 use Livewire\WithPagination;
@@ -15,9 +17,15 @@ class CommentsList extends Component
 {
     use WithPagination;
 
+    #[Locked]
     public Model $commentable;
+    
+    #[Locked]
     public int $perPage = 10;
+    
+    #[Locked]
     public bool $showForm = true;
+    
     public ?int $replyingTo = null;
 
     public function mount(Model $commentable, int $perPage = 10, bool $showForm = true): void
@@ -27,17 +35,19 @@ class CommentsList extends Component
         $this->showForm = $showForm;
     }
 
-    public function render(): View
+    #[Computed]
+    public function comments()
     {
-        $comments = $this->commentable
+        return $this->commentable
             ->topLevelComments()
             ->with(['user', 'replies.user'])
             ->orderBy('created_at', 'desc')
             ->paginate($this->perPage);
+    }
 
-        return view('livewire.comments.comments-list', [
-            'comments' => $comments,
-        ]);
+    public function render(): View
+    {
+        return view('livewire.comments.comments-list');
     }
 
     #[On('comment-added')]
