@@ -14,6 +14,7 @@ use App\Livewire\Fantasies\CreateFantasy;
 use App\Livewire\Stories\ListStories;
 use App\Livewire\Stories\ShowStory;
 use App\Livewire\Stories\CreateStory;
+use App\Http\Controllers\EncryptedMediaController;
 use Illuminate\Support\Facades\Route;
 
 Route::passkeys();
@@ -58,4 +59,10 @@ Route::middleware('auth')->prefix('app')->name('app.')->group(function () {
     Route::get('/stories', ListStories::class)->name('stories.index');
     Route::get('/stories/create', CreateStory::class)->name('stories.create');
     Route::get('/stories/{story:slug}', ShowStory::class)->name('stories.show');
+});
+
+// Encrypted Media Routes (Authenticated users only)
+Route::middleware('auth')->group(function () {
+    Route::get('/media/{media}/encrypted', [EncryptedMediaController::class, 'show'])->name('media.encrypted');
+    Route::get('/media/{media}/download', [EncryptedMediaController::class, 'download'])->name('media.download');
 });
