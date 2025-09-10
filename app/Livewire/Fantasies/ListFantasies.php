@@ -24,7 +24,7 @@ class ListFantasies extends Component
     #[Computed]
     public function fantasies(): \Illuminate\Contracts\Pagination\LengthAwarePaginator
     {
-        $query = Fantasy::with(['user', 'reactions'])
+        $query = Fantasy::with(['user.profile', 'reactions'])
             ->approved()
             ->when($this->search, function ($query) {
                 $query->where('content', 'like', '%' . $this->search . '%');

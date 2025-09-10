@@ -24,7 +24,7 @@ class ListStories extends Component
     #[Computed]
     public function stories(): \Illuminate\Contracts\Pagination\LengthAwarePaginator
     {
-        $query = Story::with(['user', 'reactions'])
+        $query = Story::with(['user.profile', 'reactions'])
             ->approved()
             ->when($this->search, function ($query) {
                 $query->where(function ($q) {
