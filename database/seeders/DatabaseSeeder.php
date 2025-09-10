@@ -32,6 +32,12 @@ class DatabaseSeeder extends Seeder
             TaskDataSeeder::class,
         ]);
 
+        // Seed content (fantasies and stories)
+        $this->call([
+            FantasySeeder::class,
+            StorySeeder::class,
+        ]);
+
         // Create test users with different roles using proper factory relationships
         $admin = User::firstOrCreate(
             ['email' => 'admin@example.com'],
