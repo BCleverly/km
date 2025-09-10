@@ -8,6 +8,7 @@ use App\Models\Tasks\Outcome;
 use App\Models\Tasks\Task;
 use App\Models\Fantasy;
 use App\Models\Story;
+use App\Models\Comment;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Cache;
 use Livewire\Attributes\Locked;
@@ -84,6 +85,7 @@ class ReactionButton extends Component
                 'outcome', 'outcomes' => Outcome::find($this->modelId),
                 'fantasy', 'fantasies' => Fantasy::find($this->modelId),
                 'story', 'stories' => Story::find($this->modelId),
+                'comment', 'comments' => Comment::find($this->modelId),
                 default => null,
             };
         } catch (\Exception $e) {
