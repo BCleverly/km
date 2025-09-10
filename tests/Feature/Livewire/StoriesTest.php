@@ -1,5 +1,6 @@
 <?php
 
+use App\ContentStatus;
 use App\Livewire\Stories\ListStories;
 use App\Livewire\Stories\CreateStory;
 use App\Livewire\Stories\ShowStory;
@@ -12,7 +13,7 @@ it('can list stories', function () {
     
     Story::factory()->count(3)->create([
         'user_id' => $user->id,
-        'status' => 2, // Approved
+        'status' => ContentStatus::Approved,
     ]);
 
     Livewire::actingAs($user)
@@ -36,7 +37,7 @@ it('can create a story as draft', function () {
         'title' => 'Test Story',
         'summary' => 'This is a test story summary.',
         'user_id' => $user->id,
-        'status' => 0, // Draft
+        'status' => ContentStatus::Draft,
     ]);
 });
 
@@ -55,7 +56,7 @@ it('can submit a story for review', function () {
         'title' => 'Test Story',
         'summary' => 'This is a test story summary.',
         'user_id' => $user->id,
-        'status' => 1, // Pending
+        'status' => ContentStatus::Pending,
     ]);
 });
 
@@ -85,14 +86,14 @@ it('allows saving draft with minimal content', function () {
     $this->assertDatabaseHas('stories', [
         'title' => 'Test Story',
         'user_id' => $user->id,
-        'status' => 0, // Draft
+        'status' => ContentStatus::Draft,
     ]);
 });
 
 it('can show a story', function () {
     $user = User::factory()->create();
     $story = Story::factory()->create([
-        'status' => 2, // Approved
+        'status' => ContentStatus::Approved,
     ]);
     
     Livewire::actingAs($user)
@@ -107,7 +108,7 @@ it('can show a story', function () {
 it('can report a story', function () {
     $user = User::factory()->create();
     $story = Story::factory()->create([
-        'status' => 2, // Approved
+        'status' => ContentStatus::Approved,
     ]);
     
     Livewire::actingAs($user)

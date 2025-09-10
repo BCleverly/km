@@ -79,7 +79,7 @@ class StoryFactory extends Factory
     public function draft(): static
     {
         return $this->state(fn (array $attributes) => [
-            'status' => 0, // Draft
+            'status' => ContentStatus::Draft,
         ]);
     }
 

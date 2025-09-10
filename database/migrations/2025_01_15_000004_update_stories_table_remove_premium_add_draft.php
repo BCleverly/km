@@ -1,5 +1,6 @@
 <?php
 
+use App\ContentStatus;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -16,7 +17,7 @@ return new class extends Migration
             $table->dropColumn('is_premium');
             
             // Add draft status - 0=draft, 1=pending, 2=approved, 3=in_review, 4=rejected
-            $table->integer('status')->default(0)->change();
+            $table->integer('status')->default(ContentStatus::Draft->value)->change();
         });
     }
 
@@ -30,7 +31,7 @@ return new class extends Migration
             $table->boolean('is_premium')->default(false);
             
             // Revert status to original default
-            $table->integer('status')->default(1)->change();
+            $table->integer('status')->default(ContentStatus::Pending->value)->change();
         });
     }
 };

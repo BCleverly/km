@@ -6,6 +6,7 @@ namespace App;
 
 enum ContentStatus: int
 {
+    case Draft = 0;
     case Pending = 1;
     case Approved = 2;
     case InReview = 3;
@@ -14,6 +15,7 @@ enum ContentStatus: int
     public function label(): string
     {
         return match($this) {
+            self::Draft => 'Draft',
             self::Pending => 'Pending Review',
             self::Approved => 'Approved',
             self::InReview => 'Under Review',
@@ -24,6 +26,7 @@ enum ContentStatus: int
     public function color(): string
     {
         return match($this) {
+            self::Draft => 'gray',
             self::Pending => 'yellow',
             self::Approved => 'green',
             self::InReview => 'orange',

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Livewire\Stories;
 
+use App\ContentStatus;
 use App\Models\Story;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\Auth;
@@ -47,7 +48,7 @@ class CreateStory extends Component
             'word_count' => $wordCount,
             'reading_time_minutes' => max(1, ceil($wordCount / 200)), // 200 words per minute
             'user_id' => Auth::id(),
-            'status' => 0, // Draft
+            'status' => ContentStatus::Draft,
         ]);
 
         $this->dispatch('show-notification', [
@@ -89,7 +90,7 @@ class CreateStory extends Component
             'word_count' => $wordCount,
             'reading_time_minutes' => max(1, ceil($wordCount / 200)), // 200 words per minute
             'user_id' => Auth::id(),
-            'status' => 1, // Pending approval
+            'status' => ContentStatus::Pending,
         ]);
 
         $this->dispatch('show-notification', [
