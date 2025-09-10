@@ -244,7 +244,7 @@ class ViewTrackingService
     private function hasViewedToday(string $userKey, string $modelType, int $modelId): bool
     {
         $dailyViewedKey = self::DAILY_VIEWED_PREFIX . $userKey . ':' . $modelType . ':' . $modelId . ':' . Carbon::today()->format('Y-m-d');
-        return Redis::exists($dailyViewedKey);
+        return (bool) Redis::exists($dailyViewedKey);
     }
 
     /**
