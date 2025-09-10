@@ -22,7 +22,6 @@ return new class extends Migration
             $table->foreignId('approved_by')->nullable()->constrained('users');
             $table->timestamps();
 
-            $table->index(['commentable_type', 'commentable_id']);
             $table->index(['parent_id']);
             $table->index(['user_id']);
             $table->index(['is_approved']);
