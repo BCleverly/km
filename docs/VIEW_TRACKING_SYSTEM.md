@@ -125,7 +125,7 @@ private const SESSION_DURATION_HOURS = 24;      // Session duration
 
 ```php
 // In bootstrap/app.php
-$schedule->command('views:sync')->dailyAt('00:00');
+$schedule->command('views:sync')->dailyAt('00:01');
 ```
 
 ## Sync Behavior
