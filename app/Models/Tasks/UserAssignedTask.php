@@ -9,10 +9,13 @@ use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Spatie\MediaLibrary\HasMedia;
+use Spatie\MediaLibrary\InteractsWithMedia;
+use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
-class UserAssignedTask extends Model
+class UserAssignedTask extends Model implements HasMedia
 {
-    use HasFactory;
+    use HasFactory, InteractsWithMedia;
 
     protected static function newFactory()
     {
@@ -30,6 +33,8 @@ class UserAssignedTask extends Model
         'assigned_at',
         'deadline_at',
         'completed_at',
+        'has_completion_image',
+        'completion_note',
     ];
 
     protected function casts(): array
@@ -140,5 +145,81 @@ class UserAssignedTask extends Model
         return $query->where('deadline_at', '>', now())
                     ->where('deadline_at', '<=', now()->addHour())
                     ->where('status', TaskStatus::Assigned);
+    }
+
+    /**
+     * Register media collections for task completion images
+     */
+    public function registerMediaCollections(): void
+    {
+        $this->addMediaCollection('completion_images')
+            ->acceptsMimeTypes(['image/jpeg', 'image/png', 'image/webp'])
+            ->singleFile();
+    }
+
+    /**
+     * Register media conversions for performance optimization
+     */
+    public function registerMediaConversions(Media $media = null): void
+    {
+        // Thumbnail for quick loading
+        $this->addMediaConversion('thumb')
+            ->width(300)
+            ->height(300)
+            ->sharpen(10)
+            ->optimize()
+            ->performOnCollections('completion_images');
+
+        // Medium size for display
+        $this->addMediaConversion('medium')
+            ->width(800)
+            ->height(600)
+            ->sharpen(10)
+            ->optimize()
+            ->performOnCollections('completion_images');
+
+        // Large size for full view
+        $this->addMediaConversion('large')
+            ->width(1200)
+            ->height(900)
+            ->sharpen(10)
+            ->optimize()
+            ->performOnCollections('completion_images');
+    }
+
+    /**
+     * Get the completion image URL
+     */
+    public function getCompletionImageUrlAttribute(): ?string
+    {
+        $media = $this->getFirstMedia('completion_images');
+        return $media ? $media->getUrl() : null;
+    }
+
+    /**
+     * Get the completion image thumbnail URL
+     */
+    public function getCompletionImageThumbUrlAttribute(): ?string
+    {
+        $media = $this->getFirstMedia('completion_images');
+        return $media ? $media->getUrl('thumb') : null;
+    }
+
+    /**
+     * Get the completion image medium URL
+     */
+    public function getCompletionImageMediumUrlAttribute(): ?string
+    {
+        $media = $this->getFirstMedia('completion_images');
+        return $media ? $media->getUrl('medium') : null;
+    }
+
+    /**
+     * Get the completion image large URL
+     */
+    public function getCompletionImageLargeUrlAttribute(): ?string
+    {
+        $media = $this->getFirstMedia('completion_images');
+        return $media ? $media->getUrl('large') : null;
     }
 }

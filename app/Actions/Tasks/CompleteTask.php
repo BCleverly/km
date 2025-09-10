@@ -11,12 +11,13 @@ use App\Models\Tasks\TaskActivity;
 use App\TaskStatus;
 use App\TaskActivityType;
 use Lorisleiva\Actions\Concerns\AsAction;
+use Illuminate\Http\UploadedFile;
 
 class CompleteTask
 {
     use AsAction;
 
-    public function handle(User $user): array
+    public function handle(User $user, ?UploadedFile $completionImage = null, ?string $completionNote = null): array
     {
         $activeTask = $user->assignedTasks()
             ->where('status', TaskStatus::Assigned)
@@ -31,13 +32,29 @@ class CompleteTask
             ];
         }
 
+        // Check if user can upload images (premium feature)
+        $hasImage = false;
+        if ($completionImage && $user->canUploadCompletionImages()) {
+            $hasImage = true;
+        }
+
         // Update task status to completed
         $activeTask->update([
             'status' => TaskStatus::Completed,
             'completed_at' => now(),
             'outcome_type' => 'reward',
             'outcome_id' => $activeTask->potential_reward_id,
+            'has_completion_image' => $hasImage,
+            'completion_note' => $completionNote,
         ]);
+
+        // Handle image upload if provided and user has premium
+        if ($completionImage && $user->canUploadCompletionImages()) {
+            $activeTask->addMedia($completionImage->getRealPath())
+                ->usingName($completionImage->getClientOriginalName())
+                ->usingFileName($completionImage->getClientOriginalName())
+                ->toMediaCollection('completion_images');
+        }
 
         // Log the completion activity
         TaskActivity::log(

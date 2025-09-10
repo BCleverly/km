@@ -76,6 +76,14 @@ class Dashboard extends Component
     }
 
     /**
+     * Show the completion modal with image upload
+     */
+    public function showCompletionModal()
+    {
+        $this->dispatch('show-completion-modal');
+    }
+
+    /**
      * Fail the current active task
      */
     public function failTask()

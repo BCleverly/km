@@ -111,10 +111,136 @@ class DatabaseSeeder extends Seeder
         );
         $user->assignRole('User');
 
+        // Create test users for each subscription level
+        $this->createTestUsers();
+
         // Create additional regular users
         User::factory(10)->create()->each(function ($user) {
             $user->assignRole('User');
         });
+    }
+
+    /**
+     * Create test users for each subscription level
+     */
+    private function createTestUsers(): void
+    {
+        // Solo (Free) User
+        $soloUser = User::firstOrCreate(
+            ['email' => 'solo@example.com'],
+            [
+                'name' => 'Solo User',
+                'email' => 'solo@example.com',
+                'password' => bcrypt('password'),
+                'user_type' => \App\TargetUserType::Male,
+            ]
+        );
+        $soloUser->profile()->firstOrCreate(
+            ['user_id' => $soloUser->id],
+            [
+                'username' => 'solo',
+                'about' => 'Free tier solo user',
+                'theme_preference' => 'light',
+            ]
+        );
+        $soloUser->assignRole('User');
+
+        // Couple (Free) Users
+        $coupleUser1 = User::firstOrCreate(
+            ['email' => 'couple1@example.com'],
+            [
+                'name' => 'Couple User 1',
+                'email' => 'couple1@example.com',
+                'password' => bcrypt('password'),
+                'user_type' => \App\TargetUserType::Couple,
+            ]
+        );
+        $coupleUser1->profile()->firstOrCreate(
+            ['user_id' => $coupleUser1->id],
+            [
+                'username' => 'couple1',
+                'about' => 'First half of couple account',
+                'theme_preference' => 'dark',
+            ]
+        );
+        $coupleUser1->assignRole('User');
+
+        $coupleUser2 = User::firstOrCreate(
+            ['email' => 'couple2@example.com'],
+            [
+                'name' => 'Couple User 2',
+                'email' => 'couple2@example.com',
+                'password' => bcrypt('password'),
+                'user_type' => \App\TargetUserType::Couple,
+                'partner_id' => $coupleUser1->id,
+            ]
+        );
+        $coupleUser2->profile()->firstOrCreate(
+            ['user_id' => $coupleUser2->id],
+            [
+                'username' => 'couple2',
+                'about' => 'Second half of couple account',
+                'theme_preference' => 'dark',
+            ]
+        );
+        $coupleUser2->assignRole('User');
+
+        // Link the couple users
+        $coupleUser1->update(['partner_id' => $coupleUser2->id]);
+
+        // Premium User
+        $premiumUser = User::firstOrCreate(
+            ['email' => 'premium@example.com'],
+            [
+                'name' => 'Premium User',
+                'email' => 'premium@example.com',
+                'password' => bcrypt('password'),
+                'user_type' => \App\TargetUserType::Female,
+            ]
+        );
+        $premiumUser->profile()->firstOrCreate(
+            ['user_id' => $premiumUser->id],
+            [
+                'username' => 'premium',
+                'about' => 'Premium subscription user',
+                'theme_preference' => 'system',
+            ]
+        );
+        $premiumUser->assignRole('User');
+        
+        // Create premium subscription
+        $premiumUser->subscriptions()->create([
+            'type' => 'premium',
+            'stripe_id' => 'sub_premium_test',
+            'stripe_status' => 'active',
+        ]);
+
+        // Lifetime User
+        $lifetimeUser = User::firstOrCreate(
+            ['email' => 'lifetime@example.com'],
+            [
+                'name' => 'Lifetime User',
+                'email' => 'lifetime@example.com',
+                'password' => bcrypt('password'),
+                'user_type' => \App\TargetUserType::Any,
+            ]
+        );
+        $lifetimeUser->profile()->firstOrCreate(
+            ['user_id' => $lifetimeUser->id],
+            [
+                'username' => 'lifetime',
+                'about' => 'Lifetime subscription user',
+                'theme_preference' => 'light',
+            ]
+        );
+        $lifetimeUser->assignRole('User');
+        
+        // Create lifetime subscription
+        $lifetimeUser->subscriptions()->create([
+            'type' => 'lifetime',
+            'stripe_id' => 'sub_lifetime_test',
+            'stripe_status' => 'active',
+        ]);
     }
 
 }

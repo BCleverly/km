@@ -35,7 +35,8 @@ class User extends Authenticatable implements HasPassKeys, ReactsInterface, Fila
         'password',
         'user_type',
         'username',
-        'email_verified_at'
+        'email_verified_at',
+        'partner_id'
     ];
 
     /**
@@ -308,6 +309,53 @@ class User extends Authenticatable implements HasPassKeys, ReactsInterface, Fila
         return $this->activeOutcomes()
             ->orderBy('assigned_at', 'asc')
             ->first();
+    }
+
+    /**
+     * Check if user has an active premium subscription
+     */
+    public function hasActivePremiumSubscription(): bool
+    {
+        return $this->subscribed('premium') || $this->onTrial('premium');
+    }
+
+    /**
+     * Check if user has a lifetime subscription
+     */
+    public function hasLifetimeSubscription(): bool
+    {
+        return $this->subscribed('lifetime');
+    }
+
+    /**
+     * Check if user can upload completion images (premium feature)
+     * Available to: premium subscribers, lifetime subscribers, and admins
+     */
+    public function canUploadCompletionImages(): bool
+    {
+        return $this->hasActivePremiumSubscription() 
+            || $this->hasLifetimeSubscription() 
+            || $this->hasRole('Admin');
+    }
+
+    /**
+     * Get subscription status for display
+     */
+    public function getSubscriptionStatusAttribute(): string
+    {
+        if ($this->hasRole('Admin')) {
+            return 'Admin';
+        }
+        
+        if ($this->hasLifetimeSubscription()) {
+            return 'Lifetime';
+        }
+        
+        if ($this->hasActivePremiumSubscription()) {
+            return 'Premium';
+        }
+        
+        return 'Free';
     }
     
 }
