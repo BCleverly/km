@@ -27,20 +27,19 @@ it('creates stories with approved status', function () {
     expect(Story::where('status', ContentStatus::Approved->value)->count())->toBe(25);
 });
 
-it('creates stories with mixed premium status', function () {
+it('creates stories with non-premium status', function () {
     // Create a test user first
     $user = User::factory()->create();
     
     // Run the seeder
     $this->seed(StorySeeder::class);
     
-    // Assert that we have both premium and non-premium stories
+    // Assert that all stories are non-premium
     $premiumCount = Story::where('is_premium', true)->count();
     $nonPremiumCount = Story::where('is_premium', false)->count();
     
-    expect($premiumCount)->toBeGreaterThan(0);
-    expect($nonPremiumCount)->toBeGreaterThan(0);
-    expect($premiumCount + $nonPremiumCount)->toBe(25);
+    expect($premiumCount)->toBe(0);
+    expect($nonPremiumCount)->toBe(25);
 });
 
 it('assigns stories to existing users', function () {

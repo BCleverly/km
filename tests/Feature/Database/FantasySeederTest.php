@@ -27,20 +27,19 @@ it('creates fantasies with approved status', function () {
     expect(Fantasy::where('status', ContentStatus::Approved->value)->count())->toBe(25);
 });
 
-it('creates fantasies with mixed premium status', function () {
+it('creates fantasies with non-premium status', function () {
     // Create a test user first
     $user = User::factory()->create();
     
     // Run the seeder
     $this->seed(FantasySeeder::class);
     
-    // Assert that we have both premium and non-premium fantasies
+    // Assert that all fantasies are non-premium
     $premiumCount = Fantasy::where('is_premium', true)->count();
     $nonPremiumCount = Fantasy::where('is_premium', false)->count();
     
-    expect($premiumCount)->toBeGreaterThan(0);
-    expect($nonPremiumCount)->toBeGreaterThan(0);
-    expect($premiumCount + $nonPremiumCount)->toBe(25);
+    expect($premiumCount)->toBe(0);
+    expect($nonPremiumCount)->toBe(25);
 });
 
 it('assigns fantasies to existing users', function () {

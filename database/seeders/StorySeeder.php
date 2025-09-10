@@ -34,7 +34,6 @@ When I finally completed the task and received my first reward, the feeling was 
 That first task changed everything. It opened doors I didn\'t know existed and showed me a side of myself I never knew was there. Now, I can\'t imagine my life without these challenges, without the structure they provide, without the growth they inspire.
 
 The journey had only just begun, but I already knew I was exactly where I was meant to be.',
-                'is_premium' => false,
             ],
             [
                 'title' => 'The Midnight Challenge',
@@ -48,7 +47,6 @@ Every sound seemed amplified in the quiet of the night. Every movement felt more
 When I finally completed the task with just minutes to spare, the relief was overwhelming. But more than that, I felt a sense of accomplishment that I\'d never experienced before. I had pushed myself beyond what I thought was possible, and the reward was worth every moment of effort.
 
 That midnight challenge taught me that sometimes the best experiences come when we least expect them, and that pushing our boundaries can lead to the most incredible discoveries.',
-                'is_premium' => true,
             ],
             [
                 'title' => 'The Weekend Retreat',
@@ -62,7 +60,6 @@ The tasks continued throughout the weekend, each one building on the last, each 
 By the end of the weekend, we weren\'t just a couple who had completed some tasks - we were partners who had discovered new depths of intimacy and trust. The experience had brought us closer together in ways that words alone could never achieve.
 
 We returned home changed, carrying with us the lessons we\'d learned and the connection we\'d deepened. The weekend retreat had become so much more than we\'d planned, and we were grateful for every moment of it.',
-                'is_premium' => false,
             ],
             [
                 'title' => 'The Public Test',
@@ -78,7 +75,6 @@ As the task progressed, I found myself entering a state of hyper-awareness. I co
 When I finally completed the task, the relief was overwhelming. But more than that, I felt a sense of accomplishment that came from having successfully navigated such a complex challenge. I had proven to myself that I could maintain control in any situation, and that knowledge was incredibly empowering.
 
 The public test had been exactly that - a test of my abilities, my focus, and my determination. And I had passed with flying colors.',
-                'is_premium' => true,
             ],
             [
                 'title' => 'The Learning Curve',
@@ -94,7 +90,6 @@ By the third task, I was beginning to understand the rhythm, the flow, the way e
 The final task in the series was the most challenging yet, but by then I had the confidence and the skills to approach it with enthusiasm rather than fear. I had learned to trust the process, to embrace the unknown, to find pleasure in the challenge itself.
 
 When the series was complete, I felt like a different person. I had grown, I had learned, I had discovered aspects of myself that I never knew existed. The learning curve had been steep, but the rewards had been immeasurable.',
-                'is_premium' => false,
             ],
             [
                 'title' => 'The Unexpected Reward',
@@ -110,7 +105,6 @@ The unexpected reward taught me an important lesson about keeping an open mind a
 That experience changed my perspective on the entire process. I learned to approach each task with curiosity rather than expectation, to embrace the unknown rather than fear it, and to find joy in the surprises that life has to offer.
 
 The unexpected reward had been exactly that - unexpected, but also exactly what I needed to grow and evolve in ways I never imagined possible.',
-                'is_premium' => true,
             ],
             [
                 'title' => 'The Long Distance Connection',
@@ -126,7 +120,6 @@ The technology that enabled our long-distance relationship also enabled our shar
 By the time we were finally reunited, we had developed a level of intimacy and understanding that we never would have achieved without those shared experiences. The long-distance connection had become our strength, our foundation, our way of building something beautiful despite the challenges we faced.
 
 The distance had taught us that connection isn\'t about physical proximity - it\'s about shared experiences, mutual understanding, and the willingness to find new ways to be together, even when apart.',
-                'is_premium' => false,
             ],
             [
                 'title' => 'The Morning Routine',
@@ -142,7 +135,6 @@ The task required me to be present, to pay attention to the details of my mornin
 By the end of the week, I was looking forward to my mornings in a way I never had before. The routine had become a ritual, a sacred time for setting intentions and preparing for the day ahead. I had transformed something I dreaded into something I cherished.
 
 The morning routine had taught me that sometimes the smallest changes can have the biggest impact, and that approaching familiar activities with new awareness can transform them completely.',
-                'is_premium' => true,
             ],
             [
                 'title' => 'The Group Challenge',
@@ -158,7 +150,6 @@ The challenge required us to communicate openly, to share our experiences, to su
 By the time we completed the challenge, we had formed bonds that went beyond the task itself. We had become a community, a group of people who had shared something meaningful and transformative together.
 
 The group challenge had shown me that sometimes the most rewarding experiences come from working with others, and that the connections we form through shared challenges can be some of the most meaningful relationships we ever develop.',
-                'is_premium' => false,
             ],
             [
                 'title' => 'The Reflection Task',
@@ -174,7 +165,6 @@ The reflection process was emotional and intense, but it was also incredibly hea
 By the end of the task, I felt like I had a deeper understanding of myself than I ever had before. The reflection had been a gift, an opportunity to pause and appreciate how far I\'d come and how much I\'d learned.
 
 The reflection task had taught me that sometimes the most important work we can do is the work of understanding ourselves, and that taking time to reflect on our experiences can lead to the most profound insights and growth.',
-                'is_premium' => true,
             ],
             [
                 'title' => 'The Surprise Element',
@@ -190,7 +180,6 @@ The unexpected twist forced me to think creatively, to adapt quickly, to find ne
 By the time I completed the task, I felt more confident and capable than I ever had before. The surprise element had taught me that I was more adaptable and resourceful than I knew, and that sometimes the best experiences come from the unexpected.
 
 The surprise element had been exactly that - a surprise, but also an opportunity to discover strengths I never knew I had and to experience growth I never would have achieved without it.',
-                'is_premium' => false,
             ],
             [
                 'title' => 'The Graduation',
@@ -206,7 +195,6 @@ The graduation was more than just completing a series of tasks - it was a recogn
 When I finally completed the graduation task, the sense of accomplishment was overwhelming. I had not only finished what I had started, but I had exceeded my own expectations and discovered capabilities I never knew I possessed.
 
 The graduation had been a journey of self-discovery, personal growth, and transformation. It had taught me that with dedication, courage, and an open mind, we can achieve things we never thought possible and become people we never knew we could be.',
-                'is_premium' => true,
             ],
             [
                 'title' => 'The Mentor\'s Guidance',
@@ -222,7 +210,6 @@ The mentor taught me to approach challenges with curiosity rather than fear, to 
 By the time I had completed the difficult task, I felt like I had not only achieved my goal but had also gained a deeper understanding of myself and the process. The mentor\'s guidance had been invaluable, and I was grateful for their patience and wisdom.
 
 The mentor had shown me that sometimes the greatest gift we can give or receive is the gift of guidance, and that sharing our experiences and knowledge can help others on their own journeys of growth and discovery.',
-                'is_premium' => false,
             ],
             [
                 'title' => 'The Creative Challenge',
@@ -238,7 +225,6 @@ As I worked on my creative project, I began to see connections between my artist
 When I finally completed my creative project, I was amazed by what I had produced. It was more than just a response to a task - it was a reflection of my journey, my growth, and my understanding of myself. The creative challenge had given me a new way to see and express my experiences.
 
 The creative challenge had taught me that creativity is not just about artistic ability - it\'s about finding new ways to understand and express our experiences, and that sometimes the most meaningful creations come from the deepest parts of ourselves.',
-                'is_premium' => true,
             ],
             [
                 'title' => 'The Patience Test',
@@ -254,7 +240,6 @@ The waiting period became a time of reflection and anticipation. I thought about
 When the 48 hours finally passed and I received my reward, the satisfaction was incredible. The waiting had made the reward more meaningful, more appreciated, more valued. The delayed gratification had been worth every moment of anticipation.
 
 The patience test had taught me that sometimes the best things in life are worth waiting for, and that the ability to delay gratification can lead to more meaningful and satisfying experiences. The waiting had been a gift, not a burden.',
-                'is_premium' => false,
             ],
             [
                 'title' => 'The Trust Exercise',
@@ -272,7 +257,6 @@ The experience was transformative. I learned that trust is not about giving up c
 When the trust exercise was complete, I felt like a different person. I had discovered a new way of being in the world, a way that was more open, more receptive, more trusting. The vulnerability had become my strength.
 
 The trust exercise had taught me that sometimes the greatest courage comes from being willing to be vulnerable, and that the most profound experiences often require us to let go of what we think we know and trust in what we can\'t see.',
-                'is_premium' => true,
             ],
             [
                 'title' => 'The Community Connection',
@@ -288,7 +272,6 @@ The connections I formed within the community were deep and meaningful. These we
 The community connection had transformed my entire experience. I was no longer navigating this journey alone - I was part of a supportive network of people who were all working toward similar goals and supporting each other along the way.
 
 The community had taught me that we are stronger together than we are alone, and that the connections we form with others who share our interests and experiences can be some of the most meaningful relationships we ever develop.',
-                'is_premium' => false,
             ],
             [
                 'title' => 'The Breakthrough Moment',
@@ -304,7 +287,6 @@ The breakthrough didn\'t just solve the immediate problem - it opened up new pos
 From that moment forward, my entire approach to the experience was different. I had gained not just knowledge, but wisdom. I had developed not just skills, but understanding. The breakthrough had been a turning point in my journey.
 
 The breakthrough moment had taught me that sometimes understanding comes when we least expect it, and that the most profound insights often arrive after periods of struggle and confusion. The breakthrough had been worth every moment of frustration that preceded it.',
-                'is_premium' => true,
             ],
             [
                 'title' => 'The Seasonal Cycle',
@@ -320,7 +302,6 @@ The seasonal cycle taught me that the same experience can feel completely differ
 As I completed the task in its new seasonal context, I found myself appreciating aspects of it that I had missed before. The seasonal cycle had given me a new perspective on an old experience, and that perspective was incredibly valuable.
 
 The seasonal cycle had taught me that growth and change are ongoing processes, and that revisiting familiar experiences with new awareness can lead to deeper understanding and appreciation. The cycle had been a gift, a chance to see how far I had come and how much I had grown.',
-                'is_premium' => false,
             ],
             [
                 'title' => 'The Final Lesson',
@@ -336,7 +317,6 @@ The final lesson was also a time of gratitude. I was grateful for the challenges
 But most of all, the final lesson was a time of understanding. I finally understood that the journey itself was the destination, that the growth and learning were the real rewards, and that every experience, whether easy or difficult, had contributed to who I had become.
 
 The final lesson had taught me that wisdom comes not from reaching a destination, but from the journey itself, and that the most profound lessons are often the ones we learn about ourselves along the way.',
-                'is_premium' => true,
             ],
             [
                 'title' => 'The New Beginning',
@@ -352,7 +332,6 @@ The new beginning was a time of integration and application. I was taking everyt
 As I began this new chapter, I felt a sense of gratitude for the journey that had brought me to this point. Every challenge, every success, every moment of growth had prepared me for this new beginning, and I was ready to embrace whatever lay ahead.
 
 The new beginning had taught me that endings are often just new beginnings in disguise, and that the wisdom we gain from our experiences becomes the foundation for whatever comes next. The new beginning was not just a fresh start - it was a continuation of a journey that had transformed me in ways I never could have imagined.',
-                'is_premium' => false,
             ],
             [
                 'title' => 'The Unexpected Teacher',
@@ -368,7 +347,6 @@ Through their guidance, I began to see my own experiences in a new light. They h
 The unexpected teacher had become one of the most important influences in my journey, not because they had all the answers, but because they helped me ask better questions and see new possibilities.
 
 The unexpected teacher had taught me that learning is not just about finding the right answers, but about asking the right questions, and that sometimes the most profound insights come from the most unexpected sources.',
-                'is_premium' => true,
             ],
             [
                 'title' => 'The Gentle Challenge',
@@ -384,7 +362,6 @@ As I worked through the gentle challenge, I found myself growing in confidence a
 The gentle challenge had been a perfect example of how to approach growth and development. It had shown me that the most effective way to expand our capabilities is often through gentle, supportive challenges that respect our boundaries while encouraging us to explore new possibilities.
 
 The gentle challenge had taught me that strength comes not from being pushed beyond our limits, but from being supported as we gradually expand those limits, and that the most meaningful growth often happens in an environment of safety and support.',
-                'is_premium' => false,
             ],
             [
                 'title' => 'The Shared Experience',
@@ -400,7 +377,6 @@ The task required us to be completely honest with each other, to share our thoug
 By the time we completed the shared experience, we had formed a connection that was deeper and more meaningful than most of the relationships in my life. We had shared something profound, and that sharing had created a bond that would last long after the task was complete.
 
 The shared experience had taught me that the most meaningful connections often come from shared challenges, and that working together toward a common goal can create bonds that are stronger and more lasting than almost anything else.',
-                'is_premium' => true,
             ],
             [
                 'title' => 'The Transformation',
@@ -416,7 +392,6 @@ The transformation has also affected my relationships with others. I\'m more ope
 The transformation has been gradual but steady, like the changing of seasons or the growth of a tree. Each experience, each challenge, each moment of growth has contributed to the person I\'ve become, and I\'m grateful for every step of the journey.
 
 The transformation has taught me that change is not just possible, but inevitable when we\'re open to growth and learning. It has shown me that the most profound transformations often come from the most unexpected experiences, and that the journey of self-discovery is one of the most rewarding adventures we can undertake.',
-                'is_premium' => false,
             ],
         ];
 
@@ -427,7 +402,7 @@ The transformation has taught me that change is not just possible, but inevitabl
                 'content' => $storyData['content'],
                 'user_id' => $users->random()->id,
                 'status' => ContentStatus::Approved->value,
-                'is_premium' => $storyData['is_premium'],
+                'is_premium' => false,
                 'view_count' => fake()->numberBetween(0, 2000),
                 'report_count' => 0,
             ]);
