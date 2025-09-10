@@ -43,8 +43,8 @@
                 </div>
             </div>
 
-            <!-- Premium Option -->
-            <div class="mb-6">
+            <!-- Premium Option - Hidden for now -->
+            {{-- <div class="mb-6">
                 <label class="flex items-center">
                     <input
                         type="checkbox"
@@ -55,7 +55,7 @@
                         Make this a premium fantasy (requires premium subscription)
                     </span>
                 </label>
-            </div>
+            </div> --}}
 
             <!-- Guidelines -->
             <div class="mb-6 p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg">

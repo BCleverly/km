@@ -56,7 +56,7 @@ class CreateFantasy extends Component
         $this->is_premium = false;
 
         // Redirect to fantasies list
-        $this->redirectRoute('fantasies.index');
+        $this->redirectRoute('app.fantasies.index');
     }
 
     public function getWordCount(): int
