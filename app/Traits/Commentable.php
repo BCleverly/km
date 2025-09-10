@@ -83,8 +83,16 @@ trait Commentable
     public function clearCommentsCache(): void
     {
         $morphClass = $this->getMorphClass();
+        $modelPath = "{$morphClass}:{$this->id}";
+        
+        // Clear comment counts
         Cache::forget("comments_count_{$morphClass}_{$this->id}");
         Cache::forget("all_comments_count_{$morphClass}_{$this->id}");
+        
+        // Clear comments list cache for all possible perPage values
+        for ($perPage = 5; $perPage <= 50; $perPage += 5) {
+            Cache::forget("comments_{$modelPath}_{$perPage}");
+        }
     }
 
     /**

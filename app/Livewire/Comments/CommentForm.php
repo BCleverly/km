@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Livewire\Comments;
 
-use App\Models\Comment;
 use Illuminate\Contracts\View\View;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
@@ -16,23 +15,36 @@ use Livewire\Component;
 class CommentForm extends Component
 {
     #[Locked]
-    public Model $commentable;
-    
+    public string $modelPath;
+
     public ?int $parentId = null;
+
     public string $content = '';
+
     public bool $showPreview = false;
+
     public string $previewContent = '';
 
-    public function mount(Model $commentable, ?int $parentId = null): void
+    public function mount(string $modelPath, ?int $parentId = null): void
     {
-        $this->commentable = $commentable;
+        $this->modelPath = $modelPath;
         $this->parentId = $parentId;
+    }
+
+    #[Computed]
+    public function commentable(): Model
+    {
+        // Parse the model path to get the model class and ID
+        // Format: "App\Models\Story:123" or "App\Models\Task:456"
+        [$modelClass, $modelId] = explode(':', $this->modelPath);
+
+        return $modelClass::findOrFail($modelId);
     }
 
     #[Computed]
     public function isReply(): bool
     {
-        return !is_null($this->parentId);
+        return ! is_null($this->parentId);
     }
 
     #[Computed]
@@ -61,8 +73,9 @@ class CommentForm extends Component
 
     public function submit(): void
     {
-        if (!Auth::check()) {
+        if (! Auth::check()) {
             $this->addError('content', 'You must be logged in to comment.');
+
             return;
         }
 
@@ -87,8 +100,8 @@ class CommentForm extends Component
 
     public function togglePreview(): void
     {
-        $this->showPreview = !$this->showPreview;
-        
+        $this->showPreview = ! $this->showPreview;
+
         if ($this->showPreview) {
             $this->previewContent = $this->content;
         }
@@ -131,7 +144,7 @@ class CommentForm extends Component
 
     public function insertCodeBlock(): void
     {
-        $this->insertMarkdown('```php' . "\n" . '// code here' . "\n" . '```');
+        $this->insertMarkdown('```php'."\n".'// code here'."\n".'```');
     }
 
     public function insertInlineCode(): void

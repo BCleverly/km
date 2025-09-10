@@ -32,7 +32,7 @@ class CommentItem extends Component
     public function replies()
     {
         return $this->showReplies 
-            ? $this->comment->replies()->with('user')->orderBy('created_at', 'asc')->get()
+            ? $this->comment->replies()->with('user.profile')->orderBy('created_at', 'asc')->get()
             : collect();
     }
 

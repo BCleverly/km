@@ -1,7 +1,7 @@
 <div class="space-y-6">
     @if($showForm)
         <div class="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-6">
-            <livewire:comments.comment-form :commentable="$commentable" />
+            <livewire:comments.comment-form :model-path="$modelPath" />
         </div>
     @endif
 
@@ -14,6 +14,16 @@
             @foreach($this->comments as $comment)
                 <div wire:key="comment-{{ $comment->id }}">
                     <livewire:comments.comment-item :comment="$comment" :key="'comment-item-' . $comment->id" />
+                    
+                    <!-- Reply Form (when replying to this comment) -->
+                    @if($replyingTo === $comment->id)
+                        <div class="mt-4 ml-8 p-4 bg-gray-50 dark:bg-gray-700 rounded-lg">
+                            <livewire:comments.comment-form 
+                                :model-path="$modelPath" 
+                                :parent-id="$comment->id" 
+                                :key="'reply-form-' . $comment->id" />
+                        </div>
+                    @endif
                 </div>
             @endforeach
         </div>

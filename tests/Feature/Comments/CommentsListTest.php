@@ -19,7 +19,7 @@ beforeEach(function () {
 it('can render comments list component', function () {
     $this->actingAs($this->user);
 
-    Livewire::test(CommentsList::class, ['commentable' => $this->story])
+    Livewire::test(CommentsList::class, ['modelPath' => 'App\Models\Story:' . $this->story->id])
         ->assertStatus(200)
         ->assertSee('No comments yet');
 });
@@ -29,7 +29,7 @@ it('can display existing comments', function () {
 
     $comment = $this->story->addComment('Test comment', null, $this->user->id);
 
-    Livewire::test(CommentsList::class, ['commentable' => $this->story])
+    Livewire::test(CommentsList::class, ['modelPath' => 'App\Models\Story:' . $this->story->id])
         ->assertSee('Test comment')
         ->assertSee($this->user->name);
 });
@@ -37,7 +37,7 @@ it('can display existing comments', function () {
 it('can handle comment added event', function () {
     $this->actingAs($this->user);
 
-    $component = Livewire::test(CommentsList::class, ['commentable' => $this->story]);
+    $component = Livewire::test(CommentsList::class, ['modelPath' => 'App\Models\Story:' . $this->story->id]);
 
     $this->story->addComment('New comment', null, $this->user->id);
 
@@ -50,7 +50,7 @@ it('can handle reply added event', function () {
 
     $parentComment = $this->story->addComment('Parent comment', null, $this->user->id);
 
-    $component = Livewire::test(CommentsList::class, ['commentable' => $this->story]);
+    $component = Livewire::test(CommentsList::class, ['modelPath' => 'App\Models\Story:' . $this->story->id]);
 
     $this->story->addComment('Reply comment', $parentComment->id, $this->user->id);
 
@@ -63,7 +63,7 @@ it('can start and cancel reply', function () {
 
     $parentComment = $this->story->addComment('Parent comment', null, $this->user->id);
 
-    Livewire::test(CommentsList::class, ['commentable' => $this->story])
+    Livewire::test(CommentsList::class, ['modelPath' => 'App\Models\Story:' . $this->story->id])
         ->call('startReply', $parentComment->id)
         ->assertSet('replyingTo', $parentComment->id)
         ->call('cancelReply')
@@ -78,7 +78,7 @@ it('can paginate comments', function () {
         $this->story->addComment("Comment {$i}", null, $this->user->id);
     }
 
-    Livewire::test(CommentsList::class, ['commentable' => $this->story, 'perPage' => 10])
+    Livewire::test(CommentsList::class, ['modelPath' => 'App\Models\Story:' . $this->story->id, 'perPage' => 10])
         ->assertSee('Comment 1')
         ->assertSee('Comment 10')
         ->assertDontSee('Comment 11')
@@ -90,6 +90,6 @@ it('can paginate comments', function () {
 it('can hide comment form when showForm is false', function () {
     $this->actingAs($this->user);
 
-    Livewire::test(CommentsList::class, ['commentable' => $this->story, 'showForm' => false])
+    Livewire::test(CommentsList::class, ['modelPath' => 'App\Models\Story:' . $this->story->id, 'showForm' => false])
         ->assertDontSee('Leave a comment');
 });

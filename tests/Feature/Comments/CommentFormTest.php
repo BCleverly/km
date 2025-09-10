@@ -19,7 +19,7 @@ beforeEach(function () {
 it('can render comment form component', function () {
     $this->actingAs($this->user);
 
-    Livewire::test(CommentForm::class, ['commentable' => $this->story])
+    Livewire::test(CommentForm::class, ['modelPath' => 'App\Models\Story:' . $this->story->id])
         ->assertStatus(200)
         ->assertSee('Leave a comment')
         ->assertSee('You can use Markdown');
@@ -28,7 +28,7 @@ it('can render comment form component', function () {
 it('can submit a comment', function () {
     $this->actingAs($this->user);
 
-    Livewire::test(CommentForm::class, ['commentable' => $this->story])
+    Livewire::test(CommentForm::class, ['modelPath' => 'App\Models\Story:' . $this->story->id])
         ->set('content', 'This is a test comment')
         ->call('submit')
         ->assertDispatched('comment-added');
@@ -43,7 +43,7 @@ it('can submit a reply', function () {
 
     $parentComment = $this->story->addComment('Parent comment', null, $this->user->id);
 
-    Livewire::test(CommentForm::class, ['commentable' => $this->story, 'parentId' => $parentComment->id])
+    Livewire::test(CommentForm::class, ['modelPath' => 'App\Models\Story:' . $this->story->id, 'parentId' => $parentComment->id])
         ->set('content', 'This is a reply')
         ->call('submit')
         ->assertDispatched('reply-added');
@@ -55,19 +55,19 @@ it('can submit a reply', function () {
 it('validates comment content', function () {
     $this->actingAs($this->user);
 
-    Livewire::test(CommentForm::class, ['commentable' => $this->story])
+    Livewire::test(CommentForm::class, ['modelPath' => 'App\Models\Story:' . $this->story->id])
         ->set('content', '')
         ->call('submit')
         ->assertHasErrors(['content' => 'required']);
 
-    Livewire::test(CommentForm::class, ['commentable' => $this->story])
+    Livewire::test(CommentForm::class, ['modelPath' => 'App\Models\Story:' . $this->story->id])
         ->set('content', str_repeat('a', 5001))
         ->call('submit')
         ->assertHasErrors(['content' => 'max']);
 });
 
 it('requires authentication to submit comment', function () {
-    Livewire::test(CommentForm::class, ['commentable' => $this->story])
+    Livewire::test(CommentForm::class, ['modelPath' => 'App\Models\Story:' . $this->story->id])
         ->set('content', 'Test comment')
         ->call('submit')
         ->assertHasErrors(['content']);
@@ -78,7 +78,7 @@ it('requires authentication to submit comment', function () {
 it('can toggle preview', function () {
     $this->actingAs($this->user);
 
-    Livewire::test(CommentForm::class, ['commentable' => $this->story])
+    Livewire::test(CommentForm::class, ['modelPath' => 'App\Models\Story:' . $this->story->id])
         ->set('content', '**Bold text**')
         ->call('togglePreview')
         ->assertSet('showPreview', true)
@@ -91,7 +91,7 @@ it('can toggle preview', function () {
 it('can insert markdown formatting', function () {
     $this->actingAs($this->user);
 
-    Livewire::test(CommentForm::class, ['commentable' => $this->story])
+    Livewire::test(CommentForm::class, ['modelPath' => 'App\Models\Story:' . $this->story->id])
         ->call('insertBold')
         ->assertSet('content', '**bold text**')
         ->call('insertItalic')
@@ -107,7 +107,7 @@ it('can handle start reply event', function () {
 
     $parentComment = $this->story->addComment('Parent comment', null, $this->user->id);
 
-    Livewire::test(CommentForm::class, ['commentable' => $this->story])
+    Livewire::test(CommentForm::class, ['modelPath' => 'App\Models\Story:' . $this->story->id])
         ->dispatch('start-reply', ['parentId' => $parentComment->id])
         ->assertSet('parentId', $parentComment->id);
 });
@@ -117,7 +117,7 @@ it('can handle cancel reply event', function () {
 
     $parentComment = $this->story->addComment('Parent comment', null, $this->user->id);
 
-    Livewire::test(CommentForm::class, ['commentable' => $this->story, 'parentId' => $parentComment->id])
+    Livewire::test(CommentForm::class, ['modelPath' => 'App\Models\Story:' . $this->story->id, 'parentId' => $parentComment->id])
         ->set('content', 'Some content')
         ->dispatch('cancel-reply')
         ->assertSet('parentId', null)

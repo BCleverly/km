@@ -77,6 +77,9 @@ class ListStories extends Component
 
     public function render(): View
     {
-        return view('livewire.stories.list-stories');
+        return view('livewire.stories.list-stories')
+            ->layout('components.layouts.app', [
+                'title' => 'Stories - Kink Master'
+            ]);
     }
 }

@@ -125,6 +125,9 @@ class CreateStory extends Component
 
     public function render(): View
     {
-        return view('livewire.stories.create-story');
+        return view('livewire.stories.create-story')
+            ->layout('components.layouts.app', [
+                'title' => 'Create Story - Kink Master'
+            ]);
     }
 }

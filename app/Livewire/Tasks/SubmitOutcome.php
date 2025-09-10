@@ -76,6 +76,9 @@ class SubmitOutcome extends Component
 
     public function render(): View
     {
-        return view('livewire.tasks.submit-outcome');
+        return view('livewire.tasks.submit-outcome')
+            ->layout('components.layouts.app', [
+                'title' => 'Submit Outcome - Kink Master'
+            ]);
     }
 }

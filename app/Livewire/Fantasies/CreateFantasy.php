@@ -71,6 +71,9 @@ class CreateFantasy extends Component
 
     public function render(): View
     {
-        return view('livewire.fantasies.create-fantasy');
+        return view('livewire.fantasies.create-fantasy')
+            ->layout('components.layouts.app', [
+                'title' => 'Create Fantasy - Kink Master'
+            ]);
     }
 }

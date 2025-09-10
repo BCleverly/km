@@ -155,6 +155,9 @@ class BrowseTasks extends Component
 
     public function render(): View
     {
-        return view('livewire.tasks.browse-tasks');
+        return view('livewire.tasks.browse-tasks')
+            ->layout('components.layouts.app', [
+                'title' => 'Browse Tasks - Kink Master'
+            ]);
     }
 }

@@ -76,6 +76,9 @@ class SubmitTask extends Component
 
     public function render(): View
     {
-        return view('livewire.tasks.submit-task');
+        return view('livewire.tasks.submit-task')
+            ->layout('components.layouts.app', [
+                'title' => 'Submit Task - Kink Master'
+            ]);
     }
 }

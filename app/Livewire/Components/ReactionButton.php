@@ -192,6 +192,12 @@ class ReactionButton extends Component
         ]);
 
         $this->dispatch('close-reaction-modal');
+        
+        // Dispatch reaction event for cache invalidation
+        $this->dispatch('reaction-added', [
+            'modelType' => $this->modelType,
+            'modelId' => $this->modelId,
+        ]);
     }
 
     public function removeReaction(): void
@@ -223,6 +229,12 @@ class ReactionButton extends Component
         ]);
 
         $this->dispatch('close-reaction-modal');
+        
+        // Dispatch reaction event for cache invalidation
+        $this->dispatch('reaction-removed', [
+            'modelType' => $this->modelType,
+            'modelId' => $this->modelId,
+        ]);
     }
 
     public function render()

@@ -1,4 +1,4 @@
-<div>
+<div class="max-w-7xl mx-auto">
     <!-- Header -->
     <div class="mb-8">
         <div class="flex items-center gap-4 mb-4">
@@ -108,8 +108,17 @@
         </div>
     @endif
 
-    <!-- Actions -->
+    <!-- Comments Section -->
     <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6">
+        <livewire:comments.comments-list 
+            :model-path="'App\Models\Story:' . $story->id" 
+            :key="'comments-story-' . $story->id"
+        />
+    </div>
+
+    
+    <!-- Actions -->
+    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6 mb-8">
         <div class="flex items-center justify-between">
             <div class="flex items-center gap-4">
                 <!-- Report Button -->
@@ -132,4 +141,5 @@
             />
         </div>
     </div>
+
 </div>

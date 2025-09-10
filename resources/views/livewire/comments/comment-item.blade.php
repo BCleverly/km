@@ -2,15 +2,7 @@
     <!-- Comment Header -->
     <div class="flex items-center space-x-3 mb-3">
         <div class="flex-shrink-0">
-            @if($comment->user->profile_photo_path)
-                <img class="h-8 w-8 rounded-full" src="{{ $comment->user->profile_photo_url }}" alt="{{ $comment->user->name }}">
-            @else
-                <div class="h-8 w-8 rounded-full bg-gray-300 dark:bg-gray-600 flex items-center justify-center">
-                    <span class="text-sm font-medium text-gray-700 dark:text-gray-300">
-                        {{ substr($comment->user->name, 0, 1) }}
-                    </span>
-                </div>
-            @endif
+            <img class="h-8 w-8 rounded-full" src="{{ $comment->user->profile_picture_url }}" alt="{{ $comment->user->name }}">
         </div>
         
         <div class="flex-1 min-w-0">
@@ -96,13 +88,4 @@
         </div>
     @endif
 
-    <!-- Reply Form (when replying to this comment) -->
-    @if($replyingTo === $comment->id)
-        <div class="mt-4 p-4 bg-gray-50 dark:bg-gray-700 rounded-lg">
-            <livewire:comments.comment-form 
-                :commentable="$comment->commentable" 
-                :parent-id="$comment->id" 
-                :key="'reply-form-' . $comment->id" />
-        </div>
-    @endif
 </div>

@@ -84,6 +84,9 @@ class ListFantasies extends Component
 
     public function render(): View
     {
-        return view('livewire.fantasies.list-fantasies');
+        return view('livewire.fantasies.list-fantasies')
+            ->layout('components.layouts.app', [
+                'title' => 'Fantasies - Kink Master'
+            ]);
     }
 }

@@ -62,6 +62,9 @@ class ShowStory extends Component
 
     public function render(): View
     {
-        return view('livewire.stories.show-story');
+        return view('livewire.stories.show-story')
+            ->layout('components.layouts.app', [
+                'title' => $this->story->title . ' - Kink Master'
+            ]);
     }
 }
