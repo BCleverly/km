@@ -91,6 +91,42 @@ class User extends Authenticatable implements HasPassKeys, ReactsInterface, Fila
     }
 
     /**
+     * Get the user's partner.
+     */
+    public function partner(): HasOne
+    {
+        return $this->hasOne(User::class, 'id', 'partner_id');
+    }
+
+    /**
+     * Get the user who has this user as their partner.
+     */
+    public function partneredBy(): HasOne
+    {
+        return $this->hasOne(User::class, 'partner_id', 'id');
+    }
+
+    /**
+     * Check if this user is part of a couple.
+     */
+    public function isPartOfCouple(): bool
+    {
+        return !is_null($this->partner_id) || $this->partneredBy()->exists();
+    }
+
+    /**
+     * Get the other user in the couple (partner or the user who has this user as partner).
+     */
+    public function getCouplePartner(): ?User
+    {
+        if ($this->partner_id) {
+            return $this->partner;
+        }
+        
+        return $this->partneredBy;
+    }
+
+    /**
      * Get the user's display name (username from profile or name fallback)
      */
     public function getDisplayNameAttribute(): string
@@ -313,18 +349,68 @@ class User extends Authenticatable implements HasPassKeys, ReactsInterface, Fila
 
     /**
      * Check if user has an active premium subscription
+     * Includes couple access - if user is part of a couple, either partner can have the subscription
      */
     public function hasActivePremiumSubscription(): bool
     {
-        return $this->subscribed('premium') || $this->onTrial('premium');
+        // Check if this user has premium subscription
+        if ($this->subscribed('premium') || $this->onTrial('premium')) {
+            return true;
+        }
+
+        // If user is part of a couple, check if their partner has premium subscription
+        if ($this->isPartOfCouple()) {
+            $partner = $this->getCouplePartner();
+            if ($partner && ($partner->subscribed('premium') || $partner->onTrial('premium'))) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**
      * Check if user has a lifetime subscription
+     * Includes couple access - if user is part of a couple, either partner can have the subscription
      */
     public function hasLifetimeSubscription(): bool
     {
-        return $this->subscribed('lifetime');
+        // Check if this user has lifetime subscription
+        if ($this->subscribed('lifetime')) {
+            return true;
+        }
+
+        // If user is part of a couple, check if their partner has lifetime subscription
+        if ($this->isPartOfCouple()) {
+            $partner = $this->getCouplePartner();
+            if ($partner && $partner->subscribed('lifetime')) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Check if user or their partner has any active subscription
+     * This includes premium, lifetime, or any other active subscription
+     */
+    public function hasActiveSubscription(): bool
+    {
+        // Check if this user has any active subscription
+        if ($this->subscribed() || $this->onTrial()) {
+            return true;
+        }
+
+        // If user is part of a couple, check if their partner has any active subscription
+        if ($this->isPartOfCouple()) {
+            $partner = $this->getCouplePartner();
+            if ($partner && ($partner->subscribed() || $partner->onTrial())) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**
@@ -353,6 +439,20 @@ class User extends Authenticatable implements HasPassKeys, ReactsInterface, Fila
         
         if ($this->hasActivePremiumSubscription()) {
             return 'Premium';
+        }
+        
+        // Check if user has access through couple subscription
+        if ($this->isPartOfCouple() && $this->hasActiveSubscription()) {
+            $partner = $this->getCouplePartner();
+            if ($partner) {
+                if ($partner->hasLifetimeSubscription()) {
+                    return 'Couple Lifetime';
+                }
+                if ($partner->hasActivePremiumSubscription()) {
+                    return 'Couple Premium';
+                }
+                return 'Couple Access';
+            }
         }
         
         return 'Free';

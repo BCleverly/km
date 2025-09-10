@@ -42,7 +42,7 @@ Route::post('/logout', function () {
 })->middleware('auth')->name('logout');
 
 // Application Routes (Authenticated users only)
-Route::middleware('auth')->prefix('app')->name('app.')->group(function () {
+Route::middleware(['auth', 'couple.subscription'])->prefix('app')->name('app.')->group(function () {
     // Dashboard
     Route::get('/dashboard', Dashboard::class)->name('dashboard');
     
@@ -67,4 +67,9 @@ Route::middleware('auth')->prefix('app')->name('app.')->group(function () {
 
     // Comments Demo
     Route::get('/comments-demo', CommentsDemo::class)->name('comments.demo');
+});
+
+// Subscription Management (Authenticated users only)
+Route::middleware('auth')->group(function () {
+    Route::get('/subscription/manage', \App\Livewire\Subscription\ManageSubscription::class)->name('subscription.manage');
 });
