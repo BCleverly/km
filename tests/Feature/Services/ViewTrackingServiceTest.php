@@ -21,8 +21,13 @@ it('can track views for fantasies', function () {
     $result = $service->trackView('fantasy', $fantasy->id, $user->id);
     expect($result)->toBeTrue();
     
+    // View count should be database count (0) + Redis count (1) = 1
     $viewCount = $service->getViewCount('fantasy', $fantasy->id);
     expect($viewCount)->toBe(1);
+    
+    // Redis count should be 1
+    $redisCount = $service->getRedisViewCount('fantasy', $fantasy->id);
+    expect($redisCount)->toBe(1);
 });
 
 it('can track views for stories', function () {
@@ -205,4 +210,27 @@ it('allows viewing different content on the same day', function () {
     // Both stories should have 1 view each
     expect($service->getViewCount('story', $story1->id))->toBe(1);
     expect($service->getViewCount('story', $story2->id))->toBe(1);
+});
+
+it('combines database and Redis view counts correctly', function () {
+    $user = User::factory()->create();
+    $story = Story::factory()->create(['view_count' => 50]); // Database has 50 views
+    
+    $service = app(ViewTrackingService::class);
+    
+    // Track a new view
+    $result = $service->trackView('story', $story->id, $user->id);
+    expect($result)->toBeTrue();
+    
+    // Total view count should be database (50) + Redis (1) = 51
+    $totalViewCount = $service->getViewCount('story', $story->id);
+    expect($totalViewCount)->toBe(51);
+    
+    // Redis count should be 1
+    $redisCount = $service->getRedisViewCount('story', $story->id);
+    expect($redisCount)->toBe(1);
+    
+    // Database count should still be 50
+    $story->refresh();
+    expect($story->view_count)->toBe(50);
 });

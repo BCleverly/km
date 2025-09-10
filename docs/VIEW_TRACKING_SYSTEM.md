@@ -16,8 +16,10 @@ The view tracking system provides robust, abuse-resistant view counting for cont
 ### Performance
 - **Redis-based**: Real-time view tracking with Redis
 - **Daily Sync**: View counts synced to database daily at midnight
+- **Combined Counts**: Display shows database + current Redis counts
+- **Safe Sync**: Daily viewed keys only cleared after successful database sync
 - **Batch Operations**: Efficient bulk view count retrieval
-- **Automatic Cleanup**: Redis data cleared after sync
+- **Automatic Cleanup**: Redis data cleared after successful sync
 
 ## Architecture
 
@@ -75,11 +77,14 @@ if ($success) {
 ### Getting View Counts
 
 ```php
-// Get single view count
+// Get combined view count (database + current Redis)
 $viewCount = $service->getViewCount('story', $storyId);
 
-// Get multiple view counts
+// Get multiple view counts (database + current Redis)
 $viewCounts = $service->getViewCounts('story', [$storyId1, $storyId2, $storyId3]);
+
+// Get Redis count only (for debugging)
+$redisCount = $service->getRedisViewCount('story', $storyId);
 ```
 
 ### In Models
@@ -96,6 +101,12 @@ public function getViewCount(): int
 {
     return app(ViewTrackingService::class)->getViewCount('story', $this->id);
 }
+
+// Get database count only
+$story->getDatabaseViewCount(); // Returns database view_count
+
+// Get Redis count only
+$story->getRedisViewCount(); // Returns current Redis count
 ```
 
 ## Configuration
@@ -116,6 +127,37 @@ private const SESSION_DURATION_HOURS = 24;      // Session duration
 // In bootstrap/app.php
 $schedule->command('views:sync')->dailyAt('00:00');
 ```
+
+## Sync Behavior
+
+### Safe Sync Process
+
+1. **Collect Redis Data**: Gather all view counts from Redis
+2. **Update Database**: Increment database view_count for each model
+3. **Verify Success**: Check that all database updates succeeded
+4. **Clear Redis**: Only clear Redis data if all database updates succeeded
+5. **Reset Tracking**: Clear daily viewed keys and other tracking data
+
+### View Count Display
+
+The displayed view count is always the sum of:
+- **Database count**: Previously synced view counts
+- **Current Redis count**: Today's views not yet synced
+
+```php
+// Example: Story has 50 views in database, 3 views in Redis today
+$story->getViewCount(); // Returns 53 (50 + 3)
+$story->getDatabaseViewCount(); // Returns 50
+$story->getRedisViewCount(); // Returns 3
+```
+
+### Failure Handling
+
+If database sync fails:
+- Redis data is preserved
+- Daily viewed keys remain active
+- Next sync attempt will retry failed updates
+- No data loss occurs
 
 ## Commands
 

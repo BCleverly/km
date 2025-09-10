@@ -87,16 +87,22 @@ class ViewTrackingService
     }
 
     /**
-     * Get view count for a specific model
+     * Get view count for a specific model (database + current Redis)
      */
     public function getViewCount(string $modelType, int $modelId): int
     {
+        // Get current Redis count
         $key = $this->getViewKey($modelType, $modelId);
-        return (int) Redis::get($key) ?? 0;
+        $redisCount = (int) Redis::get($key) ?? 0;
+        
+        // Get database count
+        $databaseCount = $this->getDatabaseViewCount($modelType, $modelId);
+        
+        return $databaseCount + $redisCount;
     }
 
     /**
-     * Get view counts for multiple models
+     * Get view counts for multiple models (database + current Redis)
      */
     public function getViewCounts(string $modelType, array $modelIds): array
     {
@@ -104,10 +110,39 @@ class ViewTrackingService
             return [];
         }
 
-        $keys = array_map(fn($id) => $this->getViewKey($modelType, $id), $modelIds);
-        $values = Redis::mget($keys);
+        $result = [];
         
-        return array_combine($modelIds, array_map('intval', $values ?: []));
+        foreach ($modelIds as $modelId) {
+            $result[$modelId] = $this->getViewCount($modelType, $modelId);
+        }
+        
+        return $result;
+    }
+
+    /**
+     * Get view count from database only
+     */
+    private function getDatabaseViewCount(string $modelType, int $modelId): int
+    {
+        $modelClass = $this->getModelClass($modelType);
+        
+        if ($modelClass) {
+            $model = $modelClass::find($modelId);
+            if ($model) {
+                return (int) $model->view_count ?? 0;
+            }
+        }
+        
+        return 0;
+    }
+
+    /**
+     * Get current Redis view count only (for debugging)
+     */
+    public function getRedisViewCount(string $modelType, int $modelId): int
+    {
+        $key = $this->getViewKey($modelType, $modelId);
+        return (int) Redis::get($key) ?? 0;
     }
 
     /**
@@ -116,6 +151,7 @@ class ViewTrackingService
     public function syncViewCountsToDatabase(): int
     {
         $syncedCount = 0;
+        $failedCount = 0;
         
         // Get all view keys from Redis (scoped by model type)
         $viewKeys = Redis::keys('*:views:*');
@@ -128,19 +164,38 @@ class ViewTrackingService
                 $parsed = $this->parseViewKey($key);
                 
                 if ($parsed) {
-                    $this->updateDatabaseViewCount($parsed['model_type'], $parsed['model_id'], $viewCount);
-                    $syncedCount++;
+                    try {
+                        $this->updateDatabaseViewCount($parsed['model_type'], $parsed['model_id'], $viewCount);
+                        $syncedCount++;
+                    } catch (\Exception $e) {
+                        Log::error('Failed to sync view count to database', [
+                            'key' => $key,
+                            'model_type' => $parsed['model_type'],
+                            'model_id' => $parsed['model_id'],
+                            'view_count' => $viewCount,
+                            'error' => $e->getMessage(),
+                        ]);
+                        $failedCount++;
+                    }
                 }
             }
         }
 
-        // Clear all view tracking data after sync
-        $this->clearViewTrackingData();
-
-        Log::info('View counts synced to database', [
-            'synced_count' => $syncedCount,
-            'total_keys' => count($viewKeys),
-        ]);
+        // Only clear tracking data if sync was successful
+        if ($failedCount === 0) {
+            $this->clearViewTrackingData();
+            
+            Log::info('View counts synced to database successfully', [
+                'synced_count' => $syncedCount,
+                'total_keys' => count($viewKeys),
+            ]);
+        } else {
+            Log::warning('View count sync completed with failures', [
+                'synced_count' => $syncedCount,
+                'failed_count' => $failedCount,
+                'total_keys' => count($viewKeys),
+            ]);
+        }
 
         return $syncedCount;
     }
@@ -290,33 +345,47 @@ class ViewTrackingService
     }
 
     /**
-     * Clear all view tracking data
+     * Clear all view tracking data (only after successful sync)
      */
     private function clearViewTrackingData(): void
     {
-        // Clear view counts (scoped by model type)
+        // Clear view counts (scoped by model type) - these have been synced to database
         $viewKeys = Redis::keys('*:views:*');
         if (!empty($viewKeys)) {
             Redis::del($viewKeys);
         }
 
-        // Clear session data
+        // Clear session data - reset for new day
         $sessionKeys = Redis::keys(self::SESSION_PREFIX . '*');
         if (!empty($sessionKeys)) {
             Redis::del($sessionKeys);
         }
 
-        // Clear cooldown data
+        // Clear cooldown data - reset for new day
         $cooldownKeys = Redis::keys('cooldown:*');
         if (!empty($cooldownKeys)) {
             Redis::del($cooldownKeys);
         }
 
-        // Clear daily viewed data
+        // Clear daily viewed data - reset for new day (only after successful sync)
         $dailyViewedKeys = Redis::keys(self::DAILY_VIEWED_PREFIX . '*');
         if (!empty($dailyViewedKeys)) {
             Redis::del($dailyViewedKeys);
         }
+
+        // Clear daily view limit counters - reset for new day
+        $dailyLimitKeys = Redis::keys(self::DAILY_LIMIT_PREFIX . '*');
+        if (!empty($dailyLimitKeys)) {
+            Redis::del($dailyLimitKeys);
+        }
+
+        Log::info('View tracking data cleared after successful sync', [
+            'view_keys_cleared' => count($viewKeys),
+            'session_keys_cleared' => count($sessionKeys),
+            'cooldown_keys_cleared' => count($cooldownKeys),
+            'daily_viewed_keys_cleared' => count($dailyViewedKeys),
+            'daily_limit_keys_cleared' => count($dailyLimitKeys),
+        ]);
     }
 
     /**

@@ -185,11 +185,27 @@ class Story extends Model implements ReactableInterface
     }
 
     /**
-     * Get the view count from Redis.
+     * Get the view count (database + current Redis).
      */
     public function getViewCount(): int
     {
         return app(\App\Services\ViewTrackingService::class)->getViewCount('story', $this->id);
+    }
+
+    /**
+     * Get the database view count only.
+     */
+    public function getDatabaseViewCount(): int
+    {
+        return (int) $this->view_count ?? 0;
+    }
+
+    /**
+     * Get the current Redis view count only.
+     */
+    public function getRedisViewCount(): int
+    {
+        return app(\App\Services\ViewTrackingService::class)->getRedisViewCount('story', $this->id);
     }
 
     /**
