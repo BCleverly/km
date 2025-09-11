@@ -33,7 +33,12 @@
 
                     {{-- Task Deadline --}}
                     @if($activeTask->deadline_at)
-                        <div class="flex items-center gap-3 p-4 rounded-lg @if($activeTask->isOverdue()) bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 @elseif($activeTask->isApproachingDeadline()) bg-orange-50 dark:bg-orange-900/20 border border-orange-200 dark:border-orange-800 @else bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 @endif">
+                        <div @class([
+                            'flex items-center gap-3 p-4 rounded-lg',
+                            'bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800' => $activeTask->isOverdue(),
+                            'bg-orange-50 dark:bg-orange-900/20 border border-orange-200 dark:border-orange-800' => $activeTask->isApproachingDeadline(),
+                            'bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800' => !$activeTask->isOverdue() && !$activeTask->isApproachingDeadline(),
+                        ])>
                             <div class="flex-shrink-0">
                                 @if($activeTask->isOverdue())
                                     <svg class="w-6 h-6 text-red-600 dark:text-red-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -50,10 +55,20 @@
                                 @endif
                             </div>
                             <div class="flex-1">
-                                <p class="text-sm font-semibold @if($activeTask->isOverdue()) text-red-900 dark:text-red-100 @elseif($activeTask->isApproachingDeadline()) text-orange-900 dark:text-orange-100 @else text-blue-900 dark:text-blue-100 @endif">
+                                <p @class([
+                                    'text-sm font-semibold',
+                                    'text-red-900 dark:text-red-100' => $activeTask->isOverdue(),
+                                    'text-orange-900 dark:text-orange-100' => $activeTask->isApproachingDeadline(),
+                                    'text-blue-900 dark:text-blue-100' => !$activeTask->isOverdue() && !$activeTask->isApproachingDeadline(),
+                                ])>
                                     Must be completed by: {{ $activeTask->deadline_at->format('M j, Y \a\t g:i A') }}
                                 </p>
-                                <p class="text-sm @if($activeTask->isOverdue()) text-red-700 dark:text-red-300 @elseif($activeTask->isApproachingDeadline()) text-orange-700 dark:text-orange-300 @else text-blue-700 dark:text-blue-300 @endif">
+                                <p @class([
+                                    'text-sm',
+                                    'text-red-700 dark:text-red-300' => $activeTask->isOverdue(),
+                                    'text-orange-700 dark:text-orange-300' => $activeTask->isApproachingDeadline(),
+                                    'text-blue-700 dark:text-blue-300' => !$activeTask->isOverdue() && !$activeTask->isApproachingDeadline(),
+                                ])>
                                     @if($activeTask->isOverdue())
                                         <span class="font-medium">⚠️ Task is overdue! Complete it now to avoid automatic failure.</span>
                                     @elseif($activeTask->isApproachingDeadline())

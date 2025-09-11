@@ -296,9 +296,11 @@
                                     >
                                         <div class="flex items-center justify-between">
                                             <div class="font-medium">{{ $reward['title'] }}</div>
-                                            <span class="ml-2 px-2 py-1 text-xs rounded-full 
-                                                @if($reward['intended_type'] === 'reward') bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-300
-                                                @else bg-red-100 text-red-800 dark:bg-red-900/20 dark:text-red-300 @endif">
+                                            <span @class([
+                                                'ml-2 px-2 py-1 text-xs rounded-full',
+                                                'bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-300' => $reward['intended_type'] === 'reward',
+                                                'bg-red-100 text-red-800 dark:bg-red-900/20 dark:text-red-300' => $reward['intended_type'] !== 'reward',
+                                            ])>
                                                 {{ ucfirst($reward['intended_type']) }}
                                             </span>
                                         </div>
@@ -324,9 +326,11 @@
                                             <div class="text-sm font-medium text-green-700 dark:text-green-300">
                                                 Selected: {{ $selectedReward['title'] }}
                                             </div>
-                                            <span class="ml-2 px-2 py-1 text-xs rounded-full 
-                                                @if($selectedReward['intended_type'] === 'reward') bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-300
-                                                @else bg-red-100 text-red-800 dark:bg-red-900/20 dark:text-red-300 @endif">
+                                            <span @class([
+                                                'ml-2 px-2 py-1 text-xs rounded-full',
+                                                'bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-300' => $selectedReward['intended_type'] === 'reward',
+                                                'bg-red-100 text-red-800 dark:bg-red-900/20 dark:text-red-300' => $selectedReward['intended_type'] !== 'reward',
+                                            ])>
                                                 {{ ucfirst($selectedReward['intended_type']) }}
                                             </span>
                                         </div>
@@ -469,9 +473,11 @@
                                     >
                                         <div class="flex items-center justify-between">
                                             <div class="font-medium">{{ $punishment['title'] }}</div>
-                                            <span class="ml-2 px-2 py-1 text-xs rounded-full 
-                                                @if($punishment['intended_type'] === 'reward') bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-300
-                                                @else bg-red-100 text-red-800 dark:bg-red-900/20 dark:text-red-300 @endif">
+                                            <span @class([
+                                                'ml-2 px-2 py-1 text-xs rounded-full',
+                                                'bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-300' => $punishment['intended_type'] === 'reward',
+                                                'bg-red-100 text-red-800 dark:bg-red-900/20 dark:text-red-300' => $punishment['intended_type'] !== 'reward',
+                                            ])>
                                                 {{ ucfirst($punishment['intended_type']) }}
                                             </span>
                                         </div>
@@ -497,9 +503,11 @@
                                             <div class="text-sm font-medium text-green-700 dark:text-green-300">
                                                 Selected: {{ $selectedPunishment['title'] }}
                                             </div>
-                                            <span class="ml-2 px-2 py-1 text-xs rounded-full 
-                                                @if($selectedPunishment['intended_type'] === 'reward') bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-300
-                                                @else bg-red-100 text-red-800 dark:bg-red-900/20 dark:text-red-300 @endif">
+                                            <span @class([
+                                                'ml-2 px-2 py-1 text-xs rounded-full',
+                                                'bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-300' => $selectedPunishment['intended_type'] === 'reward',
+                                                'bg-red-100 text-red-800 dark:bg-red-900/20 dark:text-red-300' => $selectedPunishment['intended_type'] !== 'reward',
+                                            ])>
                                                 {{ ucfirst($selectedPunishment['intended_type']) }}
                                             </span>
                                         </div>
