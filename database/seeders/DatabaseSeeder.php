@@ -3,15 +3,6 @@
 namespace Database\Seeders;
 
 use App\Models\User;
-use App\Models\Tasks\Task;
-use App\Models\Tasks\TaskReward;
-use App\Models\Tasks\TaskPunishment;
-use App\Models\Tasks\UserAssignedTask;
-use App\Models\Tasks\TaskActivity;
-use App\TargetUserType;
-use App\ContentStatus;
-use App\TaskStatus;
-use App\TaskActivityType;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -45,7 +36,6 @@ class DatabaseSeeder extends Seeder
             [
                 'username' => 'admin',
                 'about' => 'Administrator of the platform',
-                'theme_preference' => 'dark',
             ]
         );
         $admin->assignRole('Admin');
@@ -63,7 +53,6 @@ class DatabaseSeeder extends Seeder
             [
                 'username' => 'moderator',
                 'about' => 'Content moderator',
-                'theme_preference' => 'light',
             ]
         );
         $moderator->assignRole('Moderator');
@@ -81,7 +70,6 @@ class DatabaseSeeder extends Seeder
             [
                 'username' => 'reviewer',
                 'about' => 'Content reviewer',
-                'theme_preference' => 'system',
             ]
         );
         $reviewer->assignRole('Reviewer');
@@ -99,7 +87,6 @@ class DatabaseSeeder extends Seeder
             [
                 'username' => 'testuser',
                 'about' => 'Regular test user',
-                'theme_preference' => 'light',
             ]
         );
         $user->assignRole('User');
@@ -109,7 +96,6 @@ class DatabaseSeeder extends Seeder
             $this->createTestUsers();
         }
 
-
     }
 
     /**
@@ -117,7 +103,6 @@ class DatabaseSeeder extends Seeder
      */
     private function createTestUsers(): void
     {
-
 
         // Couple (Free) Users
         $coupleUser1 = User::firstOrCreate(
@@ -134,7 +119,6 @@ class DatabaseSeeder extends Seeder
             [
                 'username' => 'couple1',
                 'about' => 'First half of couple account',
-                'theme_preference' => 'dark',
             ]
         );
         $coupleUser1->assignRole('User');
@@ -154,7 +138,6 @@ class DatabaseSeeder extends Seeder
             [
                 'username' => 'couple2',
                 'about' => 'Second half of couple account',
-                'theme_preference' => 'dark',
             ]
         );
         $coupleUser2->assignRole('User');
@@ -162,5 +145,4 @@ class DatabaseSeeder extends Seeder
         // Link the couple users
         $coupleUser1->update(['partner_id' => $coupleUser2->id]);
     }
-
 }

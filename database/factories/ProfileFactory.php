@@ -20,7 +20,6 @@ class ProfileFactory extends Factory
             'user_id' => \App\Models\User::factory(),
             'username' => fake()->unique()->userName(),
             'about' => fake()->optional(0.7)->paragraph(),
-            'theme_preference' => fake()->randomElement(['light', 'dark', 'system']),
         ];
     }
 }

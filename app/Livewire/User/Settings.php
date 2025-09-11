@@ -23,16 +23,12 @@ class Settings extends Component
         $user = auth()->user();
         $profile = $user->profile;
 
-        // Store the old theme preference to check if it changed
-        $oldThemePreference = $profile?->theme_preference ?? 'system';
-
         // Custom validation for username uniqueness and file uploads
         $this->form->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255',
             'username' => 'required|string|max:255|unique:profiles,username,'.($profile?->id ?? 'NULL'),
             'about' => 'nullable|string|max:1000',
-            'theme_preference' => 'required|string|in:light,dark,system',
             'profile_picture' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:10240', // 10MB max
             'cover_photo' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:10240', // 10MB max
         ]);
@@ -45,30 +41,12 @@ class Settings extends Component
             $profile = $user->profile()->create([
                 'username' => $this->form->username,
                 'about' => $this->form->about,
-                'theme_preference' => $this->form->theme_preference,
             ]);
         } else {
             $profile->update([
                 'username' => $this->form->username,
                 'about' => $this->form->about,
-                'theme_preference' => $this->form->theme_preference,
             ]);
-        }
-
-        // If theme preference changed, dispatch events to sync with global theme selector
-        if ($oldThemePreference !== $this->form->theme_preference) {
-            // Update session to match the new preference
-            session(['theme' => $this->form->theme_preference]);
-            
-            // Dispatch Livewire event
-            $this->dispatch('theme-changed', theme: $this->form->theme_preference);
-            
-            // Dispatch JavaScript event for global theme selector
-            $this->js("
-                document.dispatchEvent(new CustomEvent('theme-changed', { 
-                    detail: { theme: '{$this->form->theme_preference}' } 
-                }));
-            ");
         }
 
         // Handle profile picture upload

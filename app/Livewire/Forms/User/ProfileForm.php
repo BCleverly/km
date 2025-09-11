@@ -19,9 +19,6 @@ class ProfileForm extends Form
     #[Validate('nullable|string|max:1000')]
     public string $about = '';
 
-    #[Validate('required|string|in:light,dark,system')]
-    public string $theme_preference = 'system';
-
     public $profile_picture;
 
     public $cover_photo;
@@ -36,7 +33,6 @@ class ProfileForm extends Form
             $this->email = $user->email;
             $this->username = $profile?->username ?? '';
             $this->about = $profile?->about ?? '';
-            $this->theme_preference = $profile?->theme_preference ?? 'system';
         }
     }
 }

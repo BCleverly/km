@@ -24,8 +24,6 @@
                 </svg>
             </button>
 
-            <!-- Theme Selector -->
-            <livewire:theme-selector />
 
             <!-- Separator -->
             <div aria-hidden="true" class="hidden lg:block lg:h-6 lg:w-px lg:bg-gray-900/10 dark:lg:bg-gray-100/10"></div>

@@ -322,57 +322,6 @@
                             </div>
                         @endif
 
-                        <!-- Account Preferences Section -->
-                        <div class="pt-6 border-t border-gray-200 dark:border-gray-700">
-                            <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-4">
-                                Account Preferences
-                            </h3>
-                            
-                            <!-- Theme Preference -->
-                            <div>
-                                <label class="block text-sm font-medium text-gray-900 dark:text-white mb-3">
-                                    Theme Preference
-                                </label>
-                                <div class="space-y-3">
-                                    <div class="flex items-center">
-                                        <input type="radio" 
-                                               id="theme-light" 
-                                               wire:model="form.theme_preference" 
-                                               value="light"
-                                               class="h-4 w-4 text-red-600 focus:ring-red-500 border-gray-300 dark:border-gray-600">
-                                        <label for="theme-light" class="ml-3 text-sm font-medium text-gray-700 dark:text-gray-300">
-                                            Light
-                                        </label>
-                                    </div>
-                                    <div class="flex items-center">
-                                        <input type="radio" 
-                                               id="theme-dark" 
-                                               wire:model="form.theme_preference" 
-                                               value="dark"
-                                               class="h-4 w-4 text-red-600 focus:ring-red-500 border-gray-300 dark:border-gray-600">
-                                        <label for="theme-dark" class="ml-3 text-sm font-medium text-gray-700 dark:text-gray-300">
-                                            Dark
-                                        </label>
-                                    </div>
-                                    <div class="flex items-center">
-                                        <input type="radio" 
-                                               id="theme-system" 
-                                               wire:model="form.theme_preference" 
-                                               value="system"
-                                               class="h-4 w-4 text-red-600 focus:ring-red-500 border-gray-300 dark:border-gray-600">
-                                        <label for="theme-system" class="ml-3 text-sm font-medium text-gray-700 dark:text-gray-300">
-                                            System (Follow device preference)
-                                        </label>
-                                    </div>
-                                </div>
-                                @error('form.theme_preference')
-                                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                                @enderror
-                                <p class="mt-2 text-xs text-gray-500 dark:text-gray-400">
-                                    Choose your preferred theme. System will automatically switch between light and dark based on your device settings.
-                                </p>
-                            </div>
-                        </div>
 
                         <!-- Action Buttons -->
                         <div class="flex justify-end space-x-3 pt-6 border-t border-gray-200 dark:border-gray-700">

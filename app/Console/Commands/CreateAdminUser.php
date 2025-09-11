@@ -34,7 +34,7 @@ class CreateAdminUser extends Command
         $this->newLine();
 
         // Check if we should run in interactive mode
-        if ($this->option('interactive') || (!$this->option('name') && !$this->option('email'))) {
+        if ($this->option('interactive') || (! $this->option('name') && ! $this->option('email'))) {
             return $this->interactiveMode();
         }
 
@@ -70,6 +70,7 @@ class CreateAdminUser extends Command
             foreach ($validator->errors()->all() as $error) {
                 $this->line("  • {$error}");
             }
+
             return Command::FAILURE;
         }
 
@@ -85,8 +86,9 @@ class CreateAdminUser extends Command
         $email = $this->option('email');
         $password = $this->option('password');
 
-        if (!$name || !$email || !$password) {
+        if (! $name || ! $email || ! $password) {
             $this->error('Missing required options. Use --name, --email, and --password or run with --interactive');
+
             return Command::FAILURE;
         }
 
@@ -106,6 +108,7 @@ class CreateAdminUser extends Command
             foreach ($validator->errors()->all() as $error) {
                 $this->line("  • {$error}");
             }
+
             return Command::FAILURE;
         }
 
@@ -130,7 +133,6 @@ class CreateAdminUser extends Command
             $user->profile()->create([
                 'username' => $this->generateUsername($name),
                 'about' => 'Administrator of the platform',
-                'theme_preference' => 'system',
             ]);
 
             // Assign admin role
@@ -142,14 +144,15 @@ class CreateAdminUser extends Command
             $this->line("  • Name: {$user->name}");
             $this->line("  • Email: {$user->email}");
             $this->line("  • Username: {$user->profile->username}");
-            $this->line("  • Role: Admin");
+            $this->line('  • Role: Admin');
             $this->newLine();
             $this->info('You can now log in to the application with these credentials.');
 
             return Command::SUCCESS;
 
         } catch (\Exception $e) {
-            $this->error('Failed to create admin user: ' . $e->getMessage());
+            $this->error('Failed to create admin user: '.$e->getMessage());
+
             return Command::FAILURE;
         }
     }
@@ -160,18 +163,18 @@ class CreateAdminUser extends Command
     private function generateUsername(string $name): string
     {
         $username = strtolower(str_replace(' ', '', $name));
-        
+
         // Ensure uniqueness
         $originalUsername = $username;
         $counter = 1;
-        
+
         while (User::whereHas('profile', function ($query) use ($username) {
             $query->where('username', $username);
         })->exists()) {
-            $username = $originalUsername . $counter;
+            $username = $originalUsername.$counter;
             $counter++;
         }
-        
+
         return $username;
     }
 }

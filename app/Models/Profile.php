@@ -17,7 +17,6 @@ class Profile extends Model implements HasMedia
         'user_id',
         'username',
         'about',
-        'theme_preference',
     ];
 
     /**
@@ -113,20 +112,5 @@ class Profile extends Model implements HasMedia
         }
 
         return null;
-    }
-
-    /**
-     * Get the effective theme preference
-     * If theme_preference is 'system', detect the user's system preference
-     */
-    public function getEffectiveThemeAttribute(): string
-    {
-        if ($this->theme_preference === 'system') {
-            // You can implement system detection here if needed
-            // For now, we'll default to 'light' when system is selected
-            return 'light';
-        }
-
-        return $this->theme_preference;
     }
 }
