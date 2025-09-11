@@ -2,28 +2,41 @@
 
 namespace App\Livewire\User;
 
-use App\Models\User;
 use App\Models\Profile;
+use App\Models\User;
+use Livewire\Attributes\Computed;
+use Livewire\Attributes\Locked;
 use Livewire\Component;
 
 class PublicProfile extends Component
 {
-    public User $user;
-    public ?Profile $profile = null;
+    #[Locked]
+    public string $username;
 
     public function mount(string $username)
     {
-        // Find the user by username
-        $this->profile = Profile::where('username', $username)->first();
-        
-        if (!$this->profile) {
+        $this->username = $username;
+
+        // Validate that the user exists
+        if (! $this->profile) {
             abort(404, 'User not found');
         }
-        
-        $this->user = $this->profile->user;
     }
 
-    public function getCoverPhotoUrl()
+    #[Computed]
+    public function profile(): ?Profile
+    {
+        return Profile::where('username', $this->username)->first();
+    }
+
+    #[Computed]
+    public function user(): User
+    {
+        return $this->profile->user;
+    }
+
+    #[Computed]
+    public function coverPhotoUrl()
     {
         if ($this->profile) {
             $media = $this->profile->getFirstMedia('cover_photos');
@@ -41,7 +54,8 @@ class PublicProfile extends Component
         return null;
     }
 
-    public function getProfilePictureUrl()
+    #[Computed]
+    public function profilePictureUrl()
     {
         if ($this->profile) {
             $media = $this->profile->getFirstMedia('profile_pictures');
@@ -60,44 +74,28 @@ class PublicProfile extends Component
         return $this->user->gravatar_url;
     }
 
-    public function getDisplayName()
-    {
-        return $this->user->display_name;
-    }
-
-    public function getUsername()
-    {
-        return $this->profile?->username ?? $this->user->name;
-    }
-
-    public function getAbout()
-    {
-        return $this->profile?->about;
-    }
-
-    public function getJoinedDate()
-    {
-        return $this->user->created_at->format('F Y');
-    }
-
-    public function getCompletedTasksCount()
+    #[Computed]
+    public function completedTasksCount()
     {
         return $this->user->stats()->getTotalCompletedTasks();
     }
 
-    public function getCurrentStreak()
+    #[Computed]
+    public function currentStreak()
     {
         return $this->user->stats()->getCurrentStreak();
     }
 
-    public function getTotalPoints()
+    #[Computed]
+    public function totalPoints()
     {
         // For now, we'll use completed tasks as points
         // This can be enhanced later with actual point system
         return $this->user->stats()->getTotalCompletedTasks();
     }
 
-    public function getRecentActivities($limit = 5)
+    #[Computed]
+    public function recentActivities($limit = 5)
     {
         return $this->user->recentTaskActivities($limit)->get();
     }
@@ -106,7 +104,7 @@ class PublicProfile extends Component
     {
         return view('livewire.user.public-profile')
             ->layout('components.layouts.app', [
-                'title' => $this->getDisplayName() . ' - Kink Master',
+                'title' => $this->user->display_name.' - Kink Master',
             ]);
     }
 }

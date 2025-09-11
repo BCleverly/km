@@ -5,6 +5,8 @@ namespace App\Providers;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\ServiceProvider;
 use Laravel\Cashier\Cashier;
+use Illuminate\Support\Facades;
+use Illuminate\View\View;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -24,5 +26,22 @@ class AppServiceProvider extends ServiceProvider
         Model::shouldBeStrict();
 
         Cashier::calculateTaxes();
+
+        // Using closure-based composers...
+
+        Facades\View::composer('components.layouts.app', function (View $view) {
+
+            $view->with('topNav', [
+                ['text'=> 'Dashboard', 'link' => route('app.dashboard'), 'icon' => 'icon.home'],
+                ['text'=> 'Tasks', 'link' => route('app.tasks'), 'icon' => 'icon.checkmark'],
+                ['text'=> 'Fantasies','link' =>  route('app.fantasies.index'), 'icon' => 'icon.heart'],
+                ['text'=> 'Stories','link' =>  route('app.stories.index'), 'icon' => 'icon.book'],
+            ]);
+
+            $view->with('bottomNav', [
+                ['text'=> 'Task Community', 'link' =>  route('app.tasks.community'), 'icon' => 'icon.checkmark']
+            ]);
+
+        });
     }
 }

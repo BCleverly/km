@@ -1,14 +1,4 @@
 <div>
-    {{-- Header --}}
-    <div class="mb-8">
-        <h1 class="text-3xl font-bold text-gray-900 dark:text-white">
-            Tasks Dashboard
-        </h1>
-        <p class="mt-2 text-gray-600 dark:text-gray-300">
-            Complete tasks to earn rewards and discover new experiences.
-        </p>
-    </div>
-
     {{-- Current Task Card --}}
     <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-8 mb-8">
         @if($activeTask)
@@ -40,7 +30,7 @@
                     <p class="text-gray-600 dark:text-gray-300 leading-relaxed mb-4">
                         {{ $activeTask->task->description }}
                     </p>
-                    
+
                     {{-- Task Deadline --}}
                     @if($activeTask->deadline_at)
                         <div class="flex items-center gap-3 p-4 rounded-lg @if($activeTask->isOverdue()) bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 @elseif($activeTask->isApproachingDeadline()) bg-orange-50 dark:bg-orange-900/20 border border-orange-200 dark:border-orange-800 @else bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 @endif">
@@ -114,7 +104,7 @@
 
                 {{-- Action Buttons --}}
                 <div class="flex flex-col sm:flex-row gap-3">
-                    <button 
+                    <button
                         wire:click="showCompletionModal"
                         @class([
                             'flex-1 text-white font-medium py-3 px-6 rounded-lg transition-colors duration-200 shadow-sm hover:shadow-md cursor-pointer',
@@ -140,7 +130,7 @@
                             @endif
                         </span>
                     </button>
-                    <button 
+                    <button
                         wire:click="failTask"
                         wire:loading.attr="disabled"
                         @class([
@@ -167,11 +157,11 @@
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                     </svg>
                 </div>
-                
+
                 <h2 class="text-2xl font-semibold text-gray-900 dark:text-white mb-4">
                     No Active Task
                 </h2>
-                
+
                 <p class="text-gray-600 dark:text-gray-300 mb-8 max-w-md mx-auto">
                     @if($remainingSlots <= 0)
                         You've reached your maximum of {{ $maxActiveOutcomes }} active outcomes. Complete or let some expire to get new tasks.
@@ -179,10 +169,10 @@
                         Ready for a new challenge? Choose how you'd like to get your next task.
                     @endif
                 </p>
-                
+
                 {{-- Action Buttons --}}
                 <div class="flex flex-col sm:flex-row gap-4 justify-center">
-                    <button 
+                    <button
                         wire:click="assignRandomTask"
                         @disabled($remainingSlots <= 0)
                         wire:loading.attr="disabled"
@@ -200,8 +190,8 @@
                             <span wire:loading wire:target="assignRandomTask">Loading...</span>
                         </span>
                     </button>
-                    
-                    <a 
+
+                    <a
                         href="{{ route('app.tasks.create') }}"
                         wire:navigate
                         @class([
@@ -235,7 +225,7 @@
                         <p class="text-sm text-gray-500 dark:text-gray-400">Your current rewards and punishments</p>
                     </div>
                 </div>
-                
+
                 {{-- Outcome Limit Indicator --}}
                 <div class="flex items-center gap-2">
                     <div class="text-sm text-gray-500 dark:text-gray-400">
@@ -264,7 +254,7 @@
                                 <p class="text-sm text-green-600 dark:text-green-400">Earned {{ $activeReward->assigned_at->diffForHumans() }}</p>
                             </div>
                         </div>
-                        
+
                         <div class="mb-4">
                             <h4 class="font-medium text-green-900 dark:text-green-100 mb-2">{{ $activeReward->outcome_title }}</h4>
                             <p class="text-sm text-green-700 dark:text-green-300">{{ $activeReward->outcome_description }}</p>
@@ -280,7 +270,7 @@
                         @endif
 
                         <div class="mt-4">
-                            <button 
+                            <button
                                 wire:click="completeOutcome({{ $activeReward->id }})"
                                 wire:loading.attr="disabled"
                                 @class([
@@ -310,7 +300,7 @@
                                 <p class="text-sm text-red-600 dark:text-red-400">Assigned {{ $activePunishment->assigned_at->diffForHumans() }}</p>
                             </div>
                         </div>
-                        
+
                         <div class="mb-4">
                             <h4 class="font-medium text-red-900 dark:text-red-100 mb-2">{{ $activePunishment->outcome_title }}</h4>
                             <p class="text-sm text-red-700 dark:text-red-300">{{ $activePunishment->outcome_description }}</p>
@@ -326,7 +316,7 @@
                         @endif
 
                         <div class="mt-4">
-                            <button 
+                            <button
                                 wire:click="completeOutcome({{ $activePunishment->id }})"
                                 wire:loading.attr="disabled"
                                 @class([
@@ -375,58 +365,63 @@
     @endif
 
     {{-- Stats Grid --}}
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-        {{-- Tasks Completed --}}
-        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6">
-            <div class="flex items-center">
-                <div class="flex-shrink-0">
-                    <div class="w-8 h-8 bg-green-100 dark:bg-green-900/30 rounded-lg flex items-center justify-center">
-                        <svg class="w-5 h-5 text-green-600 dark:text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                        </svg>
+    @isset($streakStats)
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+            {{-- Tasks Completed --}}
+            <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0">
+                        <div class="w-8 h-8 bg-green-100 dark:bg-green-900/30 rounded-lg flex items-center justify-center">
+                            <svg class="w-5 h-5 text-green-600 dark:text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="ml-4">
+                        <p class="text-sm font-medium text-gray-600 dark:text-gray-400">Tasks Completed</p>
+                        <p class="text-2xl font-semibold text-gray-900 dark:text-white">{{ $streakStats['total_completed_tasks'] }}</p>
                     </div>
                 </div>
-                <div class="ml-4">
-                    <p class="text-sm font-medium text-gray-600 dark:text-gray-400">Tasks Completed</p>
-                    <p class="text-2xl font-semibold text-gray-900 dark:text-white">{{ $streakStats['total_completed_tasks'] }}</p>
+            </div>
+
+            {{-- Completion Rate --}}
+            <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0">
+                        <div class="w-8 h-8 bg-yellow-100 dark:bg-yellow-900/30 rounded-lg flex items-center justify-center">
+                            <svg class="w-5 h-5 text-yellow-600 dark:text-yellow-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="ml-4">
+                        <p class="text-sm font-medium text-gray-600 dark:text-gray-400">Completion Rate</p>
+                        <p class="text-2xl font-semibold text-gray-900 dark:text-white">{{ $streakStats['completion_rate'] }}%</p>
+                    </div>
+                </div>
+            </div>
+
+            {{-- Current Streak --}}
+            <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0">
+                        <div class="w-8 h-8 bg-red-100 dark:bg-red-900/30 rounded-lg flex items-center justify-center">
+                            <svg class="w-5 h-5 text-red-600 dark:text-red-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="ml-4">
+                        <p class="text-sm font-medium text-gray-600 dark:text-gray-400">Current Streak</p>
+                        <p class="text-2xl font-semibold text-gray-900 dark:text-white">{{ $streakStats['current_streak'] }} days</p>
+                    </div>
                 </div>
             </div>
         </div>
 
-        {{-- Completion Rate --}}
-        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6">
-            <div class="flex items-center">
-                <div class="flex-shrink-0">
-                    <div class="w-8 h-8 bg-yellow-100 dark:bg-yellow-900/30 rounded-lg flex items-center justify-center">
-                        <svg class="w-5 h-5 text-yellow-600 dark:text-yellow-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
-                        </svg>
-                    </div>
-                </div>
-                <div class="ml-4">
-                    <p class="text-sm font-medium text-gray-600 dark:text-gray-400">Completion Rate</p>
-                    <p class="text-2xl font-semibold text-gray-900 dark:text-white">{{ $streakStats['completion_rate'] }}%</p>
-                </div>
-            </div>
-        </div>
+    @endif
 
-        {{-- Current Streak --}}
-        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6">
-            <div class="flex items-center">
-                <div class="flex-shrink-0">
-                    <div class="w-8 h-8 bg-red-100 dark:bg-red-900/30 rounded-lg flex items-center justify-center">
-                        <svg class="w-5 h-5 text-red-600 dark:text-red-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
-                        </svg>
-                    </div>
-                </div>
-                <div class="ml-4">
-                    <p class="text-sm font-medium text-gray-600 dark:text-gray-400">Current Streak</p>
-                    <p class="text-2xl font-semibold text-gray-900 dark:text-white">{{ $streakStats['current_streak'] }} days</p>
-                </div>
-            </div>
-        </div>
-    </div>
 
     {{-- Recent Activity --}}
     <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
@@ -487,8 +482,8 @@
                                     @endphp
                                     @if($completionImage)
                                         <div class="mt-3">
-                                            <img src="{{ $completionImage->getUrl('medium') }}" 
-                                                 alt="Task completion image" 
+                                            <img src="{{ $completionImage->getUrl('medium') }}"
+                                                 alt="Task completion image"
                                                  class="w-full max-w-xs rounded-lg shadow-sm border border-gray-200 dark:border-gray-600 cursor-pointer hover:shadow-md transition-shadow"
                                                  onclick="openImageModal('{{ $completionImage->getUrl('large') }}')">
                                         </div>
@@ -532,16 +527,16 @@
                 <div class="inline-block w-full max-w-4xl overflow-hidden text-left align-bottom transition-all transform bg-white dark:bg-gray-800 rounded-lg shadow-xl sm:my-8 sm:align-middle">
                     <div class="relative">
                         {{-- Close Button --}}
-                        <button @click="show = false" 
+                        <button @click="show = false"
                                 class="absolute top-4 right-4 z-10 p-2 text-white bg-black bg-opacity-50 rounded-full hover:bg-opacity-75 transition-all">
                             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
                             </svg>
                         </button>
-                        
+
                         {{-- Image --}}
-                        <img :src="imageUrl" 
-                             alt="Task completion image" 
+                        <img :src="imageUrl"
+                             alt="Task completion image"
                              class="w-full h-auto max-h-[80vh] object-contain">
                     </div>
                 </div>

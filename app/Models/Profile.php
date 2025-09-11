@@ -77,7 +77,7 @@ class Profile extends Model implements HasMedia
     /**
      * Get the profile picture URL
      */
-    public function getProfilePictureUrlAttribute(): string
+    public function getProfilePictureUrlAttribute()
     {
         $media = $this->getFirstMedia('profile_pictures');
 

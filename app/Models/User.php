@@ -68,7 +68,7 @@ class User extends Authenticatable implements HasPassKeys, ReactsInterface, Fila
         if (app()->isProduction()){
             return str_ends_with($this->email, '@bencleverly.dev');# && $this->hasVerifiedEmail();
         }
-        
+
         return true;
     }
 
@@ -96,6 +96,13 @@ class User extends Authenticatable implements HasPassKeys, ReactsInterface, Fila
     public function getDisplayNameAttribute(): string
     {
         return $this->profile?->username ?? $this->name;
+    }
+
+    public function displayName(): Attribute
+    {
+        return Attribute::make(
+            get: fn() => $this->profile?->username ?? $this->name
+        );
     }
 
     /**
@@ -260,7 +267,7 @@ class User extends Authenticatable implements HasPassKeys, ReactsInterface, Fila
     {
         $activeCount = $this->activeOutcomes()->count();
         $maxAllowed = $this->getMaxActiveOutcomes();
-        
+
         return $activeCount >= $maxAllowed;
     }
 
@@ -279,7 +286,7 @@ class User extends Authenticatable implements HasPassKeys, ReactsInterface, Fila
     {
         $activeCount = $this->getActiveOutcomeCount();
         $maxAllowed = $this->getMaxActiveOutcomes();
-        
+
         return max(0, $maxAllowed - $activeCount);
     }
 
@@ -333,8 +340,8 @@ class User extends Authenticatable implements HasPassKeys, ReactsInterface, Fila
      */
     public function canUploadCompletionImages(): bool
     {
-        return $this->hasActivePremiumSubscription() 
-            || $this->hasLifetimeSubscription() 
+        return $this->hasActivePremiumSubscription()
+            || $this->hasLifetimeSubscription()
             || $this->hasRole('Admin');
     }
 
@@ -346,16 +353,16 @@ class User extends Authenticatable implements HasPassKeys, ReactsInterface, Fila
         if ($this->hasRole('Admin')) {
             return 'Admin';
         }
-        
+
         if ($this->hasLifetimeSubscription()) {
             return 'Lifetime';
         }
-        
+
         if ($this->hasActivePremiumSubscription()) {
             return 'Premium';
         }
-        
+
         return 'Free';
     }
-    
+
 }

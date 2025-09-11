@@ -5,10 +5,9 @@ declare(strict_types=1);
 namespace App\Livewire\Tasks;
 
 use App\Actions\Tasks\AssignRandomTask;
-use App\Actions\Tasks\CompleteTask;
 use App\Actions\Tasks\FailTask;
-use Livewire\Attributes\Title;
 use Livewire\Attributes\On;
+use Livewire\Attributes\Title;
 use Livewire\Component;
 
 #[Title('Tasks Dashboard')]
@@ -19,17 +18,16 @@ class Dashboard extends Component
         $user = auth()->user();
         $recentActivities = $user->recentTaskActivities(5)->get();
         $activeTask = $user->stats()->getActiveTask();
-        $streakStats = $user->stats()->getStreakStats();
         $activeReward = $user->getCurrentActiveReward();
         $activePunishment = $user->getCurrentActivePunishment();
         $activeOutcomeCount = $user->getActiveOutcomeCount();
         $maxActiveOutcomes = $user->getMaxActiveOutcomes();
         $remainingSlots = $user->getRemainingOutcomeSlots();
-        
+
         return view('livewire.tasks.dashboard', [
             'recentActivities' => $recentActivities,
             'activeTask' => $activeTask,
-            'streakStats' => $streakStats,
+            'streakStats' => $streakStats ?? null, // $user->stats()->getStreakStats()
             'activeReward' => $activeReward,
             'activePunishment' => $activePunishment,
             'activeOutcomeCount' => $activeOutcomeCount,
@@ -64,21 +62,22 @@ class Dashboard extends Component
     public function assignRandomTask()
     {
         $user = auth()->user();
-        
+
         // Check if user has reached their outcome limit
         if ($user->hasReachedOutcomeLimit()) {
             $this->dispatch('notify', [
                 'type' => 'warning',
-                'message' => 'You have reached your maximum of ' . $user->getMaxActiveOutcomes() . ' active outcomes. Complete or let some expire to get new tasks.'
+                'message' => 'You have reached your maximum of '.$user->getMaxActiveOutcomes().' active outcomes. Complete or let some expire to get new tasks.',
             ]);
+
             return;
         }
-        
+
         $result = AssignRandomTask::run($user);
-        
+
         $this->dispatch('notify', [
             'type' => $result['success'] ? 'success' : 'error',
-            'message' => $result['message']
+            'message' => $result['message'],
         ]);
     }
 
@@ -89,15 +88,16 @@ class Dashboard extends Component
     {
         $user = auth()->user();
         $activeTask = $user->stats()->getActiveTask();
-        
-        if (!$activeTask) {
+
+        if (! $activeTask) {
             $this->dispatch('notify', [
                 'type' => 'error',
-                'message' => 'No active task found'
+                'message' => 'No active task found',
             ]);
+
             return;
         }
-        
+
         $this->dispatch('show-completion-modal', $activeTask);
     }
 
@@ -108,10 +108,10 @@ class Dashboard extends Component
     {
         $user = auth()->user();
         $result = FailTask::run($user);
-        
+
         $this->dispatch('notify', [
             'type' => $result['success'] ? 'warning' : 'error',
-            'message' => $result['message']
+            'message' => $result['message'],
         ]);
     }
 
@@ -122,28 +122,30 @@ class Dashboard extends Component
     {
         $user = auth()->user();
         $outcome = $user->outcomes()->find($outcomeId);
-        
-        if (!$outcome) {
+
+        if (! $outcome) {
             $this->dispatch('notify', [
                 'type' => 'error',
-                'message' => 'Outcome not found'
+                'message' => 'Outcome not found',
             ]);
+
             return;
         }
 
         if ($outcome->status !== 'active') {
             $this->dispatch('notify', [
                 'type' => 'error',
-                'message' => 'This outcome is not active'
+                'message' => 'This outcome is not active',
             ]);
+
             return;
         }
 
         $outcome->markAsCompleted();
-        
+
         $this->dispatch('notify', [
             'type' => 'success',
-            'message' => ucfirst($outcome->outcome_type_label) . ' marked as completed!'
+            'message' => ucfirst($outcome->outcome_type_label).' marked as completed!',
         ]);
     }
 }
