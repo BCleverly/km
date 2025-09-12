@@ -49,10 +49,10 @@ class ManageWidget extends Component
 
         // Check if user has reached their outcome limit
         if ($user->hasReachedOutcomeLimit()) {
-            $this->dispatch('notify', [
-                'type' => 'warning',
-                'message' => 'You have reached your maximum of '.$user->getMaxActiveOutcomes().' active outcomes. Complete or let some expire to get new tasks.',
-            ]);
+                $this->dispatch('notify', [
+                    'type' => 'warning',
+                    'message' => 'You have reached your maximum of '.$user->getMaxActiveOutcomes().' active outcomes. Complete or let some expire to get new tasks.',
+                ]);
 
             return;
         }

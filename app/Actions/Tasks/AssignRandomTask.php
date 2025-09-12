@@ -92,7 +92,8 @@ class AssignRandomTask
             ->whereNotIn('id', function ($query) use ($user) {
                 $query->select('task_id')
                     ->from('user_assigned_tasks')
-                    ->where('user_id', $user->id); // Exclude ALL previously assigned tasks
+                    ->where('user_id', $user->id)
+                    ->where('status', TaskStatus::Assigned); // Only exclude currently active tasks
             })
             ->inRandomOrder()
             ->first();

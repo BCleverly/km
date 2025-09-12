@@ -157,6 +157,8 @@
     </main>
 </div>
 
+<!-- Toast Notifications -->
+<x-toast-notifications />
 
 </body>
 </html>
