@@ -15,7 +15,11 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+        // Register search strategy
+        $this->app->bind(
+            \App\Contracts\SearchStrategyInterface::class,
+            \App\Services\Search\MySqlSearchStrategy::class
+        );
     }
 
     /**
@@ -36,6 +40,7 @@ class AppServiceProvider extends ServiceProvider
                 ['text'=> 'Tasks', 'link' => route('app.tasks'), 'icon' => 'icon.checkmark'],
                 ['text'=> 'Fantasies','link' =>  route('app.fantasies.index'), 'icon' => 'icon.heart'],
                 ['text'=> 'Stories','link' =>  route('app.stories.index'), 'icon' => 'icon.book'],
+                ['text'=> 'Search', 'link' => route('app.search'), 'icon' => 'icon.magnifying-glass'],
             ]);
 
             $view->with('bottomNav', [

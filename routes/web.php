@@ -17,6 +17,7 @@ use App\Livewire\Stories\ListStories;
 use App\Livewire\Stories\ShowStory;
 use App\Livewire\Stories\CreateStory;
 use App\Livewire\Comments\CommentsDemo;
+use App\Livewire\Search\SearchContent;
 use Illuminate\Support\Facades\Route;
 
 Route::passkeys();
@@ -67,4 +68,7 @@ Route::middleware('auth')->prefix('app')->name('app.')->group(function () {
 
     // Comments Demo
     Route::get('/comments-demo', CommentsDemo::class)->name('comments.demo');
+
+    // Search
+    Route::get('/search', SearchContent::class)->name('search');
 });
