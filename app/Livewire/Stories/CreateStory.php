@@ -6,6 +6,7 @@ namespace App\Livewire\Stories;
 
 use App\ContentStatus;
 use App\Models\Story;
+use App\Models\Models\Tag;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Attributes\Rule;
@@ -21,6 +22,8 @@ class CreateStory extends Component
 
     #[Rule('nullable|string', message: 'Story content is required.')]
     public string $content = '';
+
+    public array $selectedTags = [];
 
     public function saveAsDraft(): void
     {
@@ -50,6 +53,12 @@ class CreateStory extends Component
             'user_id' => Auth::id(),
             'status' => ContentStatus::Draft,
         ]);
+
+        // Attach selected tags
+        if (!empty($this->selectedTags)) {
+            $tags = Tag::whereIn('id', $this->selectedTags)->get();
+            $story->syncTags($tags);
+        }
 
         $this->dispatch('show-notification', [
             'message' => 'Story saved as draft successfully!',
@@ -93,6 +102,12 @@ class CreateStory extends Component
             'status' => ContentStatus::Pending,
         ]);
 
+        // Attach selected tags
+        if (!empty($this->selectedTags)) {
+            $tags = Tag::whereIn('id', $this->selectedTags)->get();
+            $story->syncTags($tags);
+        }
+
         $this->dispatch('show-notification', [
             'message' => 'Story submitted successfully! It will be reviewed before being published.',
             'type' => 'success',
@@ -110,6 +125,7 @@ class CreateStory extends Component
         $this->title = '';
         $this->summary = '';
         $this->content = '';
+        $this->selectedTags = [];
     }
 
     public function getWordCount(): int
@@ -121,6 +137,11 @@ class CreateStory extends Component
     {
         $wordCount = $this->getWordCount();
         return max(1, ceil($wordCount / 200)); // 200 words per minute
+    }
+
+    public function getAvailableTags()
+    {
+        return Tag::approved()->orderBy('name')->get();
     }
 
     public function render(): View

@@ -79,6 +79,18 @@
                         </span>
                     </div>
 
+                    <!-- Tags -->
+                    @if($story->tags->count() > 0)
+                        <div class="mb-4">
+                            <div class="flex flex-wrap gap-2">
+                                @foreach($story->tags as $tag)
+                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200">
+                                        {{ $tag->name }}
+                                    </span>
+                                @endforeach
+                            </div>
+                        </div>
+                    @endif
 
                     <!-- Read More Button -->
                     <div class="mt-auto">

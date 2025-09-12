@@ -43,6 +43,47 @@
                 </div>
             </div>
 
+            <!-- Tags -->
+            <div class="mb-6">
+                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                    Tags (Optional)
+                </label>
+                <div class="space-y-2">
+                    @foreach($this->getAvailableTags() as $tag)
+                        <label class="flex items-center">
+                            <input
+                                type="checkbox"
+                                wire:model="selectedTags"
+                                value="{{ $tag->id }}"
+                                class="rounded border-gray-300 text-blue-600 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
+                            >
+                            <span class="ml-2 text-sm text-gray-700 dark:text-gray-300">
+                                {{ $tag->name }}
+                            </span>
+                        </label>
+                    @endforeach
+                </div>
+                @if($this->getAvailableTags()->isEmpty())
+                    <p class="text-sm text-gray-500 dark:text-gray-400 mt-2">
+                        No tags available. Tags will be added by administrators.
+                    </p>
+                @endif
+            </div>
+
+            <!-- Anonymous Option -->
+            <div class="mb-6">
+                <label class="flex items-center">
+                    <input
+                        type="checkbox"
+                        wire:model="is_anonymous"
+                        class="rounded border-gray-300 text-blue-600 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
+                    >
+                    <span class="ml-2 text-sm text-gray-700 dark:text-gray-300">
+                        Submit anonymously (your username won't be shown)
+                    </span>
+                </label>
+            </div>
+
             <!-- Premium Option - Hidden for now -->
             {{-- <div class="mb-6">
                 <label class="flex items-center">

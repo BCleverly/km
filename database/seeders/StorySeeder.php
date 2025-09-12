@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use App\Models\Story;
 use App\Models\User;
+use App\Models\Models\Tag;
 use App\ContentStatus;
 use Illuminate\Database\Seeder;
 
@@ -19,6 +20,13 @@ class StorySeeder extends Seeder
         if ($users->isEmpty()) {
             $this->command->warn('No users found. Please run the DatabaseSeeder first.');
             return;
+        }
+
+        // Get all available tags from the system
+        $availableTags = Tag::all();
+        
+        if ($availableTags->isEmpty()) {
+            $this->command->warn('No tags found. Please ensure TaskDataSeeder runs before StorySeeder.');
         }
 
         $stories = [
@@ -396,18 +404,25 @@ The transformation has taught me that change is not just possible, but inevitabl
         ];
 
         foreach ($stories as $storyData) {
-            Story::create([
+            $story = Story::create([
                 'title' => $storyData['title'],
                 'summary' => $storyData['summary'],
                 'content' => $storyData['content'],
                 'user_id' => $users->random()->id,
                 'status' => ContentStatus::Approved->value,
-                'is_premium' => false,
+                'is_premium' => rand(0, 10) < 2, // 20% chance of being premium
                 'view_count' => rand(0, 2000),
                 'report_count' => 0,
             ]);
+
+            // Attach random tags to the story (1-4 tags per story)
+            if ($availableTags->isNotEmpty()) {
+                $tagCount = rand(1, min(4, $availableTags->count()));
+                $randomTags = $availableTags->random($tagCount);
+                $story->syncTags($randomTags);
+            }
         }
 
-        $this->command->info('Created 25 stories successfully.');
+        $this->command->info('Created ' . count($stories) . ' stories successfully.');
     }
 }

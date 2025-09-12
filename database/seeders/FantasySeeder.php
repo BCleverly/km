@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use App\Models\Fantasy;
 use App\Models\User;
+use App\Models\Models\Tag;
 use App\ContentStatus;
 use Illuminate\Database\Seeder;
 
@@ -19,6 +20,13 @@ class FantasySeeder extends Seeder
         if ($users->isEmpty()) {
             $this->command->warn('No users found. Please run the DatabaseSeeder first.');
             return;
+        }
+
+        // Get all available tags from the system
+        $availableTags = Tag::all();
+        
+        if ($availableTags->isEmpty()) {
+            $this->command->warn('No tags found. Please ensure TaskDataSeeder runs before FantasySeeder.');
         }
 
         $fantasies = [
@@ -50,16 +58,24 @@ class FantasySeeder extends Seeder
         ];
 
         foreach ($fantasies as $content) {
-            Fantasy::create([
+            $fantasy = Fantasy::create([
                 'content' => $content,
                 'user_id' => $users->random()->id,
                 'status' => ContentStatus::Approved->value,
-                'is_premium' => false,
+                'is_premium' => rand(0, 10) < 2, // 20% chance of being premium
+                'is_anonymous' => rand(0, 10) < 3, // 30% chance of being anonymous
                 'view_count' => rand(0, 1000),
                 'report_count' => 0,
             ]);
+
+            // Attach random tags to the fantasy (1-4 tags per fantasy)
+            if ($availableTags->isNotEmpty()) {
+                $tagCount = rand(1, min(4, $availableTags->count()));
+                $randomTags = $availableTags->random($tagCount);
+                $fantasy->syncTags($randomTags);
+            }
         }
 
-        $this->command->info('Created 25 fantasies successfully.');
+        $this->command->info('Created ' . count($fantasies) . ' fantasies successfully.');
     }
 }

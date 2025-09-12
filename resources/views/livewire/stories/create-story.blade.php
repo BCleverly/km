@@ -80,6 +80,32 @@
                 </div>
             </div>
 
+            <!-- Tags -->
+            <div class="mb-6">
+                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                    Tags (Optional)
+                </label>
+                <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2">
+                    @foreach($this->getAvailableTags() as $tag)
+                        <label class="flex items-center">
+                            <input
+                                type="checkbox"
+                                wire:model="selectedTags"
+                                value="{{ $tag->id }}"
+                                class="rounded border-gray-300 text-blue-600 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
+                            >
+                            <span class="ml-2 text-sm text-gray-700 dark:text-gray-300">
+                                {{ $tag->name }}
+                            </span>
+                        </label>
+                    @endforeach
+                </div>
+                @if($this->getAvailableTags()->isEmpty())
+                    <p class="text-sm text-gray-500 dark:text-gray-400 mt-2">
+                        No tags available. Tags will be added by administrators.
+                    </p>
+                @endif
+            </div>
 
             <!-- Guidelines -->
             <div class="mb-6 p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg">

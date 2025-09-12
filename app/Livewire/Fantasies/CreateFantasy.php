@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Livewire\Fantasies;
 
 use App\Models\Fantasy;
+use App\Models\Models\Tag;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Attributes\Rule;
@@ -17,6 +18,11 @@ class CreateFantasy extends Component
 
     #[Rule('boolean')]
     public bool $is_premium = false;
+
+    #[Rule('boolean')]
+    public bool $is_anonymous = false;
+
+    public array $selectedTags = [];
 
     public function save(): void
     {
@@ -43,8 +49,15 @@ class CreateFantasy extends Component
             'word_count' => $wordCount,
             'user_id' => Auth::id(),
             'is_premium' => $this->is_premium,
+            'is_anonymous' => $this->is_anonymous,
             'status' => 1, // Pending approval
         ]);
+
+        // Attach selected tags
+        if (!empty($this->selectedTags)) {
+            $tags = Tag::whereIn('id', $this->selectedTags)->get();
+            $fantasy->syncTags($tags);
+        }
 
         $this->dispatch('show-notification', [
             'message' => 'Fantasy submitted successfully! It will be reviewed before being published.',
@@ -54,6 +67,8 @@ class CreateFantasy extends Component
         // Reset form
         $this->content = '';
         $this->is_premium = false;
+        $this->is_anonymous = false;
+        $this->selectedTags = [];
 
         // Redirect to fantasies list
         $this->redirectRoute('app.fantasies.index');
@@ -67,6 +82,11 @@ class CreateFantasy extends Component
     public function getRemainingWords(): int
     {
         return max(0, 280 - $this->getWordCount());
+    }
+
+    public function getAvailableTags()
+    {
+        return Tag::approved()->orderBy('name')->get();
     }
 
     public function render(): View

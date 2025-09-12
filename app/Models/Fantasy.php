@@ -10,10 +10,11 @@ use Qirolab\Laravel\Reactions\Traits\Reactable;
 use Qirolab\Laravel\Reactions\Contracts\ReactableInterface;
 use Spatie\Activitylog\Traits\LogsActivity;
 use Spatie\Activitylog\LogOptions;
+use Spatie\Tags\HasTags;
 
 class Fantasy extends Model implements ReactableInterface
 {
-    use HasFactory, Reactable, LogsActivity;
+    use HasFactory, Reactable, LogsActivity, HasTags;
 
     protected $fillable = [
         'content',
@@ -23,12 +24,14 @@ class Fantasy extends Model implements ReactableInterface
         'view_count',
         'report_count',
         'is_premium',
+        'is_anonymous',
     ];
 
     protected function casts(): array
     {
         return [
             'is_premium' => 'boolean',
+            'is_anonymous' => 'boolean',
             'word_count' => 'integer',
             'view_count' => 'integer',
             'report_count' => 'integer',

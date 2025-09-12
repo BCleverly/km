@@ -16,9 +16,9 @@ class DatabaseSeeder extends Seeder
         // Seed roles and permissions first
         $this->call([
             RolesAndPermissionsSeeder::class,
-            TaskDataSeeder::class,
-            FantasySeeder::class,
-            StorySeeder::class,
+            TaskDataSeeder::class, // Creates tags and tasks
+            FantasySeeder::class,  // Uses tags from TaskDataSeeder
+            StorySeeder::class,    // Uses tags from TaskDataSeeder
         ]);
 
         // Create test users with different roles using proper factory relationships
