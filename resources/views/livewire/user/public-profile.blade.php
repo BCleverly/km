@@ -1,10 +1,10 @@
 <div class="min-h-screen">
     <div class="max-w-4xl mx-auto px-4 py-8">
         <!-- Cover Photo -->
-        @if($this->getCoverPhotoUrl())
+        @if($this->coverPhotoUrl)
             <div class="relative h-64 rounded-xl overflow-hidden mb-6">
-                <img src="{{ $this->getCoverPhotoUrl() }}" 
-                     alt="{{ $this->getDisplayName() }}'s cover photo" 
+                <img src="{{ $this->coverPhotoUrl }}" 
+                     alt="{{ $this->displayName }}'s cover photo" 
                      class="w-full h-full object-cover">
                 <div class="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
             </div>
@@ -17,32 +17,32 @@
             <div class="flex flex-col sm:flex-row items-start sm:items-center gap-4">
                 <!-- Profile Picture -->
                 <div class="relative">
-                    <img src="{{ $this->getProfilePictureUrl() }}" 
-                         alt="{{ $this->getDisplayName() }}" 
+                    <img src="{{ $this->profilePictureUrl }}" 
+                         alt="{{ $this->displayName }}" 
                          class="w-24 h-24 rounded-full border-4 border-white dark:border-gray-800 shadow-lg">
                 </div>
                 
                 <!-- Profile Info -->
                 <div class="flex-1">
                     <h1 class="text-3xl font-bold text-gray-900 dark:text-white mb-2">
-                        {{ $this->getDisplayName() }}
+                        {{ $this->displayName }}
                     </h1>
                     <p class="text-lg text-gray-600 dark:text-gray-300 mb-2">
                         
                     </p>
                     <p class="text-sm text-gray-500 dark:text-gray-400">
-                        Joined {{ $this->getJoinedDate() }}
+                        Joined {{ $this->joinedDate }}
                     </p>
                 </div>
             </div>
         </div>
 
         <!-- About Section -->
-        @if($this->getAbout())
+        @if($this->about)
             <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6 mb-6">
                 <h2 class="text-xl font-semibold text-gray-900 dark:text-white mb-4">About</h2>
                 <p class="text-gray-600 dark:text-gray-300 leading-relaxed">
-                    {{ $this->getAbout() }}
+                    {{ $this->about }}
                 </p>
             </div>
         @endif
@@ -52,7 +52,7 @@
             <!-- Tasks Completed -->
             <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6 text-center">
                 <div class="text-3xl font-bold text-red-600 dark:text-red-400 mb-2">
-                    {{ $this->getCompletedTasksCount() }}
+                    {{ $this->completedTasksCount }}
                 </div>
                 <div class="text-sm text-gray-600 dark:text-gray-300">
                     Tasks Completed
@@ -62,7 +62,7 @@
             <!-- Current Streak -->
             <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6 text-center">
                 <div class="text-3xl font-bold text-orange-600 dark:text-orange-400 mb-2">
-                    {{ $this->getCurrentStreak() }}
+                    {{ $this->currentStreak }}
                 </div>
                 <div class="text-sm text-gray-600 dark:text-gray-300">
                     Day Streak
@@ -72,7 +72,7 @@
             <!-- Total Points -->
             <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6 text-center">
                 <div class="text-3xl font-bold text-purple-600 dark:text-purple-400 mb-2">
-                    {{ $this->getTotalPoints() }}
+                    {{ $this->totalPoints }}
                 </div>
                 <div class="text-sm text-gray-600 dark:text-gray-300">
                     Total Points
@@ -85,7 +85,7 @@
             <h2 class="text-xl font-semibold text-gray-900 dark:text-white mb-4">Recent Activity</h2>
             
             @php
-                $recentActivities = $this->getRecentActivities(5);
+                $recentActivities = $this->recentActivities(5);
             @endphp
             
             @if($recentActivities->count() > 0)

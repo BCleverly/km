@@ -100,6 +100,24 @@ class PublicProfile extends Component
         return $this->user->recentTaskActivities($limit)->get();
     }
 
+    #[Computed]
+    public function displayName()
+    {
+        return $this->user->display_name ?? $this->user->name;
+    }
+
+    #[Computed]
+    public function joinedDate()
+    {
+        return $this->user->created_at->format('F Y');
+    }
+
+    #[Computed]
+    public function about()
+    {
+        return $this->profile?->about;
+    }
+
     public function render()
     {
         return view('livewire.user.public-profile')
