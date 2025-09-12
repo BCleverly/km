@@ -6,6 +6,7 @@ namespace App\Livewire\Tasks;
 
 use App\Actions\Tasks\AssignRandomTask;
 use App\Actions\Tasks\FailTask;
+use App\Services\TaskService;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Title;
 use Livewire\Component;
@@ -16,18 +17,20 @@ class Dashboard extends Component
     public function render()
     {
         $user = auth()->user();
+        $taskService = $user->tasks(); // Use the new TaskService via user model
         $recentActivities = $user->recentTaskActivities(5)->get();
-        $activeTask = $user->stats()->getActiveTask();
+        $activeTask = $taskService->getActiveTask();
         $activeReward = $user->getCurrentActiveReward();
         $activePunishment = $user->getCurrentActivePunishment();
         $activeOutcomeCount = $user->getActiveOutcomeCount();
         $maxActiveOutcomes = $user->getMaxActiveOutcomes();
         $remainingSlots = $user->getRemainingOutcomeSlots();
+        $streakStats = $taskService->getStreakStats();
 
         return view('livewire.tasks.dashboard', [
             'recentActivities' => $recentActivities,
             'activeTask' => $activeTask,
-            'streakStats' => $streakStats ?? null, // $user->stats()->getStreakStats()
+            'streakStats' => $streakStats,
             'activeReward' => $activeReward,
             'activePunishment' => $activePunishment,
             'activeOutcomeCount' => $activeOutcomeCount,
@@ -87,7 +90,7 @@ class Dashboard extends Component
     public function showCompletionModal()
     {
         $user = auth()->user();
-        $activeTask = $user->stats()->getActiveTask();
+        $activeTask = $user->tasks()->getActiveTask();
 
         if (! $activeTask) {
             $this->dispatch('notify', [

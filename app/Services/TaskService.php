@@ -10,10 +10,12 @@ use App\TaskStatus;
 use Carbon\Carbon;
 
 /**
- * @deprecated This class is deprecated and will be removed in a future version.
- * Use TaskService instead for task-related statistics and operations.
+ * Service class for task-related operations and statistics.
+ * 
+ * This service provides methods for managing user tasks, calculating statistics,
+ * and handling task-related business logic.
  */
-class UserStatsService
+class TaskService
 {
     public function __construct(
         private User $user
@@ -182,5 +184,66 @@ class UserStatsService
     public function getTotalCompletedTasks(): int
     {
         return $this->user->assignedTasks()->where('status', TaskStatus::Completed)->count();
+    }
+
+    /**
+     * Get all assigned tasks for the user
+     */
+    public function getAssignedTasks(): \Illuminate\Database\Eloquent\Collection
+    {
+        return $this->user->assignedTasks()
+            ->with(['task', 'potentialReward', 'potentialPunishment'])
+            ->orderBy('assigned_at', 'desc')
+            ->get();
+    }
+
+    /**
+     * Get completed tasks for the user
+     */
+    public function getCompletedTasks(): \Illuminate\Database\Eloquent\Collection
+    {
+        return $this->user->assignedTasks()
+            ->where('status', TaskStatus::Completed)
+            ->with(['task', 'potentialReward', 'potentialPunishment'])
+            ->orderBy('completed_at', 'desc')
+            ->get();
+    }
+
+    /**
+     * Get failed tasks for the user
+     */
+    public function getFailedTasks(): \Illuminate\Database\Eloquent\Collection
+    {
+        return $this->user->assignedTasks()
+            ->where('status', TaskStatus::Failed)
+            ->with(['task', 'potentialReward', 'potentialPunishment'])
+            ->orderBy('failed_at', 'desc')
+            ->get();
+    }
+
+    /**
+     * Check if user has an active task
+     */
+    public function hasActiveTask(): bool
+    {
+        return $this->getActiveTask() !== null;
+    }
+
+    /**
+     * Get task statistics summary
+     */
+    public function getTaskSummary(): array
+    {
+        $assignedTasks = $this->user->assignedTasks();
+        
+        return [
+            'total_assigned' => $assignedTasks->count(),
+            'completed' => $assignedTasks->where('status', TaskStatus::Completed)->count(),
+            'failed' => $assignedTasks->where('status', TaskStatus::Failed)->count(),
+            'active' => $assignedTasks->where('status', TaskStatus::Assigned)->count(),
+            'completion_rate' => $this->getCompletionRate(),
+            'current_streak' => $this->getCurrentStreak(),
+            'longest_streak' => $this->getLongestStreak(),
+        ];
     }
 }

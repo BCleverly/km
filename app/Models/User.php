@@ -3,6 +3,8 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Filament\Models\Contracts\FilamentUser;
+use Filament\Panel;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -11,15 +13,13 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Cashier\Billable;
 use Laravel\Sanctum\HasApiTokens;
+use Qirolab\Laravel\Reactions\Contracts\ReactsInterface;
+use Qirolab\Laravel\Reactions\Traits\Reacts;
 use Spatie\LaravelPasskeys\Models\Concerns\HasPasskeys;
 use Spatie\LaravelPasskeys\Models\Concerns\InteractsWithPasskeys;
 use Spatie\Permission\Traits\HasRoles;
-use Qirolab\Laravel\Reactions\Traits\Reacts;
-use Qirolab\Laravel\Reactions\Contracts\ReactsInterface;
-use Filament\Models\Contracts\FilamentUser;
-use Filament\Panel;
 
-class User extends Authenticatable implements HasPassKeys, ReactsInterface, FilamentUser
+class User extends Authenticatable implements FilamentUser, HasPassKeys, ReactsInterface
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use Billable, HasApiTokens, HasFactory, HasRoles, InteractsWithPasskeys, Notifiable, Reacts;
@@ -36,7 +36,7 @@ class User extends Authenticatable implements HasPassKeys, ReactsInterface, Fila
         'user_type',
         'username',
         'email_verified_at',
-        'partner_id'
+        'partner_id',
     ];
 
     /**
@@ -65,8 +65,8 @@ class User extends Authenticatable implements HasPassKeys, ReactsInterface, Fila
 
     public function canAccessPanel(Panel $panel): bool
     {
-        if (app()->isProduction()){
-            return str_ends_with($this->email, '@bencleverly.dev');# && $this->hasVerifiedEmail();
+        if (app()->isProduction()) {
+            return str_ends_with($this->email, '@bencleverly.dev'); // && $this->hasVerifiedEmail();
         }
 
         return true;
@@ -101,7 +101,7 @@ class User extends Authenticatable implements HasPassKeys, ReactsInterface, Fila
     public function displayName(): Attribute
     {
         return Attribute::make(
-            get: fn() => $this->profile?->username ?? $this->name
+            get: fn () => $this->profile?->username ?? $this->name
         );
     }
 
@@ -200,10 +200,20 @@ class User extends Authenticatable implements HasPassKeys, ReactsInterface, Fila
 
     /**
      * Get user stats service instance
+     *
+     * @deprecated Use tasks() method instead. This method will be removed in a future version.
      */
     public function stats(): \App\Services\UserStatsService
     {
         return new \App\Services\UserStatsService($this);
+    }
+
+    /**
+     * Get task service instance for task-related operations and statistics
+     */
+    public function tasks(): \App\Services\TaskService
+    {
+        return new \App\Services\TaskService($this);
     }
 
     /**
@@ -364,5 +374,4 @@ class User extends Authenticatable implements HasPassKeys, ReactsInterface, Fila
 
         return 'Free';
     }
-
 }
