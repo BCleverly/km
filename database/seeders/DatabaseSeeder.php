@@ -96,6 +96,8 @@ class DatabaseSeeder extends Seeder
             $this->createTestUsers();
         }
 
+        // Ensure all users have profiles with usernames
+        $this->ensureAllUsersHaveProfiles();
     }
 
     /**
@@ -144,5 +146,84 @@ class DatabaseSeeder extends Seeder
 
         // Link the couple users
         $coupleUser1->update(['partner_id' => $coupleUser2->id]);
+    }
+
+    /**
+     * Ensure all users have profiles with usernames
+     */
+    private function ensureAllUsersHaveProfiles(): void
+    {
+        $this->command->info('Ensuring all users have profiles with usernames...');
+
+        $usersWithoutProfiles = User::whereDoesntHave('profile')->get();
+        
+        if ($usersWithoutProfiles->isEmpty()) {
+            $this->command->info('All users already have profiles.');
+            return;
+        }
+
+        $this->command->info("Found {$usersWithoutProfiles->count()} users without profiles. Creating profiles...");
+
+        foreach ($usersWithoutProfiles as $user) {
+            $username = $this->generateUniqueUsername($user);
+            
+            $user->profile()->create([
+                'username' => $username,
+                'about' => $this->generateAboutText($user),
+            ]);
+
+            $this->command->info("Created profile for user: {$user->name} ({$user->email}) with username: {$username}");
+        }
+
+        $this->command->info('All users now have profiles with usernames.');
+    }
+
+    /**
+     * Generate a unique username for a user
+     */
+    private function generateUniqueUsername(User $user): string
+    {
+        // Try to use the user's name first
+        $baseUsername = strtolower(preg_replace('/[^a-zA-Z0-9]/', '', $user->name));
+        
+        // If name is empty or too short, use email prefix
+        if (empty($baseUsername) || strlen($baseUsername) < 3) {
+            $baseUsername = strtolower(preg_replace('/[^a-zA-Z0-9]/', '', explode('@', $user->email)[0]));
+        }
+        
+        // Ensure minimum length
+        if (strlen($baseUsername) < 3) {
+            $baseUsername = 'user' . $user->id;
+        }
+
+        // Check if username is unique
+        $username = $baseUsername;
+        $counter = 1;
+        
+        while (\App\Models\Profile::where('username', $username)->exists()) {
+            $username = $baseUsername . $counter;
+            $counter++;
+        }
+
+        return $username;
+    }
+
+    /**
+     * Generate appropriate about text for a user
+     */
+    private function generateAboutText(User $user): string
+    {
+        // Check if this is a system user
+        if (str_contains($user->email, 'system@') || str_contains($user->email, '@kinkmaster.com')) {
+            return 'System account for imported content';
+        }
+
+        // Check if this is an admin/moderator
+        if ($user->hasRole(['Admin', 'Moderator', 'Reviewer'])) {
+            return ucfirst(strtolower($user->getRoleNames()->first())) . ' account';
+        }
+
+        // Default for regular users
+        return 'Welcome to my profile!';
     }
 }

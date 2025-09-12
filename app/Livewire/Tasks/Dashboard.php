@@ -20,22 +20,12 @@ class Dashboard extends Component
         $taskService = $user->tasks(); // Use the new TaskService via user model
         $recentActivities = $user->recentTaskActivities(5)->get();
         $activeTask = $taskService->getActiveTask();
-        $activeReward = $user->getCurrentActiveReward();
-        $activePunishment = $user->getCurrentActivePunishment();
-        $activeOutcomeCount = $user->getActiveOutcomeCount();
-        $maxActiveOutcomes = $user->getMaxActiveOutcomes();
-        $remainingSlots = $user->getRemainingOutcomeSlots();
-        $streakStats = $taskService->getStreakStats();
+        $activeOutcomes = $user->activeOutcomes()->get();
 
         return view('livewire.tasks.dashboard', [
             'recentActivities' => $recentActivities,
             'activeTask' => $activeTask,
-            'streakStats' => $streakStats,
-            'activeReward' => $activeReward,
-            'activePunishment' => $activePunishment,
-            'activeOutcomeCount' => $activeOutcomeCount,
-            'maxActiveOutcomes' => $maxActiveOutcomes,
-            'remainingSlots' => $remainingSlots,
+            'activeOutcomes' => $activeOutcomes,
         ]);
     }
 
@@ -59,50 +49,8 @@ class Dashboard extends Component
         $this->dispatch('$refresh');
     }
 
-    /**
-     * Assign a random task to the user
-     */
-    public function assignRandomTask()
-    {
-        $user = auth()->user();
 
-        // Check if user has reached their outcome limit
-        if ($user->hasReachedOutcomeLimit()) {
-            $this->dispatch('notify', [
-                'type' => 'warning',
-                'message' => 'You have reached your maximum of '.$user->getMaxActiveOutcomes().' active outcomes. Complete or let some expire to get new tasks.',
-            ]);
 
-            return;
-        }
-
-        $result = AssignRandomTask::run($user);
-
-        $this->dispatch('notify', [
-            'type' => $result['success'] ? 'success' : 'error',
-            'message' => $result['message'],
-        ]);
-    }
-
-    /**
-     * Show the completion modal with image upload
-     */
-    public function showCompletionModal()
-    {
-        $user = auth()->user();
-        $activeTask = $user->tasks()->getActiveTask();
-
-        if (! $activeTask) {
-            $this->dispatch('notify', [
-                'type' => 'error',
-                'message' => 'No active task found',
-            ]);
-
-            return;
-        }
-
-        $this->dispatch('show-completion-modal', $activeTask);
-    }
 
     /**
      * Fail the current active task

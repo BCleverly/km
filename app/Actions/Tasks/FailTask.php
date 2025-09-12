@@ -39,29 +39,10 @@ class FailTask
             'outcome_id' => $activeTask->potential_punishment_id,
         ]);
 
-        // Log the failure activity
-        TaskActivity::log(
-            type: TaskActivityType::Failed,
-            user: $user,
-            task: $activeTask->task,
-            assignedTask: $activeTask,
-            title: "Failed task: {$activeTask->task->title}",
-            description: "Unfortunately, you didn't complete the task in time."
-        );
-
         // Create UserOutcome record for the punishment
         if ($activeTask->potentialPunishment) {
             // Clean up expired outcomes first
             $user->cleanupExpiredOutcomes();
-            
-            // Check if user has reached outcome limit
-            if ($user->hasReachedOutcomeLimit()) {
-                // Replace the oldest active outcome
-                $oldestOutcome = $user->getOldestActiveOutcome();
-                if ($oldestOutcome) {
-                    $oldestOutcome->markAsExpired();
-                }
-            }
             
             UserOutcome::create([
                 'user_id' => $user->id,
@@ -74,14 +55,24 @@ class FailTask
                 'expires_at' => $this->calculatePunishmentExpiry($activeTask->potentialPunishment),
             ]);
 
-            // Log punishment received activity
+            // Log combined failure + punishment activity
             TaskActivity::log(
-                type: TaskActivityType::PunishmentReceived,
+                type: TaskActivityType::Failed,
                 user: $user,
                 task: $activeTask->task,
                 assignedTask: $activeTask,
-                title: "Received punishment for: {$activeTask->task->title}",
-                description: $activeTask->potentialPunishment->description
+                title: "Failed task: {$activeTask->task->title}",
+                description: "Unfortunately, you didn't complete the task in time and received a punishment: {$activeTask->potentialPunishment->title}. {$activeTask->potentialPunishment->description}"
+            );
+        } else {
+            // Log failure activity without punishment
+            TaskActivity::log(
+                type: TaskActivityType::Failed,
+                user: $user,
+                task: $activeTask->task,
+                assignedTask: $activeTask,
+                title: "Failed task: {$activeTask->task->title}",
+                description: "Unfortunately, you didn't complete the task in time."
             );
         }
 

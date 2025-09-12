@@ -52,6 +52,14 @@ class TaskDataSeeder extends Seeder
             $user->email_verified_at = now();
             $user->save();
         }
+
+        // Ensure the system user has a profile
+        if (!$user->profile) {
+            $user->profile()->create([
+                'username' => 'system',
+                'about' => 'System account for imported content',
+            ]);
+        }
         
         return $user;
     }

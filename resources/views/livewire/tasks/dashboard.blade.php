@@ -7,222 +7,139 @@
    
 
     {{-- Active Outcomes Section --}}
-    @if($activeReward || $activePunishment)
-        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-8 mb-8">
-            <div class="flex items-center justify-between mb-6">
-                <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 bg-purple-100 dark:bg-purple-900/30 rounded-lg flex items-center justify-center">
-                        <svg class="w-6 h-6 text-purple-600 dark:text-purple-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v13m0-13V6a2 2 0 112 2h-2zm0 0V5.5A2.5 2.5 0 109.5 8H12zm-7 4h14M5 12a2 2 0 110-4h14a2 2 0 110 4M5 12v7a2 2 0 002 2h10a2 2 0 002-2v-7" />
-                        </svg>
-                    </div>
-                    <div>
-                        <h2 class="text-xl font-semibold text-gray-900 dark:text-white">Current Active Outcomes</h2>
-                        <p class="text-sm text-gray-500 dark:text-gray-400">Your current rewards and punishments</p>
-                    </div>
-                </div>
-
-                {{-- Outcome Limit Indicator --}}
-                <div class="flex items-center gap-2">
-                    <div class="text-sm text-gray-500 dark:text-gray-400">
-                        {{ $activeOutcomeCount }}/{{ $maxActiveOutcomes }} active
-                    </div>
-                    <div class="flex gap-1">
-                        @for($i = 1; $i <= $maxActiveOutcomes; $i++)
-                            <div class="w-2 h-2 rounded-full {{ $i <= $activeOutcomeCount ? 'bg-purple-500' : 'bg-gray-300 dark:bg-gray-600' }}"></div>
-                        @endfor
-                    </div>
-                </div>
-            </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {{-- Active Reward --}}
-                @if($activeReward)
-                    <div class="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg p-6">
-                        <div class="flex items-center gap-3 mb-4">
-                            <div class="w-8 h-8 bg-green-100 dark:bg-green-900/50 rounded-lg flex items-center justify-center">
-                                <svg class="w-5 h-5 text-green-600 dark:text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z" />
-                                </svg>
-                            </div>
-                            <div>
-                                <h3 class="text-lg font-medium text-green-900 dark:text-green-100">Active Reward</h3>
-                                <p class="text-sm text-green-600 dark:text-green-400">Earned {{ $activeReward->assigned_at->diffForHumans() }}</p>
-                            </div>
+    @if($activeOutcomes->count() > 0)
+        <div class="max-w-4xl mx-auto px-4 py-8">
+            <div class="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 overflow-hidden">
+            <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center gap-3">
+                        <div class="w-8 h-8 bg-purple-100 dark:bg-purple-900/30 rounded-lg flex items-center justify-center">
+                            <svg class="w-5 h-5 text-purple-600 dark:text-purple-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v13m0-13V6a2 2 0 112 2h-2zm0 0V5.5A2.5 2.5 0 109.5 8H12zm-7 4h14M5 12a2 2 0 110-4h14a2 2 0 110 4M5 12v7a2 2 0 002 2h10a2 2 0 002-2v-7" />
+                            </svg>
                         </div>
-
-                        <div class="mb-4">
-                            <h4 class="font-medium text-green-900 dark:text-green-100 mb-2">{{ $activeReward->outcome_title }}</h4>
-                            <p class="text-sm text-green-700 dark:text-green-300">{{ $activeReward->outcome_description }}</p>
+                        <div>
+                            <h2 class="text-lg font-semibold text-gray-900 dark:text-white">Active Outcomes</h2>
+                            <p class="text-sm text-gray-500 dark:text-gray-400">{{ $activeOutcomes->count() }} active</p>
                         </div>
-
-                        @if($activeReward->expires_at)
-                            <div class="flex items-center gap-2 text-sm text-green-600 dark:text-green-400">
-                                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                </svg>
-                                <span>Expires {{ $activeReward->expires_at->diffForHumans() }}</span>
-                            </div>
-                        @endif
-
-                        <div class="mt-4">
-                            <button
-                                wire:click="completeOutcome({{ $activeReward->id }})"
-                                wire:loading.attr="disabled"
-                                @class([
-                                    'text-white font-medium py-2 px-4 rounded-lg transition-colors duration-200 cursor-pointer text-sm',
-                                    'bg-green-600 hover:bg-green-700' => true,
-                                    'opacity-50 cursor-not-allowed' => false,
-                                ])
+                    </div>
+                    
+                    @if($activeOutcomes->count() > 1)
+                        <div class="flex items-center gap-2">
+                            <button 
+                                onclick="previousOutcome()" 
+                                class="p-2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
+                                id="prevBtn"
                             >
-                                <span wire:loading.remove wire:target="completeOutcome({{ $activeReward->id }})">Mark as Completed</span>
-                                <span wire:loading wire:target="completeOutcome({{ $activeReward->id }})">Completing...</span>
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                                </svg>
+                            </button>
+                            <button 
+                                onclick="nextOutcome()" 
+                                class="p-2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
+                                id="nextBtn"
+                            >
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                                </svg>
                             </button>
                         </div>
+                    @endif
+                </div>
+            </div>
+
+            <div class="relative overflow-hidden">
+                <div class="flex transition-transform duration-300 ease-in-out" id="outcomesContainer">
+                    @foreach($activeOutcomes as $index => $outcome)
+                        <div class="w-full flex-shrink-0 p-6" data-outcome-index="{{ $index }}">
+                            <div class="flex items-start gap-4">
+                                <div class="flex-shrink-0">
+                                    <div class="w-12 h-12 rounded-lg flex items-center justify-center
+                                        @if($outcome->outcome->intended_type === 'reward')
+                                            bg-green-100 dark:bg-green-900/30
+                                        @else
+                                            bg-red-100 dark:bg-red-900/30
+                                        @endif">
+                                        @if($outcome->outcome->intended_type === 'reward')
+                                            <svg class="w-6 h-6 text-green-600 dark:text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z" />
+                                            </svg>
+                                        @else
+                                            <svg class="w-6 h-6 text-red-600 dark:text-red-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z" />
+                                            </svg>
+                                        @endif
+                                    </div>
+                                </div>
+                                
+                                <div class="flex-1 min-w-0">
+                                    <div class="flex items-center gap-2 mb-2">
+                                        <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
+                                            {{ ucfirst($outcome->outcome->intended_type) }}
+                                        </h3>
+                                        <span class="text-sm text-gray-500 dark:text-gray-400">
+                                            {{ $outcome->assigned_at->diffForHumans() }}
+                                        </span>
+                                    </div>
+                                    
+                                    <h4 class="font-medium text-gray-900 dark:text-white mb-2">{{ $outcome->outcome->title }}</h4>
+                                    <p class="text-sm text-gray-600 dark:text-gray-300 mb-4">{{ $outcome->outcome->description }}</p>
+                                    
+                                    @if($outcome->expires_at)
+                                        <div class="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400 mb-4">
+                                            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                            </svg>
+                                            <span>Expires {{ $outcome->expires_at->diffForHumans() }}</span>
+                                        </div>
+                                    @endif
+                                    
+                                    <button
+                                        wire:click="completeOutcome({{ $outcome->id }})"
+                                        wire:loading.attr="disabled"
+                                        class="inline-flex items-center px-4 py-2 text-sm font-medium rounded-lg transition-colors duration-200
+                                            @if($outcome->outcome->intended_type === 'reward')
+                                                bg-green-600 hover:bg-green-700 text-white
+                                            @else
+                                                bg-red-600 hover:bg-red-700 text-white
+                                            @endif
+                                            disabled:opacity-50 disabled:cursor-not-allowed"
+                                    >
+                                        <span wire:loading.remove wire:target="completeOutcome({{ $outcome->id }})">Mark as Completed</span>
+                                        <span wire:loading wire:target="completeOutcome({{ $outcome->id }})">Completing...</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    @endforeach
+                </div>
+            </div>
+            
+            @if($activeOutcomes->count() > 1)
+                <div class="px-6 py-3 border-t border-gray-200 dark:border-gray-700">
+                    <div class="flex justify-center gap-2">
+                        @foreach($activeOutcomes as $index => $outcome)
+                            <button 
+                                onclick="goToOutcome({{ $index }})" 
+                                class="w-2 h-2 rounded-full transition-colors outcome-dot {{ $index === 0 ? 'bg-purple-500' : 'bg-gray-300 dark:bg-gray-600' }}"
+                                data-outcome-dot="{{ $index }}"
+                            ></button>
+                        @endforeach
                     </div>
-                @endif
-
-                {{-- Active Punishment --}}
-                @if($activePunishment)
-                    <div class="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-6">
-                        <div class="flex items-center gap-3 mb-4">
-                            <div class="w-8 h-8 bg-red-100 dark:bg-red-900/50 rounded-lg flex items-center justify-center">
-                                <svg class="w-5 h-5 text-red-600 dark:text-red-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z" />
-                                </svg>
-                            </div>
-                            <div>
-                                <h3 class="text-lg font-medium text-red-900 dark:text-red-100">Active Punishment</h3>
-                                <p class="text-sm text-red-600 dark:text-red-400">Assigned {{ $activePunishment->assigned_at->diffForHumans() }}</p>
-                            </div>
-                        </div>
-
-                        <div class="mb-4">
-                            <h4 class="font-medium text-red-900 dark:text-red-100 mb-2">{{ $activePunishment->outcome_title }}</h4>
-                            <p class="text-sm text-red-700 dark:text-red-300">{{ $activePunishment->outcome_description }}</p>
-                        </div>
-
-                        @if($activePunishment->expires_at)
-                            <div class="flex items-center gap-2 text-sm text-red-600 dark:text-red-400">
-                                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                </svg>
-                                <span>Expires {{ $activePunishment->expires_at->diffForHumans() }}</span>
-                            </div>
-                        @endif
-
-                        <div class="mt-4">
-                            <button
-                                wire:click="completeOutcome({{ $activePunishment->id }})"
-                                wire:loading.attr="disabled"
-                                @class([
-                                    'text-white font-medium py-2 px-4 rounded-lg transition-colors duration-200 cursor-pointer text-sm',
-                                    'bg-red-600 hover:bg-red-700' => true,
-                                    'opacity-50 cursor-not-allowed' => false,
-                                ])
-                            >
-                                <span wire:loading.remove wire:target="completeOutcome({{ $activePunishment->id }})">Mark as Completed</span>
-                                <span wire:loading wire:target="completeOutcome({{ $activePunishment->id }})">Completing...</span>
-                            </button>
-                        </div>
-                    </div>
-                @endif
+                </div>
+            @endif
             </div>
         </div>
     @endif
 
-    {{-- Outcome Limit Warning --}}
-    @if($remainingSlots <= 1 && $activeOutcomeCount > 0)
-        <div class="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg p-4 mb-8">
-            <div class="flex items-center gap-3">
-                <div class="w-8 h-8 bg-yellow-100 dark:bg-yellow-900/50 rounded-lg flex items-center justify-center">
-                    <svg class="w-5 h-5 text-yellow-600 dark:text-yellow-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z" />
-                    </svg>
-                </div>
-                <div>
-                    <h3 class="text-sm font-medium text-yellow-800 dark:text-yellow-200">
-                        @if($remainingSlots === 0)
-                            Outcome Limit Reached
-                        @else
-                            Near Outcome Limit
-                        @endif
-                    </h3>
-                    <p class="text-sm text-yellow-700 dark:text-yellow-300">
-                        @if($remainingSlots === 0)
-                            You have reached your maximum of {{ $maxActiveOutcomes }} active outcomes. Complete or let some expire to earn new ones.
-                        @else
-                            You have {{ $remainingSlots }} slot{{ $remainingSlots === 1 ? '' : 's' }} remaining for active outcomes.
-                        @endif
-                    </p>
-                </div>
-            </div>
-        </div>
-    @endif
 
-    {{-- Stats Grid --}}
-    @isset($streakStats)
-
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-            {{-- Tasks Completed --}}
-            <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6">
-                <div class="flex items-center">
-                    <div class="flex-shrink-0">
-                        <div class="w-8 h-8 bg-green-100 dark:bg-green-900/30 rounded-lg flex items-center justify-center">
-                            <svg class="w-5 h-5 text-green-600 dark:text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                            </svg>
-                        </div>
-                    </div>
-                    <div class="ml-4">
-                        <p class="text-sm font-medium text-gray-600 dark:text-gray-400">Tasks Completed</p>
-                        <p class="text-2xl font-semibold text-gray-900 dark:text-white">{{ $streakStats['total_completed_tasks'] }}</p>
-                    </div>
-                </div>
-            </div>
-
-            {{-- Completion Rate --}}
-            <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6">
-                <div class="flex items-center">
-                    <div class="flex-shrink-0">
-                        <div class="w-8 h-8 bg-yellow-100 dark:bg-yellow-900/30 rounded-lg flex items-center justify-center">
-                            <svg class="w-5 h-5 text-yellow-600 dark:text-yellow-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
-                            </svg>
-                        </div>
-                    </div>
-                    <div class="ml-4">
-                        <p class="text-sm font-medium text-gray-600 dark:text-gray-400">Completion Rate</p>
-                        <p class="text-2xl font-semibold text-gray-900 dark:text-white">{{ $streakStats['completion_rate'] }}%</p>
-                    </div>
-                </div>
-            </div>
-
-            {{-- Current Streak --}}
-            <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6">
-                <div class="flex items-center">
-                    <div class="flex-shrink-0">
-                        <div class="w-8 h-8 bg-red-100 dark:bg-red-900/30 rounded-lg flex items-center justify-center">
-                            <svg class="w-5 h-5 text-red-600 dark:text-red-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
-                            </svg>
-                        </div>
-                    </div>
-                    <div class="ml-4">
-                        <p class="text-sm font-medium text-gray-600 dark:text-gray-400">Current Streak</p>
-                        <p class="text-2xl font-semibold text-gray-900 dark:text-white">{{ $streakStats['current_streak'] }} days</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-    @endif
 
 
     {{-- Recent Activity --}}
-    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
+    <div class="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700">
         <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
-            <h3 class="text-lg font-medium text-gray-900 dark:text-white">Recent Activity</h3>
+            <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Recent Activity</h3>
         </div>
         <div class="p-6">
             @if($recentActivities->count() > 0)
@@ -344,5 +261,60 @@
             alpineData.imageUrl = imageUrl;
             alpineData.show = true;
         }
+
+        // Outcomes sliding functionality
+        let currentOutcomeIndex = 0;
+        const totalOutcomes = {{ $activeOutcomes->count() ?? 0 }};
+
+        function updateOutcomeDisplay() {
+            const container = document.getElementById('outcomesContainer');
+            const dots = document.querySelectorAll('.outcome-dot');
+            const prevBtn = document.getElementById('prevBtn');
+            const nextBtn = document.getElementById('nextBtn');
+
+            if (!container || totalOutcomes <= 1) return;
+
+            // Update container position
+            container.style.transform = `translateX(-${currentOutcomeIndex * 100}%)`;
+
+            // Update dots
+            dots.forEach((dot, index) => {
+                if (index === currentOutcomeIndex) {
+                    dot.classList.remove('bg-gray-300', 'dark:bg-gray-600');
+                    dot.classList.add('bg-purple-500');
+                } else {
+                    dot.classList.remove('bg-purple-500');
+                    dot.classList.add('bg-gray-300', 'dark:bg-gray-600');
+                }
+            });
+
+            // Update button states
+            if (prevBtn) prevBtn.disabled = currentOutcomeIndex === 0;
+            if (nextBtn) nextBtn.disabled = currentOutcomeIndex === totalOutcomes - 1;
+        }
+
+        function previousOutcome() {
+            if (currentOutcomeIndex > 0) {
+                currentOutcomeIndex--;
+                updateOutcomeDisplay();
+            }
+        }
+
+        function nextOutcome() {
+            if (currentOutcomeIndex < totalOutcomes - 1) {
+                currentOutcomeIndex++;
+                updateOutcomeDisplay();
+            }
+        }
+
+        function goToOutcome(index) {
+            currentOutcomeIndex = index;
+            updateOutcomeDisplay();
+        }
+
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            updateOutcomeDisplay();
+        });
         </script>
 </div>

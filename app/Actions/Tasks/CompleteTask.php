@@ -58,29 +58,10 @@ class CompleteTask
                 ->toMediaCollection('completion_images');
         }
 
-        // Log the completion activity
-        TaskActivity::log(
-            type: TaskActivityType::Completed,
-            user: $user,
-            task: $activeTask->task,
-            assignedTask: $activeTask,
-            title: "Completed task: {$activeTask->task->title}",
-            description: "Great job! You completed the task successfully."
-        );
-
         // Create UserOutcome record for the reward
         if ($activeTask->potentialReward) {
             // Clean up expired outcomes first
             $user->cleanupExpiredOutcomes();
-            
-            // Check if user has reached outcome limit
-            if ($user->hasReachedOutcomeLimit()) {
-                // Replace the oldest active outcome
-                $oldestOutcome = $user->getOldestActiveOutcome();
-                if ($oldestOutcome) {
-                    $oldestOutcome->markAsExpired();
-                }
-            }
             
             UserOutcome::create([
                 'user_id' => $user->id,
@@ -93,14 +74,24 @@ class CompleteTask
                 'expires_at' => $this->calculateRewardExpiry($activeTask->potentialReward),
             ]);
 
-            // Log reward received activity
+            // Log combined completion + reward activity
             TaskActivity::log(
-                type: TaskActivityType::RewardReceived,
+                type: TaskActivityType::Completed,
                 user: $user,
                 task: $activeTask->task,
                 assignedTask: $activeTask,
-                title: "Received reward for: {$activeTask->task->title}",
-                description: $activeTask->potentialReward->description
+                title: "Completed task: {$activeTask->task->title}",
+                description: "Great job! You completed the task successfully and earned a reward: {$activeTask->potentialReward->title}. {$activeTask->potentialReward->description}"
+            );
+        } else {
+            // Log completion activity without reward
+            TaskActivity::log(
+                type: TaskActivityType::Completed,
+                user: $user,
+                task: $activeTask->task,
+                assignedTask: $activeTask,
+                title: "Completed task: {$activeTask->task->title}",
+                description: "Great job! You completed the task successfully."
             );
         }
 

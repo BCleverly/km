@@ -79,29 +79,10 @@ class CheckTaskDeadlines extends Command
             'outcome_id' => $punishment?->id,
         ]);
 
-        // Log the failure activity
-        TaskActivity::log(
-            type: TaskActivityType::Failed,
-            user: $user,
-            task: $task,
-            assignedTask: $assignedTask,
-            title: "Task failed due to deadline: {$task->title}",
-            description: "Task automatically failed due to missing the deadline of {$assignedTask->deadline_at->format('M j, Y g:i A')}."
-        );
-
         // Create UserOutcome record for the punishment if it exists
         if ($punishment) {
             // Clean up expired outcomes first
             $user->cleanupExpiredOutcomes();
-
-            // Check if user has reached outcome limit
-            if ($user->hasReachedOutcomeLimit()) {
-                // Replace the oldest active outcome
-                $oldestOutcome = $user->getOldestActiveOutcome();
-                if ($oldestOutcome) {
-                    $oldestOutcome->markAsExpired();
-                }
-            }
 
             UserOutcome::create([
                 'user_id' => $user->id,
@@ -113,14 +94,24 @@ class CheckTaskDeadlines extends Command
                 'expires_at' => $this->calculatePunishmentExpiry($punishment),
             ]);
 
-            // Log punishment received activity
+            // Log combined failure + punishment activity
             TaskActivity::log(
-                type: TaskActivityType::PunishmentReceived,
+                type: TaskActivityType::Failed,
                 user: $user,
                 task: $task,
                 assignedTask: $assignedTask,
-                title: "Received punishment for missed deadline: {$task->title}",
-                description: $punishment->description
+                title: "Task failed due to deadline: {$task->title}",
+                description: "Task automatically failed due to missing the deadline of {$assignedTask->deadline_at->format('M j, Y g:i A')} and received a punishment: {$punishment->title}. {$punishment->description}"
+            );
+        } else {
+            // Log failure activity without punishment
+            TaskActivity::log(
+                type: TaskActivityType::Failed,
+                user: $user,
+                task: $task,
+                assignedTask: $assignedTask,
+                title: "Task failed due to deadline: {$task->title}",
+                description: "Task automatically failed due to missing the deadline of {$assignedTask->deadline_at->format('M j, Y g:i A')}."
             );
         }
 
