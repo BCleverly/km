@@ -18,6 +18,8 @@ class ListStories extends Component
     #[Url]
     public string $search = '';
 
+    #[Url]
+    public bool $showPremium = false;
 
     #[Computed]
     public function stories(): \Illuminate\Contracts\Pagination\LengthAwarePaginator
@@ -30,6 +32,9 @@ class ListStories extends Component
                         ->orWhere('summary', 'like', '%' . $this->search . '%')
                         ->orWhere('content', 'like', '%' . $this->search . '%');
                 });
+            })
+            ->when(!$this->showPremium, function ($query) {
+                $query->where('is_premium', false);
             });
 
         return $query->orderBy('created_at', 'desc')->paginate(12);
@@ -69,9 +74,15 @@ class ListStories extends Component
         $this->resetPage();
     }
 
+    public function updatedShowPremium(): void
+    {
+        $this->resetPage();
+    }
+
     public function clearFilters(): void
     {
         $this->search = '';
+        $this->showPremium = false;
         $this->resetPage();
     }
 
