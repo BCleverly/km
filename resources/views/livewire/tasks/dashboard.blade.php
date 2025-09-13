@@ -49,8 +49,19 @@
                 </div>
             </div>
 
-            <div class="relative overflow-hidden">
-                <div class="flex transition-transform duration-300 ease-in-out" id="outcomesContainer">
+            <div class="relative overflow-hidden select-none cursor-grab active:cursor-grabbing" 
+                 x-data="outcomeSlider()" 
+                 @mousedown="startDrag($event)"
+                 @mousemove="drag($event)"
+                 @mouseup="endDrag()"
+                 @mouseleave="endDrag()"
+                 @touchstart="startDrag($event)"
+                 @touchmove="drag($event)"
+                 @touchend="endDrag()">
+                <div class="flex transition-transform duration-300 ease-in-out" 
+                     id="outcomesContainer"
+                     :style="`transform: translateX(${translateX}px)`"
+                     :class="{ 'transition-none': isDragging, 'opacity-90': isDragging }">
                     @foreach($activeOutcomes as $index => $outcome)
                         <div class="w-full flex-shrink-0 p-6" data-outcome-index="{{ $index }}">
                             <div class="flex items-start gap-4">
@@ -98,13 +109,11 @@
                                     <button
                                         wire:click="completeOutcome({{ $outcome->id }})"
                                         wire:loading.attr="disabled"
-                                        class="inline-flex items-center px-4 py-2 text-sm font-medium rounded-lg transition-colors duration-200
-                                            @if($outcome->outcome->intended_type === 'reward')
-                                                bg-green-600 hover:bg-green-700 text-white
-                                            @else
-                                                bg-red-600 hover:bg-red-700 text-white
-                                            @endif
-                                            disabled:opacity-50 disabled:cursor-not-allowed"
+                                        @class([
+                                            'inline-flex items-center px-4 py-2 text-sm font-medium rounded-lg transition-colors duration-200 hover:cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed',
+                                            'bg-green-600 hover:bg-green-700 text-white' => $outcome->outcome->intended_type === 'reward',
+                                            'bg-red-600 hover:bg-red-700 text-white' => $outcome->outcome->intended_type === 'punishment'
+                                        ])
                                     >
                                         <span wire:loading.remove wire:target="completeOutcome({{ $outcome->id }})">Mark as Completed</span>
                                         <span wire:loading wire:target="completeOutcome({{ $outcome->id }})">Completing...</span>
@@ -262,59 +271,135 @@
             alpineData.show = true;
         }
 
-        // Outcomes sliding functionality
-        let currentOutcomeIndex = 0;
-        const totalOutcomes = {{ $activeOutcomes->count() ?? 0 }};
+        // Alpine.js component for drag/swipe functionality
+        function outcomeSlider() {
+            return {
+                currentIndex: 0,
+                totalItems: {{ $activeOutcomes->count() ?? 0 }},
+                translateX: 0,
+                startX: 0,
+                currentX: 0,
+                isDragging: false,
+                dragThreshold: 80, // Minimum drag distance to trigger slide
+                containerWidth: 0,
 
-        function updateOutcomeDisplay() {
-            const container = document.getElementById('outcomesContainer');
-            const dots = document.querySelectorAll('.outcome-dot');
-            const prevBtn = document.getElementById('prevBtn');
-            const nextBtn = document.getElementById('nextBtn');
+                init() {
+                    this.containerWidth = this.$el.offsetWidth;
+                    this.updateDisplay();
+                },
 
-            if (!container || totalOutcomes <= 1) return;
+                startDrag(event) {
+                    if (this.totalItems <= 1) return;
+                    
+                    this.isDragging = true;
+                    this.startX = this.getEventX(event);
+                    this.currentX = this.startX;
+                    
+                    // Prevent default to avoid text selection
+                    event.preventDefault();
+                },
 
-            // Update container position
-            container.style.transform = `translateX(-${currentOutcomeIndex * 100}%)`;
+                drag(event) {
+                    if (!this.isDragging || this.totalItems <= 1) return;
+                    
+                    this.currentX = this.getEventX(event);
+                    const deltaX = this.currentX - this.startX;
+                    const baseTranslate = -this.currentIndex * this.containerWidth;
+                    
+                    this.translateX = baseTranslate + deltaX;
+                    
+                    event.preventDefault();
+                },
 
-            // Update dots
-            dots.forEach((dot, index) => {
-                if (index === currentOutcomeIndex) {
-                    dot.classList.remove('bg-gray-300', 'dark:bg-gray-600');
-                    dot.classList.add('bg-purple-500');
-                } else {
-                    dot.classList.remove('bg-purple-500');
-                    dot.classList.add('bg-gray-300', 'dark:bg-gray-600');
+                endDrag() {
+                    if (!this.isDragging || this.totalItems <= 1) return;
+                    
+                    this.isDragging = false;
+                    const deltaX = this.currentX - this.startX;
+                    
+                    // Determine if we should slide to next/previous
+                    if (Math.abs(deltaX) > this.dragThreshold) {
+                        if (deltaX > 0 && this.currentIndex > 0) {
+                            // Dragged right, go to previous
+                            this.currentIndex--;
+                        } else if (deltaX < 0 && this.currentIndex < this.totalItems - 1) {
+                            // Dragged left, go to next
+                            this.currentIndex++;
+                        }
+                    }
+                    
+                    this.updateDisplay();
+                },
+
+                getEventX(event) {
+                    return event.type.includes('touch') ? event.touches[0].clientX : event.clientX;
+                },
+
+                updateDisplay() {
+                    this.translateX = -this.currentIndex * this.containerWidth;
+                    this.updateDots();
+                    this.updateButtons();
+                },
+
+                updateDots() {
+                    const dots = document.querySelectorAll('.outcome-dot');
+                    dots.forEach((dot, index) => {
+                        if (index === this.currentIndex) {
+                            dot.classList.remove('bg-gray-300', 'dark:bg-gray-600');
+                            dot.classList.add('bg-purple-500');
+                        } else {
+                            dot.classList.remove('bg-purple-500');
+                            dot.classList.add('bg-gray-300', 'dark:bg-gray-600');
+                        }
+                    });
+                },
+
+                updateButtons() {
+                    const prevBtn = document.getElementById('prevBtn');
+                    const nextBtn = document.getElementById('nextBtn');
+                    
+                    if (prevBtn) prevBtn.disabled = this.currentIndex === 0;
+                    if (nextBtn) nextBtn.disabled = this.currentIndex === this.totalItems - 1;
+                },
+
+                goToSlide(index) {
+                    if (index >= 0 && index < this.totalItems) {
+                        this.currentIndex = index;
+                        this.updateDisplay();
+                    }
                 }
-            });
-
-            // Update button states
-            if (prevBtn) prevBtn.disabled = currentOutcomeIndex === 0;
-            if (nextBtn) nextBtn.disabled = currentOutcomeIndex === totalOutcomes - 1;
+            }
         }
 
+        // Legacy functions for backward compatibility with button clicks
         function previousOutcome() {
-            if (currentOutcomeIndex > 0) {
-                currentOutcomeIndex--;
-                updateOutcomeDisplay();
+            const slider = document.querySelector('[x-data*="outcomeSlider"]');
+            if (slider) {
+                const alpineData = Alpine.$data(slider);
+                if (alpineData.currentIndex > 0) {
+                    alpineData.currentIndex--;
+                    alpineData.updateDisplay();
+                }
             }
         }
 
         function nextOutcome() {
-            if (currentOutcomeIndex < totalOutcomes - 1) {
-                currentOutcomeIndex++;
-                updateOutcomeDisplay();
+            const slider = document.querySelector('[x-data*="outcomeSlider"]');
+            if (slider) {
+                const alpineData = Alpine.$data(slider);
+                if (alpineData.currentIndex < alpineData.totalItems - 1) {
+                    alpineData.currentIndex++;
+                    alpineData.updateDisplay();
+                }
             }
         }
 
         function goToOutcome(index) {
-            currentOutcomeIndex = index;
-            updateOutcomeDisplay();
+            const slider = document.querySelector('[x-data*="outcomeSlider"]');
+            if (slider) {
+                const alpineData = Alpine.$data(slider);
+                alpineData.goToSlide(index);
+            }
         }
-
-        // Initialize on page load
-        document.addEventListener('DOMContentLoaded', function() {
-            updateOutcomeDisplay();
-        });
         </script>
 </div>
