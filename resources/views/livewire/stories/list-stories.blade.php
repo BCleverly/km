@@ -106,9 +106,11 @@
 
                     <!-- Story Summary -->
                     <div class="mb-4 flex-1">
-                        <p class="text-gray-600 dark:text-gray-300 text-sm leading-relaxed line-clamp-3">
-                            {{ $story->summary }}
-                        </p>
+                        <div class="text-gray-600 dark:text-gray-300 text-sm leading-relaxed line-clamp-3 prose prose-sm dark:prose-invert max-w-none">
+                            <x-markdown>
+                                {{ $story->summary }}
+                            </x-markdown>
+                        </div>
                     </div>
 
                     <!-- Tags -->

@@ -20,6 +20,7 @@
     "dependencies": {
         "@simplewebauthn/browser": "^13.1.2",
         "@tailwindplus/elements": "^1.0.12",
-        "playwright": "^1.55.0"
+        "playwright": "^1.55.0",
+        "shiki": "^3.12.2"
     }
 }

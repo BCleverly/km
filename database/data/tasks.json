@@ -1,112 +1,258 @@
 [
- {
-   "task": "Write you're a dirty little slut on your leg somewhere and keep it on all day",
-   "duration": 1,
-   "tip": [],
-   "status": 1,
-   "recommended_rewards": [1],
-   "recommended_punishments": [7],
-   "tags": {
-    "target_kink": ["Humiliation"],
-    "required_accessories": []
-   }
- },
- {
-   "task": "Write insert cum here on your inner thigh and draw and arrow to your pussy",
-   "duration": 1,
-   "tip": [],
-   "status": 1,
-   "recommended_rewards": [1],
-   "recommended_punishments": [7],
-   "tags": {
-    "target_kink": ["Humiliation"],
-    "required_accessories": []
-   }
- },
- {
-   "task": "Wear a vibrating egg whilst you go out",
-   "duration": 1,
-   "tip": [],
-   "status": 1,
-   "recommended_rewards": [1],
-   "recommended_punishments": [],
-   "tags": {
-    "target_kink": ["Exhabitionism"],
-    "required_accessories": ["Vibrating Egg","Ben-Wa Balls"]
-   }
- },
- {
-   "task": "Wear a vibrating egg whilst you go out and put it on noise activated mode",
-   "duration": 1,
-   "tip": [],
-   "status": 1,
-   "recommended_rewards": [1],
-   "recommended_punishments": [7],
-   "tags": {
-    "target_kink": ["Exhabitionism"],
-    "required_accessories": ["Vibrating Egg"]
-   }
- },
- {
-   "task": "Wear some Ben-wa balls out and about, heavier the better",
-   "duration": 1,
-   "tip": [],
-   "status": 1,
-   "recommended_rewards": [1],
-   "recommended_punishments": [7],
-   "tags": {
-    "target_kink": ["Exhabitionism"],
-    "required_accessories": ["Ben-Wa Balls"]
-   }
- },
- {
-   "task": "Wear a butt plug and wear it all day, Make sure it has the correct flared base",
-   "duration": 1,
-   "tip": [],
-   "status": 1,
-   "recommended_rewards": [1],
-   "recommended_punishments": [7],
-   "tags": {
-    "target_kink": ["Anal Play"],
-    "required_accessories": ["Butt plug", "Anal beads"]
-   }
- },
- {
-   "task": "Wear a butt plug and be wan balls whilst going out for a chore",
-   "duration": 1,
-   "tip": [],
-   "status": 1,
-   "recommended_rewards": [1],
-   "recommended_punishments": [7],
-   "tags": {
-    "target_kink": ["Anal Play"],
-    "required_accessories": ["Butt plug", "Anal beads"]
-   }
- },
- {
-   "task": "Practice your oral skills on your partner",
-   "user_type": 3,
-   "duration": 1,
-   "tip": [],
-   "status": 1,
-   "recommended_rewards": [1],
-   "recommended_punishments": [7],
-   "tags": {
-    "target_kink": ["Submissive","Oral"],
-    "required_accessories": []
-   }
- },
- {
-   "task": "Practice your blow job skills on a dildo",
-   "user_type": 3,
-   "duration": 1,
-   "tip": [],
-   "status": 1,
-   "recommended_rewards": [1],
-   "recommended_punishments": [7],
-   "tags": {
-    "target_kink": ["Oral"],
-    "required_accessories": ["Dildo"]
-   }
- }
+  {
+    "task": "Write you're a dirty little slut on your leg somewhere and keep it on all day",
+    "duration": 1,
+    "tip": [],
+    "status": 1,
+    "recommended_rewards": [
+      1
+    ],
+    "recommended_punishments": [
+      7
+    ],
+    "tags": {
+      "target_kink": [
+        "Humiliation"
+      ],
+      "required_accessories": []
+    }
+  },
+  {
+    "task": "Write insert cum here on your inner thigh and draw and arrow to your pussy",
+    "duration": 1,
+    "tip": [],
+    "status": 1,
+    "recommended_rewards": [
+      1
+    ],
+    "recommended_punishments": [
+      7
+    ],
+    "tags": {
+      "target_kink": [
+        "Humiliation"
+      ],
+      "required_accessories": []
+    }
+  },
+  {
+    "task": "One one thigh write cum, on the other dump, with your pussy in the middle",
+    "duration": 1,
+    "tip": [],
+    "status": 1,
+    "recommended_rewards": [
+      1
+    ],
+    "recommended_punishments": [
+      7
+    ],
+    "tags": {
+      "target_kink": [
+        "Humiliation"
+      ],
+      "required_accessories": []
+    }
+  },
+  {
+    "task": "Using lube, massage your asshole with your finger and get comofrtable fingering yourself",
+    "duration": 1,
+    "tip": [],
+    "status": 1,
+    "recommended_rewards": [
+      1
+    ],
+    "recommended_punishments": [
+      7
+    ],
+    "tags": {
+      "target_kink": [
+        "Anal",
+        "Fingering"
+      ],
+      "required_accessories": [
+        "Lube"
+      ]
+    }
+  },
+  {
+    "task": "Put nipple clamps on in the evening and keep them on for an hour.",
+    "duration": 1,
+    "tip": [],
+    "status": 1,
+    "recommended_rewards": [
+      1
+    ],
+    "recommended_punishments": [
+      7
+    ],
+    "tags": {
+      "target_kink": [
+        "Submission"
+      ],
+      "required_accessories": [
+        "Nipple clamps",
+        "Weighted Nipple Clamps"
+      ]
+    }
+  },
+  {
+    "task": "Set a timer for 30 minutes, sit down naked and just imagine what it would be like to be a sex slave",
+    "duration": 1,
+    "tip": [],
+    "status": 1,
+    "recommended_rewards": [
+      1
+    ],
+    "recommended_punishments": [
+      7
+    ],
+    "tags": {
+      "target_kink": [
+        "Submission"
+      ],
+      "required_accessories": []
+    }
+  },
+  {
+    "task": "Wear a vibrating egg whilst you go out",
+    "duration": 1,
+    "tip": [],
+    "status": 1,
+    "recommended_rewards": [
+      1
+    ],
+    "recommended_punishments": [],
+    "tags": {
+      "target_kink": [
+        "Exhabitionism"
+      ],
+      "required_accessories": [
+        "Vibrating Egg",
+        "Ben-Wa Balls"
+      ]
+    }
+  },
+  {
+    "task": "Wear a vibrating egg whilst you go out and put it on noise activated mode",
+    "duration": 1,
+    "tip": [],
+    "status": 1,
+    "recommended_rewards": [
+      1
+    ],
+    "recommended_punishments": [
+      7
+    ],
+    "tags": {
+      "target_kink": [
+        "Exhabitionism"
+      ],
+      "required_accessories": [
+        "Vibrating Egg"
+      ]
+    }
+  },
+  {
+    "task": "Wear some Ben-wa balls out and about, heavier the better",
+    "duration": 1,
+    "tip": [],
+    "status": 1,
+    "recommended_rewards": [
+      1
+    ],
+    "recommended_punishments": [
+      7
+    ],
+    "tags": {
+      "target_kink": [
+        "Exhabitionism"
+      ],
+      "required_accessories": [
+        "Ben-Wa Balls"
+      ]
+    }
+  },
+  {
+    "task": "Wear a butt plug and wear it all day, Make sure it has the correct flared base",
+    "duration": 1,
+    "tip": [],
+    "status": 1,
+    "recommended_rewards": [
+      1
+    ],
+    "recommended_punishments": [
+      7
+    ],
+    "tags": {
+      "target_kink": [
+        "Anal Play"
+      ],
+      "required_accessories": [
+        "Butt plug",
+        "Anal beads"
+      ]
+    }
+  },
+  {
+    "task": "Wear a butt plug and be wan balls whilst going out for a chore",
+    "duration": 1,
+    "tip": [],
+    "status": 1,
+    "recommended_rewards": [
+      1
+    ],
+    "recommended_punishments": [
+      7
+    ],
+    "tags": {
+      "target_kink": [
+        "Anal Play"
+      ],
+      "required_accessories": [
+        "Butt plug",
+        "Anal beads"
+      ]
+    }
+  },
+  {
+    "task": "Practice your oral skills on your partner",
+    "user_type": 3,
+    "duration": 1,
+    "tip": [],
+    "status": 1,
+    "recommended_rewards": [
+      1
+    ],
+    "recommended_punishments": [
+      7
+    ],
+    "tags": {
+      "target_kink": [
+        "Submissive",
+        "Oral"
+      ],
+      "required_accessories": []
+    }
+  },
+  {
+    "task": "Practice your blow job skills on a dildo",
+    "user_type": 3,
+    "duration": 1,
+    "tip": [],
+    "status": 1,
+    "recommended_rewards": [
+      1
+    ],
+    "recommended_punishments": [
+      7
+    ],
+    "tags": {
+      "target_kink": [
+        "Oral"
+      ],
+      "required_accessories": [
+        "Dildo"
+      ]
+    }
+  }
 ]
