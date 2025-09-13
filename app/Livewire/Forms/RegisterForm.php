@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Forms;
 
+use App\Enums\SubscriptionPlan;
 use Livewire\Attributes\Validate;
 use Livewire\Form;
 
@@ -24,4 +25,7 @@ class RegisterForm extends Form
 
     #[Validate('nullable|string|in:search,advertisement,referral,other')]
     public ?string $hear_about = null;
+
+    #[Validate('required|integer')]
+    public ?int $subscription_plan = SubscriptionPlan::Free->value;
 }

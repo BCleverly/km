@@ -2,8 +2,10 @@
 
 namespace App\Livewire\Auth;
 
+use App\Enums\SubscriptionPlan;
 use App\Livewire\Forms\RegisterForm;
 use App\Models\User;
+use App\Services\SubscriptionService;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -22,13 +24,42 @@ class Register extends Component
             'username' => $this->form->username,
             'email' => $this->form->email,
             'password' => Hash::make($this->form->password),
+            'subscription_plan' => $this->form->subscription_plan,
         ]);
 
-        event(new Registered($user));
+        // Handle subscription based on selected plan
+        $selectedPlan = SubscriptionPlan::from($this->form->subscription_plan);
+        
+        if ($selectedPlan === SubscriptionPlan::Free) {
+            // Start the trial period for free plan users
+            $user->startTrial();
+        } else {
+            // For paid plans, start trial and redirect to Stripe checkout
+            $user->startTrial();
+            $user->updateSubscriptionPlan($selectedPlan);
+        }
 
+        event(new Registered($user));
         Auth::login($user);
 
+        // If user selected a paid plan, redirect to Stripe checkout
+        if ($selectedPlan !== SubscriptionPlan::Free) {
+            $checkoutUrl = app(SubscriptionService::class)->createCheckoutSession($user, $selectedPlan);
+            return $this->redirect($checkoutUrl);
+        }
+
         return $this->redirect(route('app.dashboard'), navigate: true);
+    }
+
+    public function getPlansProperty()
+    {
+        return [
+            SubscriptionPlan::Free,
+            SubscriptionPlan::Solo,
+            SubscriptionPlan::Premium,
+            SubscriptionPlan::Couple,
+            SubscriptionPlan::Lifetime,
+        ];
     }
 
     public function render()

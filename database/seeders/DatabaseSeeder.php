@@ -105,8 +105,71 @@ class DatabaseSeeder extends Seeder
      */
     private function createTestUsers(): void
     {
+        // Free User (on trial)
+        $freeUser = User::firstOrCreate(
+            ['email' => 'free@example.com'],
+            [
+                'name' => 'Free User',
+                'email' => 'free@example.com',
+                'password' => bcrypt('password'),
+                'user_type' => \App\TargetUserType::Male,
+                'subscription_plan' => \App\Enums\SubscriptionPlan::Free,
+                'trial_ends_at' => now()->addDays(7), // Trial expires in 7 days
+                'has_used_trial' => true,
+            ]
+        );
+        $freeUser->profile()->firstOrCreate(
+            ['user_id' => $freeUser->id],
+            [
+                'username' => 'freeuser',
+                'about' => 'Free tier user on trial',
+            ]
+        );
+        $freeUser->assignRole('User');
 
-        // Couple (Free) Users
+        // Solo User
+        $soloUser = User::firstOrCreate(
+            ['email' => 'solo@example.com'],
+            [
+                'name' => 'Solo User',
+                'email' => 'solo@example.com',
+                'password' => bcrypt('password'),
+                'user_type' => \App\TargetUserType::Male,
+                'subscription_plan' => \App\Enums\SubscriptionPlan::Solo,
+                'has_used_trial' => true,
+            ]
+        );
+        $soloUser->profile()->firstOrCreate(
+            ['user_id' => $soloUser->id],
+            [
+                'username' => 'solouser',
+                'about' => 'Solo subscription user',
+            ]
+        );
+        $soloUser->assignRole('User');
+
+        // Premium User
+        $premiumUser = User::firstOrCreate(
+            ['email' => 'premium@example.com'],
+            [
+                'name' => 'Premium User',
+                'email' => 'premium@example.com',
+                'password' => bcrypt('password'),
+                'user_type' => \App\TargetUserType::Female,
+                'subscription_plan' => \App\Enums\SubscriptionPlan::Premium,
+                'has_used_trial' => true,
+            ]
+        );
+        $premiumUser->profile()->firstOrCreate(
+            ['user_id' => $premiumUser->id],
+            [
+                'username' => 'premiumuser',
+                'about' => 'Premium subscription user',
+            ]
+        );
+        $premiumUser->assignRole('User');
+
+        // Couple Users
         $coupleUser1 = User::firstOrCreate(
             ['email' => 'couple1@example.com'],
             [
@@ -114,6 +177,8 @@ class DatabaseSeeder extends Seeder
                 'email' => 'couple1@example.com',
                 'password' => bcrypt('password'),
                 'user_type' => \App\TargetUserType::Couple,
+                'subscription_plan' => \App\Enums\SubscriptionPlan::Couple,
+                'has_used_trial' => true,
             ]
         );
         $coupleUser1->profile()->firstOrCreate(
@@ -132,7 +197,9 @@ class DatabaseSeeder extends Seeder
                 'email' => 'couple2@example.com',
                 'password' => bcrypt('password'),
                 'user_type' => \App\TargetUserType::Couple,
+                'subscription_plan' => \App\Enums\SubscriptionPlan::Couple,
                 'partner_id' => $coupleUser1->id,
+                'has_used_trial' => true,
             ]
         );
         $coupleUser2->profile()->firstOrCreate(
@@ -146,6 +213,49 @@ class DatabaseSeeder extends Seeder
 
         // Link the couple users
         $coupleUser1->update(['partner_id' => $coupleUser2->id]);
+
+        // Lifetime User
+        $lifetimeUser = User::firstOrCreate(
+            ['email' => 'lifetime@example.com'],
+            [
+                'name' => 'Lifetime User',
+                'email' => 'lifetime@example.com',
+                'password' => bcrypt('password'),
+                'user_type' => \App\TargetUserType::Male,
+                'subscription_plan' => \App\Enums\SubscriptionPlan::Lifetime,
+                'has_used_trial' => true,
+            ]
+        );
+        $lifetimeUser->profile()->firstOrCreate(
+            ['user_id' => $lifetimeUser->id],
+            [
+                'username' => 'lifetimeuser',
+                'about' => 'Lifetime subscription user',
+            ]
+        );
+        $lifetimeUser->assignRole('User');
+
+        // Expired Trial User (needs to choose subscription)
+        $expiredTrialUser = User::firstOrCreate(
+            ['email' => 'expired@example.com'],
+            [
+                'name' => 'Expired Trial User',
+                'email' => 'expired@example.com',
+                'password' => bcrypt('password'),
+                'user_type' => \App\TargetUserType::Female,
+                'subscription_plan' => \App\Enums\SubscriptionPlan::Free,
+                'trial_ends_at' => now()->subDays(1), // Trial expired yesterday
+                'has_used_trial' => true,
+            ]
+        );
+        $expiredTrialUser->profile()->firstOrCreate(
+            ['user_id' => $expiredTrialUser->id],
+            [
+                'username' => 'expireduser',
+                'about' => 'User with expired trial',
+            ]
+        );
+        $expiredTrialUser->assignRole('User');
     }
 
     /**

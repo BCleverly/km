@@ -30,6 +30,10 @@ class UserFactory extends Factory
             'password' => static::$password ??= Hash::make('password'),
             'remember_token' => Str::random(10),
             'user_type' => \App\TargetUserType::Any,
+            'subscription_plan' => \App\Enums\SubscriptionPlan::Free,
+            'subscription_ends_at' => null,
+            'has_used_trial' => false,
+            'trial_ends_at' => null,
         ];
     }
 
@@ -53,6 +57,44 @@ class UserFactory extends Factory
     {
         return $this->state(fn (array $attributes) => [
             'email_verified_at' => null,
+        ]);
+    }
+
+    /**
+     * Create a user with a trial subscription.
+     */
+    public function onTrial(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'subscription_plan' => \App\Enums\SubscriptionPlan::Free,
+            'trial_ends_at' => now()->addDays(14),
+            'has_used_trial' => true,
+        ]);
+    }
+
+    /**
+     * Create a user with a paid subscription.
+     */
+    public function withPaidSubscription(\App\Enums\SubscriptionPlan $plan = \App\Enums\SubscriptionPlan::Solo): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'subscription_plan' => $plan,
+            'subscription_ends_at' => now()->addMonth(),
+            'has_used_trial' => true,
+            'trial_ends_at' => null,
+        ]);
+    }
+
+    /**
+     * Create a user with a lifetime subscription.
+     */
+    public function withLifetimeSubscription(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'subscription_plan' => \App\Enums\SubscriptionPlan::Lifetime,
+            'subscription_ends_at' => null,
+            'has_used_trial' => true,
+            'trial_ends_at' => null,
         ]);
     }
 }

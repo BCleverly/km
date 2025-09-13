@@ -22,6 +22,9 @@ use Illuminate\Support\Facades\Route;
 
 Route::passkeys();
 
+// Stripe Webhook (must be outside middleware)
+Route::post('/stripe/webhook', [\App\Http\Controllers\StripeWebhookController::class, 'handleWebhook']);
+
 Route::get('/', Homepage::class);
 
 // Authentication Routes (Guest only)
@@ -71,4 +74,12 @@ Route::middleware('auth')->prefix('app')->name('app.')->group(function () {
 
     // Search
     Route::get('/search', SearchContent::class)->name('search');
+
+    // Subscription Routes
+    Route::prefix('subscription')->name('subscription.')->group(function () {
+        Route::get('/choose', \App\Livewire\Subscription\ChoosePlan::class)->name('choose');
+        Route::get('/success', \App\Livewire\Subscription\Success::class)->name('success');
+        Route::get('/cancel', \App\Livewire\Subscription\Cancel::class)->name('cancel');
+        Route::get('/billing', \App\Livewire\Subscription\Billing::class)->name('billing');
+    });
 });

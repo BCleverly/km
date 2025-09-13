@@ -24,6 +24,7 @@
         "spatie/laravel-medialibrary": "^11.14",
         "spatie/laravel-passkeys": "^1.0",
         "spatie/laravel-permission": "^6.21",
+        "spatie/laravel-sluggable": "^3.7",
         "spatie/laravel-tags": "^4.10",
         "ueberdosis/tiptap-php": "^2.0"
     },

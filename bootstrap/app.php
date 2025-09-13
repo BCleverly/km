@@ -14,7 +14,10 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
-        //
+        $middleware->alias([
+            'subscription' => \App\Http\Middleware\EnsureUserHasSubscription::class,
+            'premium' => \App\Http\Middleware\EnsureUserHasPremiumSubscription::class,
+        ]);
     })
     ->withSchedule(function (Schedule $schedule): void {
         //        $schedule->command('activitylog:clean --days=7')->daily();

@@ -34,14 +34,22 @@ class AppServiceProvider extends ServiceProvider
         // Using closure-based composers...
 
         Facades\View::composer('components.layouts.app', function (View $view) {
-
-            $view->with('topNav', [
+            $user = auth()->user();
+            
+            $topNav = [
                 ['text'=> 'Dashboard', 'link' => route('app.dashboard'), 'icon' => 'icon.home'],
                 ['text'=> 'Tasks', 'link' => route('app.tasks'), 'icon' => 'icon.checkmark'],
                 ['text'=> 'Fantasies','link' =>  route('app.fantasies.index'), 'icon' => 'icon.heart'],
                 ['text'=> 'Stories','link' =>  route('app.stories.index'), 'icon' => 'icon.book'],
                 ['text'=> 'Search', 'link' => route('app.search'), 'icon' => 'icon.magnifying-glass'],
-            ]);
+            ];
+
+            // Only show billing link for non-lifetime users
+            if ($user && !$user->hasLifetimeSubscription()) {
+                $topNav[] = ['text'=> 'Billing', 'link' => route('app.subscription.billing'), 'icon' => 'icon.credit-card'];
+            }
+
+            $view->with('topNav', $topNav);
 
             $view->with('bottomNav', [
                 ['text'=> 'Task Community', 'link' =>  route('app.tasks.community'), 'icon' => 'icon.checkmark']

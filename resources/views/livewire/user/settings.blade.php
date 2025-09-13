@@ -343,6 +343,52 @@
                         </div>
                     </form>
                 </div>
+
+                <!-- Subscription Management Section -->
+                @if(auth()->user()->hasLifetimeSubscription())
+                    <!-- Lifetime Member Status -->
+                    <div class="bg-gradient-to-r from-purple-50 to-indigo-50 dark:from-purple-900/20 dark:to-indigo-900/20 rounded-xl shadow-sm border border-purple-200 dark:border-purple-700 p-6 mt-6">
+                        <div class="flex items-center mb-4">
+                            <div class="flex-shrink-0">
+                                <svg class="h-8 w-8 text-purple-600 dark:text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                </svg>
+                            </div>
+                            <div class="ml-3">
+                                <h2 class="text-lg font-semibold text-purple-900 dark:text-purple-100">
+                                    Lifetime Member
+                                </h2>
+                                <p class="text-purple-700 dark:text-purple-300 text-sm">
+                                    You have unlimited access to all features
+                                </p>
+                            </div>
+                        </div>
+                        <div class="bg-white/50 dark:bg-gray-800/50 rounded-lg p-4">
+                            <p class="text-purple-800 dark:text-purple-200 text-sm leading-relaxed">
+                                🎉 <strong>Congratulations!</strong> You're a lifetime member of Kink Master. 
+                                You have unlimited access to all premium features, content, and updates forever. 
+                                No more subscription fees, no more billing concerns - just unlimited access to everything we offer.
+                            </p>
+                        </div>
+                    </div>
+                @else
+                    <!-- Regular Subscription Management -->
+                    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6 mt-6">
+                        <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">
+                            Subscription & Billing
+                        </h2>
+                        <p class="text-gray-600 dark:text-gray-300 text-sm mb-4">
+                            Manage your subscription plan, billing information, and payment methods.
+                        </p>
+                        <a href="{{ route('app.subscription.billing') }}" 
+                           class="inline-flex items-center px-4 py-2 bg-red-600 hover:bg-red-700 text-white font-medium rounded-lg transition-colors duration-200">
+                            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"></path>
+                            </svg>
+                            Manage Subscription
+                        </a>
+                    </div>
+                @endif
             </div>
         </div>
     </div>

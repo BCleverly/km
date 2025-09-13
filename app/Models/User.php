@@ -37,6 +37,10 @@ class User extends Authenticatable implements FilamentUser, HasPassKeys, ReactsI
         'username',
         'email_verified_at',
         'partner_id',
+        'subscription_plan',
+        'subscription_ends_at',
+        'has_used_trial',
+        'trial_ends_at',
     ];
 
     /**
@@ -60,6 +64,9 @@ class User extends Authenticatable implements FilamentUser, HasPassKeys, ReactsI
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
             'user_type' => \App\TargetUserType::class,
+            'subscription_plan' => \App\Enums\SubscriptionPlan::class,
+            'subscription_ends_at' => 'datetime',
+            'has_used_trial' => 'boolean',
         ];
     }
 
@@ -329,11 +336,80 @@ class User extends Authenticatable implements FilamentUser, HasPassKeys, ReactsI
     }
 
     /**
+     * Check if user is on trial (either generic trial or subscription trial)
+     */
+    public function isOnTrial(): bool
+    {
+        // Check generic trial (trial_ends_at on user)
+        if ($this->onGenericTrial()) {
+            return true;
+        }
+
+        // Check subscription trial
+        if ($this->subscription() && $this->subscription()->onTrial()) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Check if user has an active subscription (including trial)
+     */
+    public function hasActiveSubscription(): bool
+    {
+        // Admins always have access
+        if ($this->hasRole('Admin')) {
+            return true;
+        }
+
+        // Check if on trial
+        if ($this->isOnTrial()) {
+            return true;
+        }
+
+        // Check if has active subscription
+        if ($this->subscription() && $this->subscription()->active()) {
+            return true;
+        }
+
+        // Check if has lifetime subscription
+        if ($this->subscription_plan === \App\Enums\SubscriptionPlan::Lifetime) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Check if user has a paid subscription (not trial)
+     */
+    public function hasPaidSubscription(): bool
+    {
+        // Admins always have access
+        if ($this->hasRole('Admin')) {
+            return true;
+        }
+
+        // Check if has active subscription (not trial)
+        if ($this->subscription() && $this->subscription()->active() && !$this->subscription()->onTrial()) {
+            return true;
+        }
+
+        // Check if has lifetime subscription
+        if ($this->subscription_plan === \App\Enums\SubscriptionPlan::Lifetime) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
      * Check if user has an active premium subscription
      */
     public function hasActivePremiumSubscription(): bool
     {
-        return $this->subscribed('premium') || $this->onTrial('premium');
+        return $this->hasPaidSubscription() && $this->subscription_plan->value >= \App\Enums\SubscriptionPlan::Premium->value;
     }
 
     /**
@@ -341,7 +417,7 @@ class User extends Authenticatable implements FilamentUser, HasPassKeys, ReactsI
      */
     public function hasLifetimeSubscription(): bool
     {
-        return $this->subscribed('lifetime');
+        return $this->subscription_plan === \App\Enums\SubscriptionPlan::Lifetime;
     }
 
     /**
@@ -350,9 +426,61 @@ class User extends Authenticatable implements FilamentUser, HasPassKeys, ReactsI
      */
     public function canUploadCompletionImages(): bool
     {
-        return $this->hasActivePremiumSubscription()
-            || $this->hasLifetimeSubscription()
-            || $this->hasRole('Admin');
+        return $this->hasRole('Admin') || $this->subscription_plan->canUploadImages();
+    }
+
+    /**
+     * Check if user can create stories
+     */
+    public function canCreateStories(): bool
+    {
+        return $this->hasRole('Admin') || $this->subscription_plan->canCreateStories();
+    }
+
+    /**
+     * Check if user can access premium content
+     */
+    public function canAccessPremiumContent(): bool
+    {
+        return $this->hasRole('Admin') || $this->subscription_plan->canAccessPremiumContent();
+    }
+
+    /**
+     * Check if user can create custom tasks
+     */
+    public function canCreateCustomTasks(): bool
+    {
+        return $this->hasRole('Admin') || $this->subscription_plan->canCreateCustomTasks();
+    }
+
+    /**
+     * Get the maximum number of tasks per day for this user
+     */
+    public function getMaxTasksPerDay(): ?int
+    {
+        if ($this->hasRole('Admin')) {
+            return null; // Unlimited for admins
+        }
+
+        return $this->subscription_plan->maxTasksPerDay();
+    }
+
+    /**
+     * Check if user has reached their daily task limit
+     */
+    public function hasReachedDailyTaskLimit(): bool
+    {
+        $maxTasks = $this->getMaxTasksPerDay();
+        
+        if ($maxTasks === null) {
+            return false; // Unlimited
+        }
+
+        $todayTasks = $this->assignedTasks()
+            ->whereDate('created_at', today())
+            ->count();
+
+        return $todayTasks >= $maxTasks;
     }
 
     /**
@@ -364,14 +492,59 @@ class User extends Authenticatable implements FilamentUser, HasPassKeys, ReactsI
             return 'Admin';
         }
 
-        if ($this->hasLifetimeSubscription()) {
-            return 'Lifetime';
+        return $this->subscription_plan->label();
+    }
+
+    /**
+     * Check if user needs to choose a subscription plan
+     */
+    public function needsSubscriptionChoice(): bool
+    {
+        // Admins don't need subscription
+        if ($this->hasRole('Admin')) {
+            return false;
         }
 
-        if ($this->hasActivePremiumSubscription()) {
-            return 'Premium';
+        // If they have a paid subscription, they're good
+        if ($this->hasPaidSubscription()) {
+            return false;
         }
 
-        return 'Free';
+        // If they're on trial, they don't need to choose yet
+        if ($this->isOnTrial()) {
+            return false;
+        }
+
+        // If they've used their trial and don't have a subscription, they need to choose
+        return $this->has_used_trial;
+    }
+
+    /**
+     * Start the trial period for a new user
+     */
+    public function startTrial(): void
+    {
+        if (!$this->has_used_trial) {
+            $this->update([
+                'trial_ends_at' => now()->addDays((int) config('subscription.trial_days')),
+                'has_used_trial' => true,
+            ]);
+        }
+    }
+
+    /**
+     * Get the current subscription plan
+     */
+    public function getCurrentPlan(): \App\Enums\SubscriptionPlan
+    {
+        return $this->subscription_plan;
+    }
+
+    /**
+     * Update subscription plan
+     */
+    public function updateSubscriptionPlan(\App\Enums\SubscriptionPlan $plan): void
+    {
+        $this->update(['subscription_plan' => $plan]);
     }
 }
