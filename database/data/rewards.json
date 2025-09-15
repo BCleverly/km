@@ -20,5 +20,115 @@
             "target_kink": [],
             "required_accessories": []
         }
+    },
+    {
+        "id": 3,
+        "title": "Vibrator Heaven",
+        "description": "Use your favorite vibrator for 30 minutes of pure pleasure. No restrictions, just enjoy yourself.",
+        "difficulty_level": 1,
+        "status": 1,
+        "tags": {
+            "target_kink": ["Masturbation"],
+            "required_accessories": ["Vibrator"]
+        }
+    },
+    {
+        "id": 4,
+        "title": "Multiple Orgasms",
+        "description": "Give yourself 3 orgasms in one session. Take your time and enjoy each one.",
+        "difficulty_level": 2,
+        "status": 1,
+        "tags": {
+            "target_kink": ["Masturbation"],
+            "required_accessories": []
+        }
+    },
+    {
+        "id": 5,
+        "title": "Sensual Bath",
+        "description": "Take a luxurious bath with candles and music. Touch yourself gently while relaxing in the warm water.",
+        "difficulty_level": 1,
+        "status": 1,
+        "tags": {
+            "target_kink": ["Relaxation", "Masturbation"],
+            "required_accessories": ["Candles"]
+        }
+    },
+    {
+        "id": 6,
+        "title": "Edging Session",
+        "description": "Edge yourself for 45 minutes, getting close to orgasm but not quite there. Then finish with a powerful climax.",
+        "difficulty_level": 3,
+        "status": 1,
+        "tags": {
+            "target_kink": ["Edging", "Masturbation"],
+            "required_accessories": []
+        }
+    },
+    {
+        "id": 7,
+        "title": "Anal Play Reward",
+        "description": "Take your time with anal play using plenty of lube. Explore at your own pace and enjoy the sensations.",
+        "difficulty_level": 2,
+        "status": 1,
+        "tags": {
+            "target_kink": ["Anal Play"],
+            "required_accessories": ["Lube", "Butt plug"]
+        }
+    },
+    {
+        "id": 8,
+        "title": "Nipple Clamp Pleasure",
+        "description": "Wear nipple clamps for 20 minutes while masturbating. Enjoy the heightened sensitivity when you remove them.",
+        "difficulty_level": 2,
+        "status": 1,
+        "tags": {
+            "target_kink": ["Nipple Play", "Pain Play"],
+            "required_accessories": ["Nipple clamps"]
+        }
+    },
+    {
+        "id": 9,
+        "title": "Blindfolded Sensation",
+        "description": "Wear a blindfold and explore your body with different textures - silk, feathers, ice cubes. Let your other senses take over.",
+        "difficulty_level": 2,
+        "status": 1,
+        "tags": {
+            "target_kink": ["Sensory Deprivation", "Sensation Play"],
+            "required_accessories": ["Blindfold", "Feather", "Ice cubes"]
+        }
+    },
+    {
+        "id": 10,
+        "title": "Dildo Marathon",
+        "description": "Use your dildo for 40 minutes, trying different positions and speeds. Take your time to find what feels best.",
+        "difficulty_level": 2,
+        "status": 1,
+        "tags": {
+            "target_kink": ["Masturbation", "Penetration"],
+            "required_accessories": ["Dildo"]
+        }
+    },
+    {
+        "id": 11,
+        "title": "Temperature Play",
+        "description": "Alternate between ice cubes and warm water on your sensitive areas. Enjoy the contrast of sensations.",
+        "difficulty_level": 2,
+        "status": 1,
+        "tags": {
+            "target_kink": ["Temperature Play"],
+            "required_accessories": ["Ice cubes"]
+        }
+    },
+    {
+        "id": 12,
+        "title": "Mirror Masturbation",
+        "description": "Masturbate while watching yourself in a mirror. Admire your body and enjoy the visual stimulation.",
+        "difficulty_level": 1,
+        "status": 1,
+        "tags": {
+            "target_kink": ["Exhibitionism", "Masturbation"],
+            "required_accessories": []
+        }
     }
 ]

@@ -254,5 +254,560 @@
         "Dildo"
       ]
     }
+  },
+  {
+    "task": "Take a cold shower for 5 minutes while touching yourself",
+    "duration": 1,
+    "tip": [],
+    "status": 1,
+    "recommended_rewards": [
+      1
+    ],
+    "recommended_punishments": [
+      7
+    ],
+    "tags": {
+      "target_kink": [
+        "Temperature Play",
+        "Masturbation"
+      ],
+      "required_accessories": []
+    }
+  },
+  {
+    "task": "Wear a collar around the house for 2 hours",
+    "duration": 1,
+    "tip": [],
+    "status": 1,
+    "recommended_rewards": [
+      1
+    ],
+    "recommended_punishments": [
+      7
+    ],
+    "tags": {
+      "target_kink": [
+        "Submission",
+        "BDSM"
+      ],
+      "required_accessories": [
+        "Collar"
+      ]
+    }
+  },
+  {
+    "task": "Edge yourself for 30 minutes without cumming",
+    "duration": 1,
+    "tip": [],
+    "status": 1,
+    "recommended_rewards": [
+      1
+    ],
+    "recommended_punishments": [
+      7
+    ],
+    "tags": {
+      "target_kink": [
+        "Edging",
+        "Masturbation"
+      ],
+      "required_accessories": []
+    }
+  },
+  {
+    "task": "Write 'Property of [Partner Name]' on your inner thigh",
+    "user_type": 3,
+    "duration": 1,
+    "tip": [],
+    "status": 1,
+    "recommended_rewards": [
+      1
+    ],
+    "recommended_punishments": [
+      7
+    ],
+    "tags": {
+      "target_kink": [
+        "Ownership",
+        "Humiliation"
+      ],
+      "required_accessories": []
+    }
+  },
+  {
+    "task": "Wear a blindfold and masturbate for 20 minutes",
+    "duration": 1,
+    "tip": [],
+    "status": 1,
+    "recommended_rewards": [
+      1
+    ],
+    "recommended_punishments": [
+      7
+    ],
+    "tags": {
+      "target_kink": [
+        "Sensory Deprivation",
+        "Masturbation"
+      ],
+      "required_accessories": [
+        "Blindfold"
+      ]
+    }
+  },
+  {
+    "task": "Take a photo of yourself in lingerie and send it to your partner",
+    "user_type": 3,
+    "duration": 1,
+    "tip": [],
+    "status": 1,
+    "recommended_rewards": [
+      1
+    ],
+    "recommended_punishments": [
+      7
+    ],
+    "tags": {
+      "target_kink": [
+        "Exhibitionism",
+        "Submission"
+      ],
+      "required_accessories": [
+        "Lingerie"
+      ]
+    }
+  },
+  {
+    "task": "Wear a plug in your ass while doing household chores for 1 hour",
+    "duration": 1,
+    "tip": [],
+    "status": 1,
+    "recommended_rewards": [
+      1
+    ],
+    "recommended_punishments": [
+      7
+    ],
+    "tags": {
+      "target_kink": [
+        "Anal Play",
+        "Submission"
+      ],
+      "required_accessories": [
+        "Butt plug"
+      ]
+    }
+  },
+  {
+    "task": "Masturbate while watching yourself in a mirror",
+    "duration": 1,
+    "tip": [],
+    "status": 1,
+    "recommended_rewards": [
+      1
+    ],
+    "recommended_punishments": [
+      7
+    ],
+    "tags": {
+      "target_kink": [
+        "Exhibitionism",
+        "Masturbation"
+      ],
+      "required_accessories": []
+    }
+  },
+  {
+    "task": "Wear nipple clamps while cooking dinner",
+    "duration": 1,
+    "tip": [],
+    "status": 1,
+    "recommended_rewards": [
+      1
+    ],
+    "recommended_punishments": [
+      7
+    ],
+    "tags": {
+      "target_kink": [
+        "Pain Play",
+        "Submission"
+      ],
+      "required_accessories": [
+        "Nipple clamps"
+      ]
+    }
+  },
+  {
+    "task": "Use ice cubes on your nipples for 10 minutes",
+    "duration": 1,
+    "tip": [],
+    "status": 1,
+    "recommended_rewards": [
+      1
+    ],
+    "recommended_punishments": [
+      7
+    ],
+    "tags": {
+      "target_kink": [
+        "Temperature Play",
+        "Pain Play"
+      ],
+      "required_accessories": [
+        "Ice cubes"
+      ]
+    }
+  },
+  {
+    "task": "Wear a chastity cage for 4 hours",
+    "user_type": 1,
+    "duration": 1,
+    "tip": [],
+    "status": 1,
+    "recommended_rewards": [
+      1
+    ],
+    "recommended_punishments": [
+      7
+    ],
+    "tags": {
+      "target_kink": [
+        "Chastity",
+        "Submission"
+      ],
+      "required_accessories": [
+        "Chastity cage"
+      ]
+    }
+  },
+  {
+    "task": "Masturbate with your non-dominant hand for 20 minutes",
+    "duration": 1,
+    "tip": [],
+    "status": 1,
+    "recommended_rewards": [
+      1
+    ],
+    "recommended_punishments": [
+      7
+    ],
+    "tags": {
+      "target_kink": [
+        "Masturbation",
+        "Submission"
+      ],
+      "required_accessories": []
+    }
+  },
+  {
+    "task": "Wear a ball gag while doing housework for 30 minutes",
+    "duration": 1,
+    "tip": [],
+    "status": 1,
+    "recommended_rewards": [
+      1
+    ],
+    "recommended_punishments": [
+      7
+    ],
+    "tags": {
+      "target_kink": [
+        "BDSM",
+        "Submission"
+      ],
+      "required_accessories": [
+        "Ball gag"
+      ]
+    }
+  },
+  {
+    "task": "Use a vibrator on your clit for 15 minutes without cumming",
+    "user_type": 2,
+    "duration": 1,
+    "tip": [],
+    "status": 1,
+    "recommended_rewards": [
+      1
+    ],
+    "recommended_punishments": [
+      7
+    ],
+    "tags": {
+      "target_kink": [
+        "Edging",
+        "Masturbation"
+      ],
+      "required_accessories": [
+        "Vibrator"
+      ]
+    }
+  },
+  {
+    "task": "Wear a rope harness under your clothes for 2 hours",
+    "duration": 1,
+    "tip": [],
+    "status": 1,
+    "recommended_rewards": [
+      1
+    ],
+    "recommended_punishments": [
+      7
+    ],
+    "tags": {
+      "target_kink": [
+        "Bondage",
+        "Exhibitionism"
+      ],
+      "required_accessories": [
+        "Rope"
+      ]
+    }
+  },
+  {
+    "task": "Masturbate while listening to audio porn for 25 minutes",
+    "duration": 1,
+    "tip": [],
+    "status": 1,
+    "recommended_rewards": [
+      1
+    ],
+    "recommended_punishments": [
+      7
+    ],
+    "tags": {
+      "target_kink": [
+        "Masturbation",
+        "Audio"
+      ],
+      "required_accessories": []
+    }
+  },
+  {
+    "task": "Wear a plug in your ass while working out for 30 minutes",
+    "duration": 1,
+    "tip": [],
+    "status": 1,
+    "recommended_rewards": [
+      1
+    ],
+    "recommended_punishments": [
+      7
+    ],
+    "tags": {
+      "target_kink": [
+        "Anal Play",
+        "Exercise"
+      ],
+      "required_accessories": [
+        "Butt plug"
+      ]
+    }
+  },
+  {
+    "task": "Use a feather to tease yourself for 20 minutes",
+    "duration": 1,
+    "tip": [],
+    "status": 1,
+    "recommended_rewards": [
+      1
+    ],
+    "recommended_punishments": [
+      7
+    ],
+    "tags": {
+      "target_kink": [
+        "Sensation Play",
+        "Teasing"
+      ],
+      "required_accessories": [
+        "Feather"
+      ]
+    }
+  },
+  {
+    "task": "Wear a cock ring for 2 hours",
+    "user_type": 1,
+    "duration": 1,
+    "tip": [],
+    "status": 1,
+    "recommended_rewards": [
+      1
+    ],
+    "recommended_punishments": [
+      7
+    ],
+    "tags": {
+      "target_kink": [
+        "Submission",
+        "Restriction"
+      ],
+      "required_accessories": [
+        "Cock ring"
+      ]
+    }
+  },
+  {
+    "task": "Masturbate in a different room than usual",
+    "duration": 1,
+    "tip": [],
+    "status": 1,
+    "recommended_rewards": [
+      1
+    ],
+    "recommended_punishments": [
+      7
+    ],
+    "tags": {
+      "target_kink": [
+        "Masturbation",
+        "Exhibitionism"
+      ],
+      "required_accessories": []
+    }
+  },
+  {
+    "task": "Use a clit pump for 10 minutes",
+    "user_type": 2,
+    "duration": 1,
+    "tip": [],
+    "status": 1,
+    "recommended_rewards": [
+      1
+    ],
+    "recommended_punishments": [
+      7
+    ],
+    "tags": {
+      "target_kink": [
+        "Sensation Play",
+        "Masturbation"
+      ],
+      "required_accessories": [
+        "Clit pump"
+      ]
+    }
+  },
+  {
+    "task": "Wear a plug in your ass while taking a bath",
+    "duration": 1,
+    "tip": [],
+    "status": 1,
+    "recommended_rewards": [
+      1
+    ],
+    "recommended_punishments": [
+      7
+    ],
+    "tags": {
+      "target_kink": [
+        "Anal Play",
+        "Relaxation"
+      ],
+      "required_accessories": [
+        "Butt plug"
+      ]
+    }
+  },
+  {
+    "task": "Masturbate while standing up for 15 minutes",
+    "duration": 1,
+    "tip": [],
+    "status": 1,
+    "recommended_rewards": [
+      1
+    ],
+    "recommended_punishments": [
+      7
+    ],
+    "tags": {
+      "target_kink": [
+        "Masturbation",
+        "Exercise"
+      ],
+      "required_accessories": []
+    }
+  },
+  {
+    "task": "Use a bullet vibrator on your nipples for 10 minutes",
+    "duration": 1,
+    "tip": [],
+    "status": 1,
+    "recommended_rewards": [
+      1
+    ],
+    "recommended_punishments": [
+      7
+    ],
+    "tags": {
+      "target_kink": [
+        "Sensation Play",
+        "Nipple Play"
+      ],
+      "required_accessories": [
+        "Bullet vibrator"
+      ]
+    }
+  },
+  {
+    "task": "Wear a plug in your ass while watching a movie",
+    "duration": 1,
+    "tip": [],
+    "status": 1,
+    "recommended_rewards": [
+      1
+    ],
+    "recommended_punishments": [
+      7
+    ],
+    "tags": {
+      "target_kink": [
+        "Anal Play",
+        "Entertainment"
+      ],
+      "required_accessories": [
+        "Butt plug"
+      ]
+    }
+  },
+  {
+    "task": "Masturbate while reading erotica for 30 minutes",
+    "duration": 1,
+    "tip": [],
+    "status": 1,
+    "recommended_rewards": [
+      1
+    ],
+    "recommended_punishments": [
+      7
+    ],
+    "tags": {
+      "target_kink": [
+        "Masturbation",
+        "Reading"
+      ],
+      "required_accessories": []
+    }
+  },
+  {
+    "task": "Use a dildo on yourself for 20 minutes",
+    "duration": 1,
+    "tip": [],
+    "status": 1,
+    "recommended_rewards": [
+      1
+    ],
+    "recommended_punishments": [
+      7
+    ],
+    "tags": {
+      "target_kink": [
+        "Masturbation",
+        "Penetration"
+      ],
+      "required_accessories": [
+        "Dildo"
+      ]
+    }
   }
 ]

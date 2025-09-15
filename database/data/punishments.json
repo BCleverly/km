@@ -63,5 +63,148 @@
             "target_kink": [],
             "required_accessories": []
         }
+    },
+    {
+        "id": 8,
+        "title": "Cold Shower",
+        "description": "Take a 5-minute cold shower while standing completely still. No touching yourself allowed.",
+        "difficulty_level": 4,
+        "status": 1,
+        "tags": {
+            "target_kink": ["Temperature Play"],
+            "required_accessories": []
+        }
+    },
+    {
+        "id": 9,
+        "title": "Ice Cube Torture",
+        "description": "Hold an ice cube on your clit/head for 2 minutes without moving it. Take a 1-minute break, then repeat.",
+        "difficulty_level": 6,
+        "status": 1,
+        "tags": {
+            "target_kink": ["Temperature Play", "Pain Play"],
+            "required_accessories": ["Ice cubes"]
+        }
+    },
+    {
+        "id": 10,
+        "title": "Wall Sit",
+        "description": "Do a wall sit for 3 minutes while wearing a plug. No touching yourself during or after.",
+        "difficulty_level": 5,
+        "status": 1,
+        "tags": {
+            "target_kink": ["Exercise", "Anal Play"],
+            "required_accessories": ["Butt plug"]
+        }
+    },
+    {
+        "id": 11,
+        "title": "Nipple Clamp Time",
+        "description": "Wear nipple clamps for 15 minutes while doing household chores. No removal until time is up.",
+        "difficulty_level": 4,
+        "status": 1,
+        "tags": {
+            "target_kink": ["Pain Play", "Submission"],
+            "required_accessories": ["Nipple clamps"]
+        }
+    },
+    {
+        "id": 12,
+        "title": "Ball Gag Silence",
+        "description": "Wear a ball gag for 30 minutes while doing your normal activities. No talking or moaning allowed.",
+        "difficulty_level": 3,
+        "status": 1,
+        "tags": {
+            "target_kink": ["BDSM", "Submission"],
+            "required_accessories": ["Ball gag"]
+        }
+    },
+    {
+        "id": 13,
+        "title": "Cock Cage Lock",
+        "description": "Wear a chastity cage for 6 hours. No touching or stimulation of any kind.",
+        "difficulty_level": 6,
+        "status": 1,
+        "tags": {
+            "target_kink": ["Chastity", "Submission"],
+            "required_accessories": ["Chastity cage"]
+        }
+    },
+    {
+        "id": 14,
+        "title": "Kneeling on Rice Extended",
+        "description": "Kneel on rice for 5 minutes, 2-minute break, then 5 more minutes. Focus on the discomfort.",
+        "difficulty_level": 6,
+        "status": 1,
+        "tags": {
+            "target_kink": ["Pain Play", "Submission"],
+            "required_accessories": ["Rice"]
+        }
+    },
+    {
+        "id": 15,
+        "title": "No Touch Day",
+        "description": "You cannot touch yourself anywhere below the waist for 24 hours. No exceptions.",
+        "difficulty_level": 7,
+        "status": 1,
+        "tags": {
+            "target_kink": ["Denial", "Submission"],
+            "required_accessories": []
+        }
+    },
+    {
+        "id": 16,
+        "title": "Ice Water Soak",
+        "description": "Soak your hands in ice water for 3 minutes. No warming them up afterwards for 5 minutes.",
+        "difficulty_level": 4,
+        "status": 1,
+        "tags": {
+            "target_kink": ["Temperature Play", "Pain Play"],
+            "required_accessories": ["Ice water"]
+        }
+    },
+    {
+        "id": 17,
+        "title": "Blindfolded Restraint",
+        "description": "Wear a blindfold and sit still for 20 minutes. No touching yourself or moving around.",
+        "difficulty_level": 3,
+        "status": 1,
+        "tags": {
+            "target_kink": ["Sensory Deprivation", "Submission"],
+            "required_accessories": ["Blindfold"]
+        }
+    },
+    {
+        "id": 18,
+        "title": "Cock Ring Restriction",
+        "description": "Wear a cock ring for 2 hours without any stimulation. Feel the restriction and frustration.",
+        "difficulty_level": 5,
+        "status": 1,
+        "tags": {
+            "target_kink": ["Restriction", "Submission"],
+            "required_accessories": ["Cock ring"]
+        }
+    },
+    {
+        "id": 19,
+        "title": "Anal Plug Punishment",
+        "description": "Wear a plug for 3 hours while doing normal activities. No removal or adjustment allowed.",
+        "difficulty_level": 4,
+        "status": 1,
+        "tags": {
+            "target_kink": ["Anal Play", "Submission"],
+            "required_accessories": ["Butt plug"]
+        }
+    },
+    {
+        "id": 20,
+        "title": "Writing Lines",
+        "description": "Write 'I will complete my tasks properly' 50 times by hand. No shortcuts or typing allowed.",
+        "difficulty_level": 2,
+        "status": 1,
+        "tags": {
+            "target_kink": ["Humiliation", "Submission"],
+            "required_accessories": ["Paper", "Pen"]
+        }
     }
 ]
