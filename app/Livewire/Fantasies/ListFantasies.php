@@ -39,7 +39,7 @@ class ListFantasies extends Component
     public function reportFantasy(int $fantasyId): void
     {
         if (!auth()->check()) {
-            $this->dispatch('show-notification', [
+            $this->dispatch('notify', [
                 'message' => 'Please log in to report content',
                 'type' => 'error',
             ]);
@@ -49,7 +49,7 @@ class ListFantasies extends Component
         $fantasy = Fantasy::find($fantasyId);
         
         if (!$fantasy) {
-            $this->dispatch('show-notification', [
+            $this->dispatch('notify', [
                 'message' => 'Fantasy not found',
                 'type' => 'error',
             ]);
@@ -59,7 +59,7 @@ class ListFantasies extends Component
         // Increment report count
         $fantasy->incrementReportCount();
 
-        $this->dispatch('show-notification', [
+        $this->dispatch('notify', [
             'message' => 'Fantasy reported successfully. Our moderation team will review it.',
             'type' => 'success',
         ]);

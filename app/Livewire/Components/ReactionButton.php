@@ -144,7 +144,7 @@ class ReactionButton extends Component
     public function addReaction(string $type): void
     {
         if (! auth()->check()) {
-            $this->dispatch('show-notification', [
+            $this->dispatch('notify', [
                 'message' => 'Please log in to react to content',
                 'type' => 'error',
             ]);
@@ -186,7 +186,7 @@ class ReactionButton extends Component
         $reactionType = $reactionLabels[$type] ?? $type;
         $message = $wasChanging ? "Reaction changed to {$reactionType}" : "Content {$reactionType}";
 
-        $this->dispatch('show-notification', [
+        $this->dispatch('notify', [
             'message' => $message,
             'type' => 'success',
         ]);
@@ -203,7 +203,7 @@ class ReactionButton extends Component
     public function removeReaction(): void
     {
         if (! auth()->check()) {
-            $this->dispatch('show-notification', [
+            $this->dispatch('notify', [
                 'message' => 'Please log in to react to content',
                 'type' => 'error',
             ]);
@@ -223,7 +223,7 @@ class ReactionButton extends Component
         // Clear cached reaction data since we've modified reactions
         $this->clearReactionCache();
 
-        $this->dispatch('show-notification', [
+        $this->dispatch('notify', [
             'message' => 'Reaction removed',
             'type' => 'success',
         ]);

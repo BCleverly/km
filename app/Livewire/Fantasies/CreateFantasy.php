@@ -29,7 +29,7 @@ class CreateFantasy extends Component
         $this->validate();
 
         if (!Auth::check()) {
-            $this->dispatch('show-notification', [
+            $this->dispatch('notify', [
                 'message' => 'Please log in to create a fantasy',
                 'type' => 'error',
             ]);
@@ -59,7 +59,7 @@ class CreateFantasy extends Component
             $fantasy->syncTags($tags);
         }
 
-        $this->dispatch('show-notification', [
+        $this->dispatch('notify', [
             'message' => 'Fantasy submitted successfully! It will be reviewed before being published.',
             'type' => 'success',
         ]);
