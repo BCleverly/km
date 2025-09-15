@@ -19,6 +19,9 @@ class ProfileForm extends Form
     #[Validate('nullable|string|max:1000')]
     public string $about = '';
 
+    #[Validate('nullable|integer|in:1,2,3')]
+    public ?int $bdsm_role = null;
+
     public $profile_picture;
 
     public $cover_photo;
@@ -33,6 +36,7 @@ class ProfileForm extends Form
             $this->email = $user->email;
             $this->username = $profile?->username ?? '';
             $this->about = $profile?->about ?? '';
+            $this->bdsm_role = $profile?->bdsm_role?->value;
         }
     }
 }

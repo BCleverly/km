@@ -29,6 +29,7 @@ class Profile extends Component
             'email' => 'required|string|email|max:255',
             'username' => 'required|string|max:255|unique:profiles,username,'.($profile?->id ?? 'NULL'),
             'about' => 'nullable|string|max:1000',
+            'bdsm_role' => 'nullable|integer|in:1,2,3',
             'profile_picture' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:10240', // 10MB max
             'cover_photo' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:10240', // 10MB max
         ]);
@@ -41,11 +42,13 @@ class Profile extends Component
             $profile = $user->profile()->create([
                 'username' => $this->form->username,
                 'about' => $this->form->about,
+                'bdsm_role' => $this->form->bdsm_role,
             ]);
         } else {
             $profile->update([
                 'username' => $this->form->username,
                 'about' => $this->form->about,
+                'bdsm_role' => $this->form->bdsm_role,
             ]);
         }
 
@@ -239,6 +242,11 @@ class Profile extends Component
         // This method can be called to refresh the component state
         // and check if conversions are ready
         $this->dispatch('$refresh');
+    }
+
+    public function getBdsmRoleOptions()
+    {
+        return \App\Enums\BdsmRole::options();
     }
 
     public function render()

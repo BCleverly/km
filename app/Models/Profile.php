@@ -17,7 +17,18 @@ class Profile extends Model implements HasMedia
         'user_id',
         'username',
         'about',
+        'bdsm_role',
     ];
+
+    /**
+     * Get the attributes that should be cast.
+     */
+    protected function casts(): array
+    {
+        return [
+            'bdsm_role' => \App\Enums\BdsmRole::class,
+        ];
+    }
 
     /**
      * Get the user that owns the profile.
@@ -112,5 +123,53 @@ class Profile extends Model implements HasMedia
         }
 
         return null;
+    }
+
+    /**
+     * Get the BDSM role label
+     */
+    public function getBdsmRoleLabelAttribute(): ?string
+    {
+        return $this->bdsm_role?->label();
+    }
+
+    /**
+     * Get the BDSM role description
+     */
+    public function getBdsmRoleDescriptionAttribute(): ?string
+    {
+        return $this->bdsm_role?->description();
+    }
+
+    /**
+     * Check if the user is dominant
+     */
+    public function isDominant(): bool
+    {
+        return $this->bdsm_role === \App\Enums\BdsmRole::Dominant;
+    }
+
+    /**
+     * Check if the user is submissive
+     */
+    public function isSubmissive(): bool
+    {
+        return $this->bdsm_role === \App\Enums\BdsmRole::Submissive;
+    }
+
+    /**
+     * Check if the user is a switch
+     */
+    public function isSwitch(): bool
+    {
+        return $this->bdsm_role === \App\Enums\BdsmRole::Switch;
+    }
+
+    /**
+     * Check if the user has a BDSM role preference set
+     */
+    public function hasBdsmRole(): bool
+    {
+        return $this->bdsm_role !== null;
     }
 }

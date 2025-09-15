@@ -578,4 +578,60 @@ class User extends Authenticatable implements FilamentUser, HasPassKeys, ReactsI
     {
         $this->update(['subscription_plan' => $plan]);
     }
+
+    /**
+     * Get the user's BDSM role from their profile
+     */
+    public function getBdsmRoleAttribute(): ?\App\Enums\BdsmRole
+    {
+        return $this->profile?->bdsm_role;
+    }
+
+    /**
+     * Get the user's BDSM role label
+     */
+    public function getBdsmRoleLabelAttribute(): ?string
+    {
+        return $this->profile?->bdsm_role_label;
+    }
+
+    /**
+     * Get the user's BDSM role description
+     */
+    public function getBdsmRoleDescriptionAttribute(): ?string
+    {
+        return $this->profile?->bdsm_role_description;
+    }
+
+    /**
+     * Check if the user is dominant
+     */
+    public function isDominant(): bool
+    {
+        return $this->profile?->isDominant() ?? false;
+    }
+
+    /**
+     * Check if the user is submissive
+     */
+    public function isSubmissive(): bool
+    {
+        return $this->profile?->isSubmissive() ?? false;
+    }
+
+    /**
+     * Check if the user is a switch
+     */
+    public function isSwitch(): bool
+    {
+        return $this->profile?->isSwitch() ?? false;
+    }
+
+    /**
+     * Check if the user has a BDSM role preference set
+     */
+    public function hasBdsmRole(): bool
+    {
+        return $this->profile?->hasBdsmRole() ?? false;
+    }
 }
