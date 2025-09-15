@@ -159,4 +159,18 @@ return [
         ],
     ],
 
+    /*
+    |--------------------------------------------------------------------------
+    | Status System Configuration
+    |--------------------------------------------------------------------------
+    |
+    | Configuration for the user status system.
+    |
+    */
+
+    'statuses' => [
+        'max_length' => env('STATUS_MAX_LENGTH', 280),
+        'max_per_user_per_day' => env('STATUS_MAX_PER_USER_PER_DAY', 10),
+    ],
+
 ];

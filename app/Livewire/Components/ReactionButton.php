@@ -9,6 +9,7 @@ use App\Models\Tasks\Task;
 use App\Models\Fantasy;
 use App\Models\Story;
 use App\Models\Comment;
+use App\Models\Status;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Cache;
 use Livewire\Attributes\Locked;
@@ -86,6 +87,7 @@ class ReactionButton extends Component
                 'fantasy', 'fantasies' => Fantasy::find($this->modelId),
                 'story', 'stories' => Story::find($this->modelId),
                 'comment', 'comments' => Comment::find($this->modelId),
+                'status', 'statuses' => Status::find($this->modelId),
                 default => null,
             };
         } catch (\Exception $e) {
@@ -145,8 +147,8 @@ class ReactionButton extends Component
     {
         if (! auth()->check()) {
             $this->dispatch('notify', [
-                'message' => 'Please log in to react to content',
                 'type' => 'error',
+                'message' => 'Please log in to react to content',
             ]);
 
             return;
@@ -187,8 +189,8 @@ class ReactionButton extends Component
         $message = $wasChanging ? "Reaction changed to {$reactionType}" : "Content {$reactionType}";
 
         $this->dispatch('notify', [
-            'message' => $message,
             'type' => 'success',
+            'message' => $message,
         ]);
 
         $this->dispatch('close-reaction-modal');
@@ -204,8 +206,8 @@ class ReactionButton extends Component
     {
         if (! auth()->check()) {
             $this->dispatch('notify', [
-                'message' => 'Please log in to react to content',
                 'type' => 'error',
+                'message' => 'Please log in to react to content',
             ]);
 
             return;
@@ -224,8 +226,8 @@ class ReactionButton extends Component
         $this->clearReactionCache();
 
         $this->dispatch('notify', [
-            'message' => 'Reaction removed',
             'type' => 'success',
+            'message' => 'Reaction removed',
         ]);
 
         $this->dispatch('close-reaction-modal');
