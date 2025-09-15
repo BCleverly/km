@@ -195,6 +195,37 @@ class User extends Authenticatable implements FilamentUser, HasPassKeys, ReactsI
     }
 
     /**
+     * Get the user's statuses
+     */
+    public function statuses(): HasMany
+    {
+        return $this->hasMany(\App\Models\Status::class);
+    }
+
+    /**
+     * Check if user has reached their daily status limit
+     */
+    public function hasReachedDailyStatusLimit(): bool
+    {
+        $maxPerDay = config('app.statuses.max_per_user_per_day', 10);
+        $todayCount = $this->statuses()
+            ->whereDate('created_at', today())
+            ->count();
+
+        return $todayCount >= $maxPerDay;
+    }
+
+    /**
+     * Get the number of statuses created today
+     */
+    public function getTodayStatusCount(): int
+    {
+        return $this->statuses()
+            ->whereDate('created_at', today())
+            ->count();
+    }
+
+    /**
      * Get the user's recent task activities
      */
     public function recentTaskActivities(int $limit = 10): HasMany

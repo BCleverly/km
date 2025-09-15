@@ -118,6 +118,15 @@ class PublicProfile extends Component
         return $this->profile?->about;
     }
 
+    #[Computed]
+    public function recentStatuses($limit = 5)
+    {
+        return $this->user->statuses()
+            ->public()
+            ->recent($limit)
+            ->get();
+    }
+
     public function render()
     {
         return view('livewire.user.public-profile')

@@ -80,6 +80,11 @@
             </div>
         </div>
 
+        <!-- Status Updates -->
+        <div class="mb-6">
+            <livewire:status.status-list :user="$this->user" :limit="10" />
+        </div>
+
         <!-- Recent Activity -->
         <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6">
             <h2 class="text-xl font-semibold text-gray-900 dark:text-white mb-4">Recent Activity</h2>
