@@ -40,6 +40,33 @@ class ManageWidget extends Component
             ->first();
     }
 
+    #[Computed]
+    public function activeCoupleTask()
+    {
+        return auth()->user()->coupleTasksReceived()
+            ->where('status', \App\Enums\CoupleTaskStatus::Pending)
+            ->with(['assignedBy', 'reward', 'punishment'])
+            ->first();
+    }
+
+    #[Computed]
+    public function canUseCoupleTasks(): bool
+    {
+        return auth()->user()->canAssignCoupleTasks() || auth()->user()->canReceiveCoupleTasks();
+    }
+
+    #[Computed]
+    public function isDominant(): bool
+    {
+        return auth()->user()->isDominant();
+    }
+
+    #[Computed]
+    public function isSubmissive(): bool
+    {
+        return auth()->user()->isSubmissive();
+    }
+
     /**
      * Assign a random task to the user
      */

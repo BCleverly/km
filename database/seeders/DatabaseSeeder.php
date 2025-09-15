@@ -185,7 +185,8 @@ class DatabaseSeeder extends Seeder
             ['user_id' => $coupleUser1->id],
             [
                 'username' => 'couple1',
-                'about' => 'First half of couple account',
+                'about' => 'First half of couple account - Dominant',
+                'bdsm_role' => \App\Enums\BdsmRole::Dominant,
             ]
         );
         $coupleUser1->assignRole('User');
@@ -206,7 +207,8 @@ class DatabaseSeeder extends Seeder
             ['user_id' => $coupleUser2->id],
             [
                 'username' => 'couple2',
-                'about' => 'Second half of couple account',
+                'about' => 'Second half of couple account - Submissive',
+                'bdsm_role' => \App\Enums\BdsmRole::Submissive,
             ]
         );
         $coupleUser2->assignRole('User');

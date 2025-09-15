@@ -7,6 +7,7 @@ use Filament\Models\Contracts\FilamentUser;
 use Filament\Panel;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -633,5 +634,60 @@ class User extends Authenticatable implements FilamentUser, HasPassKeys, ReactsI
     public function hasBdsmRole(): bool
     {
         return $this->profile?->hasBdsmRole() ?? false;
+    }
+
+    /**
+     * Get couple tasks assigned by this user
+     */
+    public function coupleTasksAssigned(): HasMany
+    {
+        return $this->hasMany(CoupleTask::class, 'assigned_by');
+    }
+
+    /**
+     * Get couple tasks assigned to this user
+     */
+    public function coupleTasksReceived(): HasMany
+    {
+        return $this->hasMany(CoupleTask::class, 'assigned_to');
+    }
+
+    public function partner(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'partner_id');
+    }
+
+    /**
+     * Check if user can assign couple tasks
+     */
+    public function canAssignCoupleTasks(): bool
+    {
+        // Must be admin, have lifetime subscription, or be in a couple
+        return $this->hasRole('Admin') || 
+               $this->hasLifetimeSubscription() || 
+               $this->user_type === \App\TargetUserType::Couple;
+    }
+
+    /**
+     * Check if user can receive couple tasks
+     */
+    public function canReceiveCoupleTasks(): bool
+    {
+        // Must be admin, have lifetime subscription, or be in a couple
+        return $this->hasRole('Admin') || 
+               $this->hasLifetimeSubscription() || 
+               $this->user_type === \App\TargetUserType::Couple;
+    }
+
+    /**
+     * Get the partner for couple tasks (if in a couple)
+     */
+    public function getCouplePartner(): ?User
+    {
+        if ($this->user_type === \App\TargetUserType::Couple) {
+            return $this->partner;
+        }
+        
+        return null;
     }
 }

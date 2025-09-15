@@ -212,6 +212,28 @@
                         <span wire:loading.remove wire:target="quickLogin">User</span>
                         <span wire:loading wire:target="quickLogin">Logging in...</span>
                     </button>
+                    
+                    <button 
+                        type="button"
+                        wire:click="quickLogin('couple1')"
+                        class="px-3 py-2 text-xs font-medium text-white bg-purple-600 hover:bg-purple-700 rounded-md transition-colors"
+                        wire:loading.attr="disabled"
+                        wire:target="quickLogin"
+                    >
+                        <span wire:loading.remove wire:target="quickLogin">Couple 1 (Dom)</span>
+                        <span wire:loading wire:target="quickLogin">Logging in...</span>
+                    </button>
+                    
+                    <button 
+                        type="button"
+                        wire:click="quickLogin('couple2')"
+                        class="px-3 py-2 text-xs font-medium text-white bg-indigo-600 hover:bg-indigo-700 rounded-md transition-colors"
+                        wire:loading.attr="disabled"
+                        wire:target="quickLogin"
+                    >
+                        <span wire:loading.remove wire:target="quickLogin">Couple 2 (Sub)</span>
+                        <span wire:loading wire:target="quickLogin">Logging in...</span>
+                    </button>
                 </div>
                 <p class="text-xs text-yellow-700 mt-2 text-center">
                     Only available in development environments

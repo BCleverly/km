@@ -38,6 +38,8 @@ class Login extends Component
             'moderator' => 'moderator@example.com',
             'reviewer' => 'reviewer@example.com',
             'user' => 'test@example.com',
+            'couple1' => 'couple1@example.com',
+            'couple2' => 'couple2@example.com',
         ];
 
         if (! isset($userEmails[$role])) {

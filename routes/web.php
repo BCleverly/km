@@ -60,6 +60,12 @@ Route::middleware('auth')->prefix('app')->name('app.')->group(function () {
 
     Route::get('/tasks/community', \App\Livewire\Tasks\TaskCommunityDashboard::class)->name('tasks.community');
 
+    // Couple Tasks
+    Route::prefix('couple-tasks')->name('couple-tasks.')->group(function () {
+        Route::get('/send', \App\Livewire\CoupleTasks\SendTask::class)->name('send');
+        Route::get('/my-tasks', \App\Livewire\CoupleTasks\MyTasks::class)->name('my-tasks');
+    });
+
     // Fantasies
     Route::get('/fantasies', ListFantasies::class)->name('fantasies.index');
     Route::get('/fantasies/create', CreateFantasy::class)->name('fantasies.create');
