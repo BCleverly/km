@@ -34,7 +34,7 @@ class CreateStory extends Component
         ]);
 
         if (!Auth::check()) {
-            $this->dispatch('show-notification', [
+            $this->dispatch('notify', [
                 'message' => 'Please log in to create a story',
                 'type' => 'error',
             ]);
@@ -60,7 +60,7 @@ class CreateStory extends Component
             $story->syncTags($tags);
         }
 
-        $this->dispatch('show-notification', [
+        $this->dispatch('notify', [
             'message' => 'Story saved as draft successfully!',
             'type' => 'success',
         ]);
@@ -77,7 +77,7 @@ class CreateStory extends Component
         $this->validate();
 
         if (!Auth::check()) {
-            $this->dispatch('show-notification', [
+            $this->dispatch('notify', [
                 'message' => 'Please log in to create a story',
                 'type' => 'error',
             ]);
@@ -108,7 +108,7 @@ class CreateStory extends Component
             $story->syncTags($tags);
         }
 
-        $this->dispatch('show-notification', [
+        $this->dispatch('notify', [
             'message' => 'Story submitted successfully! It will be reviewed before being published.',
             'type' => 'success',
         ]);

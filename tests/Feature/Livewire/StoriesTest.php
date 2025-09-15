@@ -114,7 +114,7 @@ it('can report a story', function () {
     Livewire::actingAs($user)
         ->test(ListStories::class)
         ->call('reportStory', $story->id)
-        ->assertDispatched('show-notification');
+        ->assertDispatched('notify');
 
     $story->refresh();
     expect($story->report_count)->toBe(1);

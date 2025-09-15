@@ -11,7 +11,7 @@
         x-transition:leave="transition ease-in duration-200"
         x-transition:leave-start="translate-y-0 opacity-100 sm:translate-x-0"
         x-transition:leave-end="translate-y-2 opacity-0 sm:translate-x-2 sm:translate-y-0"
-        class="pointer-events-auto w-full max-w-sm transform rounded-lg bg-white shadow-lg outline-1 outline-black/5 dark:bg-gray-800 dark:-outline-offset-1 dark:outline-white/10"
+        class="pointer-events-auto w-full max-w-sm sm:max-w-md transform rounded-lg bg-white shadow-lg outline-1 outline-black/5 dark:bg-gray-800 dark:-outline-offset-1 dark:outline-white/10"
         :class="{
           'border-l-4 border-green-400': toast.type === 'success',
           'border-l-4 border-red-400': toast.type === 'error',
@@ -68,11 +68,21 @@
 </div>
 
 <script>
+// Global flag to prevent multiple event listener registrations
+window.toastNotificationsInitialized = window.toastNotificationsInitialized || false;
+
 function toastNotifications() {
   return {
     toasts: [],
     
     init() {
+      // Prevent multiple event listener registrations globally
+      if (window.toastNotificationsInitialized) {
+        return;
+      }
+      
+      window.toastNotificationsInitialized = true;
+      
       // Listen for Livewire notify events
       Livewire.on('notify', (data) => {
         this.addToast(data[0]);

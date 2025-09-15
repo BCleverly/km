@@ -55,7 +55,7 @@ it('can report a fantasy', function () {
     Livewire::actingAs($user)
         ->test(ListFantasies::class)
         ->call('reportFantasy', $fantasy->id)
-        ->assertDispatched('show-notification');
+        ->assertDispatched('notify');
 
     $fantasy->refresh();
     expect($fantasy->report_count)->toBe(1);

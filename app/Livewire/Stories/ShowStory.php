@@ -44,7 +44,7 @@ class ShowStory extends Component
     public function reportStory(): void
     {
         if (!auth()->check()) {
-            $this->dispatch('show-notification', [
+            $this->dispatch('notify', [
                 'message' => 'Please log in to report content',
                 'type' => 'error',
             ]);
@@ -54,7 +54,7 @@ class ShowStory extends Component
         // Increment report count
         $this->story->incrementReportCount();
 
-        $this->dispatch('show-notification', [
+        $this->dispatch('notify', [
             'message' => 'Story reported successfully. Our moderation team will review it.',
             'type' => 'success',
         ]);
