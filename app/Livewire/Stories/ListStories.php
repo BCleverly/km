@@ -43,7 +43,7 @@ class ListStories extends Component
     public function reportStory(int $storyId): void
     {
         if (!auth()->check()) {
-            $this->dispatch('show-notification', [
+            $this->dispatch('notify', [
                 'message' => 'Please log in to report content',
                 'type' => 'error',
             ]);
@@ -53,7 +53,7 @@ class ListStories extends Component
         $story = Story::find($storyId);
         
         if (!$story) {
-            $this->dispatch('show-notification', [
+            $this->dispatch('notify', [
                 'message' => 'Story not found',
                 'type' => 'error',
             ]);
@@ -63,7 +63,7 @@ class ListStories extends Component
         // Increment report count
         $story->incrementReportCount();
 
-        $this->dispatch('show-notification', [
+        $this->dispatch('notify', [
             'message' => 'Story reported successfully. Our moderation team will review it.',
             'type' => 'success',
         ]);
