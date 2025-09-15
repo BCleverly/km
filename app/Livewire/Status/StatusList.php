@@ -61,9 +61,9 @@ class StatusList extends Component
     public function toggleCreateForm(): void
     {
         if (!$this->canCreateStatus) {
-            $this->dispatch('show-notification', [
-                'message' => 'You have reached your daily status limit.',
+            $this->dispatch('notify', [
                 'type' => 'error',
+                'message' => 'You have reached your daily status limit.',
             ]);
             return;
         }

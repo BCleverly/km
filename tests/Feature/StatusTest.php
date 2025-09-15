@@ -29,9 +29,9 @@ it('cannot create a status when not authenticated', function () {
     Livewire::test(CreateStatus::class)
         ->set('content', 'This should not work')
         ->call('create')
-        ->assertDispatched('show-notification', [
-            'message' => 'Please log in to create a status.',
+        ->assertDispatched('notify', [
             'type' => 'error',
+            'message' => 'Please log in to create a status.',
         ]);
 
     $this->assertDatabaseMissing('statuses', [
@@ -92,9 +92,9 @@ it('enforces daily status limit', function () {
         ->test(CreateStatus::class)
         ->set('content', 'This should be blocked')
         ->call('create')
-        ->assertDispatched('show-notification', [
-            'message' => 'You have reached your daily status limit.',
+        ->assertDispatched('notify', [
             'type' => 'error',
+            'message' => 'You have reached your daily status limit.',
         ]);
 
     $this->assertDatabaseMissing('statuses', [
@@ -158,9 +158,9 @@ it('cannot delete another users status', function () {
     Livewire::actingAs($user)
         ->test(StatusItem::class, ['status' => $status])
         ->call('deleteStatus')
-        ->assertDispatched('show-notification', [
-            'message' => 'You are not authorized to delete this status.',
+        ->assertDispatched('notify', [
             'type' => 'error',
+            'message' => 'You are not authorized to delete this status.',
         ]);
 
     $this->assertDatabaseHas('statuses', [

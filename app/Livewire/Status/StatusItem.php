@@ -29,18 +29,18 @@ class StatusItem extends Component
     public function deleteStatus(): void
     {
         if (!Auth::check() || Auth::id() !== $this->status->user_id) {
-            $this->dispatch('show-notification', [
-                'message' => 'You are not authorized to delete this status.',
+            $this->dispatch('notify', [
                 'type' => 'error',
+                'message' => 'You are not authorized to delete this status.',
             ]);
             return;
         }
 
         $this->status->delete();
 
-        $this->dispatch('show-notification', [
-            'message' => 'Status deleted successfully.',
+        $this->dispatch('notify', [
             'type' => 'success',
+            'message' => 'Status deleted successfully.',
         ]);
 
         $this->dispatch('status-deleted', [

@@ -72,7 +72,7 @@ CREATE TABLE statuses (
 - Handles status creation form
 - Validates content length and daily limits
 - Provides character counting
-- Shows success/error notifications
+- Shows success/error notifications using the `notify` event
 
 ### StatusList
 - Displays list of statuses for a user

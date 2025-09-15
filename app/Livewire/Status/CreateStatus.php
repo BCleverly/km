@@ -20,9 +20,9 @@ class CreateStatus extends Component
     {
         // Check if user has reached daily limit
         if ($this->hasReachedDailyLimit()) {
-            $this->dispatch('show-notification', [
-                'message' => 'You have reached your daily status limit.',
+            $this->dispatch('notify', [
                 'type' => 'error',
+                'message' => 'You have reached your daily status limit.',
             ]);
         }
     }
@@ -32,17 +32,17 @@ class CreateStatus extends Component
         $this->validate();
 
         if (!Auth::check()) {
-            $this->dispatch('show-notification', [
-                'message' => 'Please log in to create a status.',
+            $this->dispatch('notify', [
                 'type' => 'error',
+                'message' => 'Please log in to create a status.',
             ]);
             return;
         }
 
         if ($this->hasReachedDailyLimit()) {
-            $this->dispatch('show-notification', [
-                'message' => 'You have reached your daily status limit.',
+            $this->dispatch('notify', [
                 'type' => 'error',
+                'message' => 'You have reached your daily status limit.',
             ]);
             return;
         }
@@ -56,9 +56,9 @@ class CreateStatus extends Component
         $this->reset(['content']);
         $this->isPublic = true;
 
-        $this->dispatch('show-notification', [
-            'message' => 'Status created successfully!',
+        $this->dispatch('notify', [
             'type' => 'success',
+            'message' => 'Status created successfully!',
         ]);
 
         $this->dispatch('status-created', [
