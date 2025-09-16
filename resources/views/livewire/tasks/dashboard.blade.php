@@ -286,11 +286,11 @@
                 init() {
                     this.containerWidth = this.$el.offsetWidth;
                     
-                    // Use $nextTick to ensure DOM is fully rendered
-                    this.$nextTick(() => {
+                    // Use setTimeout to ensure DOM is fully rendered
+                    setTimeout(() => {
                         this.updateTotalItems();
                         this.updateDisplay();
-                    });
+                    }, 100);
                     
                     // Listen for custom events to re-initialize
                     this.$el.addEventListener('outcome-carousel-refresh', () => {
@@ -299,15 +299,15 @@
                 },
 
                 reinitialize() {
-                    // Use $nextTick to ensure DOM is fully updated
-                    this.$nextTick(() => {
+                    // Use setTimeout to ensure DOM is fully updated
+                    setTimeout(() => {
                         // Reset to first slide if current index is out of bounds
                         this.updateTotalItems();
                         if (this.currentIndex >= this.totalItems) {
                             this.currentIndex = 0;
                         }
                         this.updateDisplay();
-                    });
+                    }, 100);
                 },
 
                 updateTotalItems() {
