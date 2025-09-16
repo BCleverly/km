@@ -285,7 +285,40 @@
 
                 init() {
                     this.containerWidth = this.$el.offsetWidth;
-                    this.updateDisplay();
+                    
+                    // Use $nextTick to ensure DOM is fully rendered
+                    this.$nextTick(() => {
+                        this.updateTotalItems();
+                        this.updateDisplay();
+                    });
+                    
+                    // Listen for custom events to re-initialize
+                    this.$el.addEventListener('outcome-carousel-refresh', () => {
+                        this.reinitialize();
+                    });
+                },
+
+                reinitialize() {
+                    // Use $nextTick to ensure DOM is fully updated
+                    this.$nextTick(() => {
+                        // Reset to first slide if current index is out of bounds
+                        this.updateTotalItems();
+                        if (this.currentIndex >= this.totalItems) {
+                            this.currentIndex = 0;
+                        }
+                        this.updateDisplay();
+                    });
+                },
+
+                updateTotalItems() {
+                    // Count the actual number of outcome items in the DOM
+                    const outcomeItems = this.$el.querySelectorAll('[data-outcome-index]');
+                    this.totalItems = outcomeItems.length;
+                    
+                    // Ensure currentIndex doesn't exceed totalItems
+                    if (this.currentIndex >= this.totalItems) {
+                        this.currentIndex = Math.max(0, this.totalItems - 1);
+                    }
                 },
 
                 startDrag(event) {
@@ -336,6 +369,7 @@
                 },
 
                 updateDisplay() {
+                    this.updateTotalItems();
                     this.translateX = -this.currentIndex * this.containerWidth;
                     this.updateDots();
                     this.updateButtons();

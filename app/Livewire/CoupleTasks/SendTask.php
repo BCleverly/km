@@ -35,10 +35,13 @@ class SendTask extends Component
     #[Validate('required|integer|exists:users,id')]
     public int $assigned_to = 0;
 
-    public string $task_mode = 'custom'; // 'custom' or 'existing'
     
     #[Validate('nullable|integer|exists:tasks,id')]
     public ?int $selected_task_id = null;
+    
+    public string $task_search = '';
+    public string $reward_search = '';
+    public string $punishment_search = '';
 
     public function mount()
     {
@@ -151,15 +154,23 @@ class SendTask extends Component
             ->get();
     }
 
-    public function updatedTaskMode()
+
+    public function updatedTaskSearch()
     {
-        // Reset form when switching modes
-        if ($this->task_mode === 'existing') {
-            $this->selected_task_id = null;
-        } else {
-            $this->title = '';
-            $this->description = '';
-        }
+        // Reset selected task when search changes
+        $this->selected_task_id = null;
+    }
+
+    public function updatedRewardSearch()
+    {
+        // Reset selected reward when search changes
+        $this->reward_id = null;
+    }
+
+    public function updatedPunishmentSearch()
+    {
+        // Reset selected punishment when search changes
+        $this->punishment_id = null;
     }
 
     public function updatedSelectedTaskId()
@@ -170,21 +181,95 @@ class SendTask extends Component
                 $this->title = $task->title;
                 $this->description = $task->description;
                 $this->difficulty_level = $task->difficulty_level;
+                // Update the search field to show the selected task title
+                $this->task_search = $task->title;
             }
         }
+    }
+
+    public function updatedRewardId()
+    {
+        if ($this->reward_id) {
+            $reward = Outcome::find($this->reward_id);
+            if ($reward) {
+                // Update the search field to show the selected reward title
+                $this->reward_search = $reward->title;
+            }
+        }
+    }
+
+    public function updatedPunishmentId()
+    {
+        if ($this->punishment_id) {
+            $punishment = Outcome::find($this->punishment_id);
+            if ($punishment) {
+                // Update the search field to show the selected punishment title
+                $this->punishment_search = $punishment->title;
+            }
+        }
+    }
+
+    public function getFilteredTasks()
+    {
+        $tasks = $this->getAvailableTasks();
+        
+        if (empty($this->task_search)) {
+            return $tasks;
+        }
+        
+        return $tasks->filter(function ($task) {
+            return stripos($task->title, $this->task_search) !== false;
+        });
+    }
+
+    public function getFilteredRewards()
+    {
+        $rewards = $this->getAvailableRewards();
+        
+        if (empty($this->reward_search)) {
+            return $rewards;
+        }
+        
+        return $rewards->filter(function ($reward) {
+            return stripos($reward->title, $this->reward_search) !== false;
+        });
+    }
+
+    public function getFilteredPunishments()
+    {
+        $punishments = $this->getAvailablePunishments();
+        
+        if (empty($this->punishment_search)) {
+            return $punishments;
+        }
+        
+        return $punishments->filter(function ($punishment) {
+            return stripos($punishment->title, $this->punishment_search) !== false;
+        });
     }
 
     public function render()
     {
         $availableTasks = $this->getAvailableTasks();
+        $filteredTasks = $this->getFilteredTasks();
+        $availableRewards = $this->getAvailableRewards();
+        $filteredRewards = $this->getFilteredRewards();
+        $availablePunishments = $this->getAvailablePunishments();
+        $filteredPunishments = $this->getFilteredPunishments();
         
         return view('livewire.couple-tasks.send-task', [
             'partners' => $this->getAvailablePartners(),
-            'rewards' => $this->getAvailableRewards(),
-            'punishments' => $this->getAvailablePunishments(),
+            'rewards' => $availableRewards,
+            'punishments' => $availablePunishments,
             'availableTasks' => $availableTasks,
+            'filteredTasks' => $filteredTasks,
+            'availableRewards' => $availableRewards,
+            'filteredRewards' => $filteredRewards,
+            'availablePunishments' => $availablePunishments,
+            'filteredPunishments' => $filteredPunishments,
         ])->layout('components.layouts.app', [
             'title' => 'Send Task to Partner - Kink Master',
         ]);
     }
 }
+

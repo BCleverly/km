@@ -60,6 +60,30 @@
                             @enderror
                         </div>
 
+                        <!-- BDSM Role Field -->
+                        <div>
+                            <label for="bdsm_role" class="block text-sm font-medium text-gray-900 dark:text-white mb-2">
+                                BDSM Role
+                            </label>
+                            <select id="bdsm_role" 
+                                    wire:model="form.bdsm_role" 
+                                    @class([
+                                        'w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500 dark:bg-gray-700 dark:text-white',
+                                        'border-red-500' => $errors->has('form.bdsm_role')
+                                    ])>
+                                <option value="">Select your BDSM role (optional)</option>
+                                <option value="1">Dominant</option>
+                                <option value="2">Submissive</option>
+                                <option value="3">Switch</option>
+                            </select>
+                            @error('form.bdsm_role')
+                                <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                            @enderror
+                            <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">
+                                This helps personalize your experience and couple task interactions.
+                            </p>
+                        </div>
+
                         <!-- Profile Picture Field -->
                         <div>
                             <label class="block text-sm font-medium text-gray-900 dark:text-white mb-2">

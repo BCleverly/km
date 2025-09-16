@@ -2,10 +2,18 @@
     <div class="max-w-6xl mx-auto px-4 py-8">
         <div class="mb-8">
             <h1 class="text-3xl font-bold text-gray-900 dark:text-white mb-2">
-                My Partner Tasks
+                @if(auth()->user()->isSubmissive())
+                    Tasks from My Dominant
+                @elseif(auth()->user()->isDominant())
+                    Tasks for My Submissive
+                @elseif(auth()->user()->isSwitch())
+                    My Partner Tasks
+                @else
+                    My Partner Tasks
+                @endif
             </h1>
             <p class="text-gray-600 dark:text-gray-300">
-                Tasks assigned by your dominant partner. Don't disappoint them!
+                {{ $this->getPageDescription() }}
             </p>
         </div>
 
@@ -153,7 +161,7 @@
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
                 </svg>
                 <h3 class="mt-2 text-sm font-medium text-gray-900 dark:text-white">No tasks yet</h3>
-                <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">Your partner hasn't assigned you any tasks yet.</p>
+                <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">{{ $this->getNoTasksMessage() }}</p>
             </div>
         @endif
     </div>

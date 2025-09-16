@@ -95,30 +95,112 @@ class MyTasks extends Component
 
     public function getActiveTasks()
     {
-        return CoupleTask::where('assigned_to', auth()->id())
-            ->active()
-            ->with(['assignedBy.profile', 'reward', 'punishment'])
-            ->orderBy('assigned_at', 'desc')
-            ->get();
+        $user = auth()->user();
+        
+        if ($user->isDominant()) {
+            // Dominants see tasks they've assigned TO their submissive
+            return CoupleTask::where('assigned_by', $user->id)
+                ->active()
+                ->with(['assignedTo.profile', 'reward', 'punishment'])
+                ->orderBy('assigned_at', 'desc')
+                ->get();
+        } else {
+            // Submissives and switches see tasks assigned TO them
+            return CoupleTask::where('assigned_to', $user->id)
+                ->active()
+                ->with(['assignedBy.profile', 'reward', 'punishment'])
+                ->orderBy('assigned_at', 'desc')
+                ->get();
+        }
     }
 
     public function getCompletedTasks()
     {
-        return CoupleTask::where('assigned_to', auth()->id())
-            ->completed()
-            ->with(['assignedBy.profile', 'reward', 'punishment'])
-            ->orderBy('completed_at', 'desc')
-            ->limit(10)
-            ->get();
+        $user = auth()->user();
+        
+        if ($user->isDominant()) {
+            // Dominants see tasks they've assigned TO their submissive
+            return CoupleTask::where('assigned_by', $user->id)
+                ->completed()
+                ->with(['assignedTo.profile', 'reward', 'punishment'])
+                ->orderBy('completed_at', 'desc')
+                ->limit(10)
+                ->get();
+        } else {
+            // Submissives and switches see tasks assigned TO them
+            return CoupleTask::where('assigned_to', $user->id)
+                ->completed()
+                ->with(['assignedBy.profile', 'reward', 'punishment'])
+                ->orderBy('completed_at', 'desc')
+                ->limit(10)
+                ->get();
+        }
     }
 
     public function getOverdueTasks()
     {
-        return CoupleTask::where('assigned_to', auth()->id())
-            ->overdue()
-            ->with(['assignedBy.profile', 'reward', 'punishment'])
-            ->orderBy('deadline_at', 'asc')
-            ->get();
+        $user = auth()->user();
+        
+        if ($user->isDominant()) {
+            // Dominants see tasks they've assigned TO their submissive
+            return CoupleTask::where('assigned_by', $user->id)
+                ->overdue()
+                ->with(['assignedTo.profile', 'reward', 'punishment'])
+                ->orderBy('deadline_at', 'asc')
+                ->get();
+        } else {
+            // Submissives and switches see tasks assigned TO them
+            return CoupleTask::where('assigned_to', $user->id)
+                ->overdue()
+                ->with(['assignedBy.profile', 'reward', 'punishment'])
+                ->orderBy('deadline_at', 'asc')
+                ->get();
+        }
+    }
+
+    public function getPageTitle(): string
+    {
+        $user = auth()->user();
+        
+        if ($user->isSubmissive()) {
+            return 'Tasks from My Dominant - Kink Master';
+        } elseif ($user->isDominant()) {
+            return 'Tasks for My Submissive - Kink Master';
+        } elseif ($user->isSwitch()) {
+            return 'My Partner Tasks - Kink Master';
+        }
+        
+        return 'My Partner Tasks - Kink Master';
+    }
+
+    public function getPageDescription(): string
+    {
+        $user = auth()->user();
+        
+        if ($user->isSubmissive()) {
+            return 'Tasks assigned by your dominant partner. Don\'t disappoint them!';
+        } elseif ($user->isDominant()) {
+            return 'Tasks you\'ve assigned to your submissive partner.';
+        } elseif ($user->isSwitch()) {
+            return 'Tasks in your relationship.';
+        }
+        
+        return 'Tasks in your relationship.';
+    }
+
+    public function getNoTasksMessage(): string
+    {
+        $user = auth()->user();
+        
+        if ($user->isSubmissive()) {
+            return 'Your dominant hasn\'t assigned you any tasks yet.';
+        } elseif ($user->isDominant()) {
+            return 'You haven\'t assigned any tasks to your submissive yet.';
+        } elseif ($user->isSwitch()) {
+            return 'No tasks have been assigned yet.';
+        }
+        
+        return 'No tasks have been assigned yet.';
     }
 
     public function render()
@@ -128,7 +210,7 @@ class MyTasks extends Component
             'completedTasks' => $this->getCompletedTasks(),
             'overdueTasks' => $this->getOverdueTasks(),
         ])->layout('components.layouts.app', [
-            'title' => 'My Partner Tasks - Kink Master',
+            'title' => $this->getPageTitle(),
         ]);
     }
 }

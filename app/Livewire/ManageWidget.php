@@ -93,6 +93,12 @@ class ManageWidget extends Component
             'type' => $result['success'] ? 'warning' : 'error',
             'message' => $result['message'],
         ]);
+
+        // Dispatch event to refresh active outcomes when task is failed
+        if ($result['success']) {
+            $this->dispatch('task-failed');
+            $this->dispatch('active-outcomes-refresh');
+        }
     }
 
 
@@ -124,6 +130,9 @@ class ManageWidget extends Component
 
             // Dispatch event to refresh dashboard and close modal
             $this->dispatch('task-completed');
+            
+            // Dispatch event to refresh active outcomes with new outcome
+            $this->dispatch('active-outcomes-refresh');
 
         } else {
             $this->dispatch('notify', [

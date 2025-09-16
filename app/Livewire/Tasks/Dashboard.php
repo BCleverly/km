@@ -49,6 +49,16 @@ class Dashboard extends Component
         $this->dispatch('$refresh');
     }
 
+    /**
+     * Handle active outcomes refresh event from ManageWidget
+     */
+    #[On('active-outcomes-refresh')]
+    public function handleActiveOutcomesRefresh()
+    {
+        // Force refresh of the component to update active outcomes with new outcome
+        $this->dispatch('$refresh');
+    }
+
 
 
 
@@ -98,5 +108,11 @@ class Dashboard extends Component
             'type' => 'success',
             'message' => ucfirst($outcome->outcome_type_label).' marked as completed!',
         ]);
+
+        // Force refresh of the component to update active outcomes
+        $this->dispatch('$refresh');
+        
+        // Dispatch custom event to re-initialize carousel
+        $this->dispatch('outcome-carousel-refresh');
     }
 }
