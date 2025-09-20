@@ -1,0 +1,553 @@
+---
+description: Laravel Actions patterns and best practices for business logic encapsulation in the Kink Master platform
+globs: app/Actions/**/*.php
+---
+
+# Laravel Actions Patterns
+
+## Actions Architecture
+
+This project uses Laravel Actions (lorisleiva/laravel-actions) to encapsulate business logic in reusable, testable classes. Actions follow the single responsibility principle and can be used across controllers, Livewire components, and API endpoints.
+
+## Basic Action Structure
+
+### Standard Action Template
+```php
+<?php
+
+declare(strict_types=1);
+
+namespace App\Actions\Tasks;
+
+use App\Models\Task;
+use App\Models\User;
+use Lorisleiva\Actions\Concerns\AsAction;
+
+class AssignRandomTask
+{
+    use AsAction;
+
+    public function handle(User $user): array
+    {
+        // Business logic here
+        $task = $this->getRandomTaskForUser($user);
+        
+        if (!$task) {
+            return [
+                'success' => false,
+                'message' => 'No available tasks found.',
+                'task' => null,
+            ];
+        }
+
+        $assignedTask = $this->createAssignedTask($user, $task);
+        
+        return [
+            'success' => true,
+            'message' => "New task assigned: {$task->title}",
+            'task' => $assignedTask,
+        ];
+    }
+
+    private function getRandomTaskForUser(User $user): ?Task
+    {
+        // Private helper methods
+    }
+
+    private function createAssignedTask(User $user, Task $task): UserAssignedTask
+    {
+        // Private helper methods
+    }
+}
+```
+
+## Action Usage Patterns
+
+### In Controllers
+```php
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Actions\Tasks\AssignRandomTask;
+use Illuminate\Http\Request;
+
+class TaskController extends Controller
+{
+    public function assignRandom(Request $request, AssignRandomTask $assignRandomTask)
+    {
+        $result = $assignRandomTask->run(auth()->user());
+        
+        if ($result['success']) {
+            return response()->json($result);
+        }
+        
+        return response()->json($result, 400);
+    }
+}
+```
+
+### In Livewire Components
+```php
+<?php
+
+namespace App\Livewire\Tasks;
+
+use App\Actions\Tasks\AssignRandomTask;
+use Livewire\Component;
+
+class TaskDashboard extends Component
+{
+    public function getNewTask()
+    {
+        $result = AssignRandomTask::run(auth()->user());
+        
+        if ($result['success']) {
+            session()->flash('message', $result['message']);
+            $this->dispatch('task-assigned');
+        } else {
+            session()->flash('error', $result['message']);
+        }
+    }
+}
+```
+
+### As Artisan Commands
+```php
+<?php
+
+namespace App\Console\Commands;
+
+use App\Actions\Tasks\AssignRandomTask;
+use Illuminate\Console\Command;
+
+class AssignTasksCommand extends Command
+{
+    protected $signature = 'tasks:assign {user_id}';
+    protected $description = 'Assign a random task to a user';
+
+    public function handle(AssignRandomTask $assignRandomTask)
+    {
+        $user = User::findOrFail($this->argument('user_id'));
+        
+        $result = $assignRandomTask->run($user);
+        
+        if ($result['success']) {
+            $this->info($result['message']);
+        } else {
+            $this->error($result['message']);
+        }
+    }
+}
+```
+
+## Action Types & Patterns
+
+### Data Processing Actions
+```php
+<?php
+
+namespace App\Actions\Data;
+
+use Lorisleiva\Actions\Concerns\AsAction;
+
+class ProcessUserData
+{
+    use AsAction;
+
+    public function handle(array $userData): array
+    {
+        return [
+            'processed_data' => $this->cleanData($userData),
+            'validation_errors' => $this->validateData($userData),
+            'statistics' => $this->generateStatistics($userData),
+        ];
+    }
+
+    private function cleanData(array $data): array
+    {
+        return array_map('trim', $data);
+    }
+
+    private function validateData(array $data): array
+    {
+        $errors = [];
+        
+        if (empty($data['email'])) {
+            $errors['email'] = 'Email is required';
+        }
+        
+        return $errors;
+    }
+
+    private function generateStatistics(array $data): array
+    {
+        return [
+            'total_fields' => count($data),
+            'empty_fields' => count(array_filter($data, fn($value) => empty($value))),
+        ];
+    }
+}
+```
+
+### Model Creation Actions
+```php
+<?php
+
+namespace App\Actions\Tasks;
+
+use App\Models\Task;
+use App\Models\User;
+use Lorisleiva\Actions\Concerns\AsAction;
+
+class CreateTask
+{
+    use AsAction;
+
+    public function handle(User $user, array $taskData): Task
+    {
+        $this->validateTaskData($taskData);
+        
+        $task = Task::create([
+            'user_id' => $user->id,
+            'title' => $taskData['title'],
+            'description' => $taskData['description'],
+            'difficulty_level' => $taskData['difficulty_level'],
+            'target_user_type' => $taskData['target_user_type'],
+            'status' => ContentStatus::Draft,
+        ]);
+
+        $this->logTaskCreation($user, $task);
+        
+        return $task->load('user');
+    }
+
+    private function validateTaskData(array $data): void
+    {
+        if (empty($data['title'])) {
+            throw new \InvalidArgumentException('Task title is required');
+        }
+        
+        if (empty($data['description'])) {
+            throw new \InvalidArgumentException('Task description is required');
+        }
+    }
+
+    private function logTaskCreation(User $user, Task $task): void
+    {
+        activity()
+            ->causedBy($user)
+            ->performedOn($task)
+            ->log('Task created');
+    }
+}
+```
+
+### Complex Business Logic Actions
+```php
+<?php
+
+namespace App\Actions\Tasks;
+
+use App\Models\Task;
+use App\Models\User;
+use App\Models\UserAssignedTask;
+use Lorisleiva\Actions\Concerns\AsAction;
+use Illuminate\Support\Facades\DB;
+
+class CompleteTask
+{
+    use AsAction;
+
+    public function handle(User $user, UserAssignedTask $assignedTask, array $completionData): array
+    {
+        return DB::transaction(function () use ($user, $assignedTask, $completionData) {
+            $this->validateTaskCompletion($user, $assignedTask);
+            
+            $outcome = $this->determineOutcome($assignedTask);
+            $this->applyOutcome($user, $outcome);
+            
+            $this->updateTaskStatus($assignedTask, $completionData);
+            $this->logCompletion($user, $assignedTask, $outcome);
+            
+            return [
+                'success' => true,
+                'outcome' => $outcome,
+                'message' => $this->generateCompletionMessage($outcome),
+            ];
+        });
+    }
+
+    private function validateTaskCompletion(User $user, UserAssignedTask $assignedTask): void
+    {
+        if ($assignedTask->user_id !== $user->id) {
+            throw new \UnauthorizedException('You can only complete your own tasks');
+        }
+        
+        if ($assignedTask->status !== TaskStatus::Assigned) {
+            throw new \InvalidArgumentException('Task is not in assigned status');
+        }
+        
+        if ($assignedTask->isOverdue()) {
+            throw new \InvalidArgumentException('Task is overdue and cannot be completed');
+        }
+    }
+
+    private function determineOutcome(UserAssignedTask $assignedTask): Outcome
+    {
+        // Complex business logic to determine reward or punishment
+        $random = rand(1, 100);
+        
+        if ($random <= 70) {
+            return $assignedTask->potentialReward;
+        }
+        
+        return $assignedTask->potentialPunishment;
+    }
+
+    private function applyOutcome(User $user, Outcome $outcome): void
+    {
+        // Apply the outcome to the user
+        $user->outcomes()->create([
+            'outcome_id' => $outcome->id,
+            'earned_at' => now(),
+        ]);
+    }
+
+    private function updateTaskStatus(UserAssignedTask $assignedTask, array $completionData): void
+    {
+        $assignedTask->update([
+            'status' => TaskStatus::Completed,
+            'completed_at' => now(),
+            'completion_notes' => $completionData['notes'] ?? null,
+        ]);
+    }
+
+    private function logCompletion(User $user, UserAssignedTask $assignedTask, Outcome $outcome): void
+    {
+        TaskActivity::log(
+            type: TaskActivityType::Completed,
+            user: $user,
+            task: $assignedTask->task,
+            title: "Task completed: {$assignedTask->task->title}",
+            description: "You completed the task and received: {$outcome->title}"
+        );
+    }
+
+    private function generateCompletionMessage(Outcome $outcome): string
+    {
+        return match ($outcome->intended_type) {
+            'reward' => "Great job! You earned: {$outcome->title}",
+            'punishment' => "Task completed. You received: {$outcome->title}",
+            default => "Task completed successfully!",
+        };
+    }
+}
+```
+
+## Action Validation
+
+### Input Validation
+```php
+<?php
+
+namespace App\Actions\Tasks;
+
+use Illuminate\Validation\ValidationException;
+use Lorisleiva\Actions\Concerns\AsAction;
+
+class CreateTask
+{
+    use AsAction;
+
+    public function rules(): array
+    {
+        return [
+            'title' => 'required|string|max:255',
+            'description' => 'required|string|max:2000',
+            'difficulty_level' => 'required|integer|min:1|max:10',
+            'target_user_type' => 'required|string',
+        ];
+    }
+
+    public function messages(): array
+    {
+        return [
+            'title.required' => 'Task title is required',
+            'description.required' => 'Task description is required',
+            'difficulty_level.min' => 'Difficulty level must be at least 1',
+            'difficulty_level.max' => 'Difficulty level cannot exceed 10',
+        ];
+    }
+
+    public function handle(array $data): Task
+    {
+        // Validation is automatically handled by the AsAction trait
+        return Task::create($data);
+    }
+}
+```
+
+### Custom Validation
+```php
+public function handle(User $user, array $taskData): Task
+{
+    $this->validateUserCanCreateTasks($user);
+    $this->validateTaskData($taskData);
+    
+    return Task::create($taskData);
+}
+
+private function validateUserCanCreateTasks(User $user): void
+{
+    if (!$user->canCreateTasks()) {
+        throw new \UnauthorizedException('User cannot create tasks');
+    }
+}
+
+private function validateTaskData(array $data): void
+{
+    if (strlen($data['description']) < 50) {
+        throw new \InvalidArgumentException('Task description must be at least 50 characters');
+    }
+}
+```
+
+## Action Responses
+
+### Standardized Response Format
+```php
+public function handle(User $user, array $data): array
+{
+    try {
+        $result = $this->processData($user, $data);
+        
+        return [
+            'success' => true,
+            'data' => $result,
+            'message' => 'Operation completed successfully',
+        ];
+    } catch (\Exception $e) {
+        return [
+            'success' => false,
+            'data' => null,
+            'message' => $e->getMessage(),
+            'error_code' => $e->getCode(),
+        ];
+    }
+}
+```
+
+### Action with Events
+```php
+<?php
+
+namespace App\Actions\Tasks;
+
+use App\Events\TaskAssigned;
+use Lorisleiva\Actions\Concerns\AsAction;
+
+class AssignTask
+{
+    use AsAction;
+
+    public function handle(User $user, Task $task): UserAssignedTask
+    {
+        $assignedTask = UserAssignedTask::create([
+            'user_id' => $user->id,
+            'task_id' => $task->id,
+            'status' => TaskStatus::Assigned,
+            'assigned_at' => now(),
+        ]);
+
+        event(new TaskAssigned($assignedTask));
+        
+        return $assignedTask;
+    }
+}
+```
+
+## Action Testing
+
+### Testing Actions
+```php
+<?php
+
+use App\Actions\Tasks\AssignRandomTask;
+use App\Models\User;
+use App\Models\Task;
+
+it('assigns a random task to user', function () {
+    $user = User::factory()->create();
+    $task = Task::factory()->create();
+    
+    $result = AssignRandomTask::run($user);
+    
+    expect($result['success'])->toBeTrue();
+    expect($result['task'])->not->toBeNull();
+    expect($result['message'])->toContain('New task assigned');
+});
+
+it('returns error when no tasks available', function () {
+    $user = User::factory()->create();
+    
+    $result = AssignRandomTask::run($user);
+    
+    expect($result['success'])->toBeFalse();
+    expect($result['message'])->toBe('No available tasks found.');
+    expect($result['task'])->toBeNull();
+});
+```
+
+### Mocking Dependencies
+```php
+it('handles external service failures', function () {
+    Http::fake([
+        'api.external.com/*' => Http::response(['error' => 'Service unavailable'], 500),
+    ]);
+    
+    $user = User::factory()->create();
+    
+    $result = ProcessExternalData::run($user);
+    
+    expect($result['success'])->toBeFalse();
+    expect($result['message'])->toContain('External service error');
+});
+```
+
+## Best Practices
+
+### 1. Single Responsibility
+- Each action should have one clear purpose
+- Keep actions focused on specific business logic
+- Avoid mixing concerns in a single action
+
+### 2. Error Handling
+- Use appropriate exception types
+- Provide meaningful error messages
+- Handle edge cases gracefully
+- Use transactions for complex operations
+
+### 3. Testing
+- Write comprehensive tests for all actions
+- Test both success and failure scenarios
+- Mock external dependencies
+- Use factories for test data
+
+### 4. Performance
+- Use database transactions for data consistency
+- Optimize database queries
+- Cache expensive operations when appropriate
+- Use eager loading for relationships
+
+### 5. Documentation
+- Document complex business logic
+- Use descriptive method names
+- Add PHPDoc comments for public methods
+- Include usage examples in comments
+
+### 6. Reusability
+- Design actions to be reusable across contexts
+- Use dependency injection for flexibility
+- Avoid hardcoded values
+- Make actions configurable through parameters

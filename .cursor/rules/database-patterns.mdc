@@ -1,17 +1,60 @@
 ---
 description: Database patterns, migrations, and model relationships for the Kink Master platform
-globs: database/migrations/*.php,app/Models/**/*.php
+globs: app/Models/**/*.php,database/migrations/**/*.php
 ---
 
-# Database Patterns & Model Relationships
+# Database Patterns & Model Conventions
 
-## Database Architecture in Kink Master
+## Model Structure & Conventions
 
-This project uses a well-structured database schema with proper relationships, indexes, and constraints. All database operations follow Laravel best practices for performance and maintainability.
+### Basic Model Template
+```php
+<?php
+
+declare(strict_types=1);
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Spatie\Activitylog\Traits\LogsActivity;
+
+class ExampleModel extends Model
+{
+    use HasFactory, LogsActivity;
+
+    protected $fillable = [
+        'field1',
+        'field2',
+        'field3',
+    ];
+
+    protected function casts(): array
+    {
+        return [
+            'field1' => 'boolean',
+            'field2' => 'datetime',
+            'field3' => \App\Enums\ExampleEnum::class,
+        ];
+    }
+
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    public function items(): HasMany
+    {
+        return $this->hasMany(Item::class);
+    }
+}
+```
 
 ## Migration Patterns
 
-### Basic Migration Structure
+### Standard Migration Structure
 ```php
 <?php
 
@@ -25,7 +68,15 @@ return new class extends Migration
     {
         Schema::create('table_name', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->string('title');
+            $table->text('description')->nullable();
+            $table->integer('status')->default(1);
             $table->timestamps();
+            
+            // Indexes for performance
+            $table->index(['user_id', 'status']);
+            $table->index(['status', 'created_at']);
         });
     }
 
@@ -36,587 +87,278 @@ return new class extends Migration
 };
 ```
 
-### Core Table Patterns
+### Foreign Key Patterns
+- Always use `constrained()` for foreign keys
+- Use `onDelete('cascade')` for dependent data
+- Use `onDelete('set null')` for optional references
+- Always add indexes for foreign key columns
 
-#### Users Table
+### Status Fields
+- Use integer fields instead of database enums
+- Cast to PHP enum classes in models
+- Default status values should be 1 (first enum case)
+- Always index status fields for performance
+
+## Model Relationships
+
+### Common Relationship Patterns
 ```php
-Schema::create('users', function (Blueprint $table) {
-    $table->id();
-    $table->string('name');
-    $table->string('email')->unique();
-    $table->timestamp('email_verified_at')->nullable();
-    $table->string('password');
-    $table->integer('user_type')->default(4); // TargetUserType enum
-    $table->unsignedBigInteger('partner_id')->nullable();
-    $table->string('stripe_id')->nullable();
-    $table->string('pm_type')->nullable();
-    $table->string('pm_last_four')->nullable();
-    $table->timestamp('trial_ends_at')->nullable();
-    $table->rememberToken();
-    $table->timestamps();
-    
-    // Indexes
-    $table->index(['user_type', 'created_at']);
-    $table->index('partner_id');
-    $table->foreign('partner_id')->references('id')->on('users')->onDelete('set null');
-});
-```
-
-#### Content Tables (Tasks, Outcomes)
-```php
-Schema::create('tasks', function (Blueprint $table) {
-    $table->id();
-    $table->string('title');
-    $table->text('description');
-    $table->integer('difficulty_level'); // 1-10 scale
-    $table->integer('duration_time')->default(24);
-    $table->string('duration_type')->default('hours');
-    $table->integer('target_user_type')->default(4); // TargetUserType enum
-    $table->foreignId('user_id')->constrained()->onDelete('cascade');
-    $table->integer('status')->default(1); // ContentStatus enum
-    $table->integer('view_count')->default(0);
-    $table->boolean('is_premium')->default(false);
-    $table->timestamps();
-    
-    // Indexes for performance
-    $table->index(['status', 'target_user_type']);
-    $table->index(['user_id', 'status']);
-    $table->index(['difficulty_level', 'status']);
-    $table->index(['is_premium', 'status']);
-});
-
-Schema::create('outcomes', function (Blueprint $table) {
-    $table->id();
-    $table->string('title');
-    $table->text('description');
-    $table->integer('difficulty_level')->default(1);
-    $table->integer('target_user_type')->default(4);
-    $table->foreignId('user_id')->constrained()->onDelete('cascade');
-    $table->integer('status')->default(1);
-    $table->integer('view_count')->default(0);
-    $table->boolean('is_premium')->default(false);
-    $table->string('intended_type'); // 'reward' or 'punishment'
-    $table->timestamps();
-    
-    // Indexes
-    $table->index(['status', 'intended_type']);
-    $table->index(['target_user_type', 'intended_type']);
-    $table->index(['difficulty_level', 'intended_type']);
-});
-```
-
-#### Junction Tables
-```php
-Schema::create('user_assigned_tasks', function (Blueprint $table) {
-    $table->id();
-    $table->foreignId('user_id')->constrained()->onDelete('cascade');
-    $table->foreignId('task_id')->constrained()->onDelete('cascade');
-    $table->integer('status')->default(1); // TaskStatus enum
-    $table->string('outcome_type')->nullable();
-    $table->unsignedBigInteger('outcome_id')->nullable();
-    $table->foreignId('potential_reward_id')->nullable()->constrained('outcomes')->onDelete('set null');
-    $table->foreignId('potential_punishment_id')->nullable()->constrained('outcomes')->onDelete('set null');
-    $table->timestamp('assigned_at');
-    $table->timestamp('deadline_at')->nullable();
-    $table->timestamp('completed_at')->nullable();
-    $table->timestamps();
-    
-    // Indexes
-    $table->index(['user_id', 'status']);
-    $table->index(['task_id', 'status']);
-    $table->index(['user_id', 'assigned_at']);
-    $table->index(['outcome_type', 'outcome_id']);
-    
-    // Constraints
-    $table->unique(['user_id', 'task_id']);
-});
-```
-
-#### Polymorphic Tables
-```php
-Schema::create('reactions', function (Blueprint $table) {
-    $table->id();
-    $table->foreignId('user_id')->constrained()->onDelete('cascade');
-    $table->morphs('reactable'); // reactable_id, reactable_type
-    $table->integer('type'); // 1=positive, 2=negative
-    $table->timestamps();
-    
-    // Unique constraint
-    $table->unique(['user_id', 'reactable_id', 'reactable_type']);
-    
-    // Indexes
-    $table->index(['reactable_id', 'reactable_type']);
-    $table->index(['type', 'created_at']);
-});
-```
-
-### Migration Best Practices
-
-#### 1. Proper Indexing
-```php
-// Always add indexes for foreign keys
-$table->foreignId('user_id')->constrained()->onDelete('cascade');
-$table->index('user_id'); // Add this for performance
-
-// Composite indexes for common queries
-$table->index(['status', 'target_user_type']);
-$table->index(['user_id', 'status']);
-$table->index(['created_at', 'status']);
-```
-
-#### 2. Foreign Key Constraints
-```php
-// Always use proper foreign key constraints
-$table->foreignId('user_id')->constrained()->onDelete('cascade');
-$table->foreignId('task_id')->constrained()->onDelete('cascade');
-
-// For nullable foreign keys
-$table->foreignId('partner_id')->nullable()->constrained()->onDelete('set null');
-```
-
-#### 3. Enum Usage in Migrations
-```php
-// Use integer columns for enums
-$table->integer('user_type')->default(4); // TargetUserType::Any
-$table->integer('status')->default(1); // ContentStatus::Pending
-
-// Add comments for clarity
-$table->integer('user_type')->default(4)->comment('1=Male, 2=Female, 3=Couple, 4=Any');
-$table->integer('status')->default(1)->comment('1=Pending, 2=Approved, 3=InReview, 4=Rejected');
-```
-
-#### 4. Timestamp Patterns
-```php
-// Standard timestamps
-$table->timestamps();
-
-// Custom timestamps
-$table->timestamp('assigned_at');
-$table->timestamp('completed_at')->nullable();
-$table->timestamp('deadline_at')->nullable();
-$table->timestamp('expires_at')->nullable();
-```
-
-## Model Relationship Patterns
-
-### User Model Relationships
-```php
-<?php
-
-namespace App\Models;
-
-use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Relations\HasOne;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
-
-class User extends Authenticatable
+// BelongsTo with foreign key specification
+public function assignedBy(): BelongsTo
 {
-    // Couple relationship
-    public function partner(): BelongsTo
-    {
-        return $this->belongsTo(User::class, 'partner_id');
-    }
+    return $this->belongsTo(User::class, 'assigned_by');
+}
 
-    public function couplePartner(): HasOne
-    {
-        return $this->hasOne(User::class, 'partner_id');
-    }
+// HasMany with conditions
+public function comments(): HasMany
+{
+    return $this->hasMany(Comment::class, 'commentable_id')
+        ->where('commentable_type', self::class)
+        ->approved()
+        ->orderBy('created_at', 'asc');
+}
 
-    // Content relationships
-    public function createdTasks(): HasMany
-    {
-        return $this->hasMany(\App\Models\Tasks\Task::class);
-    }
-
-    public function createdRewards(): HasMany
-    {
-        return $this->hasMany(\App\Models\Tasks\TaskReward::class);
-    }
-
-    public function createdPunishments(): HasMany
-    {
-        return $this->hasMany(\App\Models\Tasks\TaskPunishment::class);
-    }
-
-    // Assigned tasks
-    public function assignedTasks(): HasMany
-    {
-        return $this->hasMany(\App\Models\Tasks\UserAssignedTask::class);
-    }
-
-    // Task activities
-    public function taskActivities(): HasMany
-    {
-        return $this->hasMany(\App\Models\Tasks\TaskActivity::class);
-    }
-
-    public function recentTaskActivities(int $limit = 10): HasMany
-    {
-        return $this->taskActivities()
-            ->with(['task', 'userAssignedTask'])
-            ->orderBy('activity_at', 'desc')
-            ->limit($limit);
-    }
-
-    // User outcomes
-    public function activeOutcomes()
-    {
-        return $this->hasMany(UserOutcome::class)
-            ->active()
-            ->notExpired()
-            ->with(['outcome', 'task'])
-            ->orderBy('assigned_at', 'desc');
-    }
-
-    public function outcomes()
-    {
-        return $this->hasMany(UserOutcome::class)
-            ->with(['outcome', 'task'])
-            ->orderBy('assigned_at', 'desc');
-    }
+// Polymorphic relationships
+public function comments(): MorphMany
+{
+    return $this->morphMany(Comment::class, 'commentable');
 }
 ```
 
-### Content Model Relationships
+### Eager Loading Patterns
 ```php
-<?php
+// Always eager load relationships in queries
+$tasks = Task::with(['user', 'outcomes', 'comments'])->get();
 
-namespace App\Models\Tasks;
+// Use with() in model defaults for common relationships
+protected $with = ['user', 'profile'];
 
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use Illuminate\Database\Eloquent\Relations\MorphMany;
+// Conditional eager loading
+$query->when($includeComments, function ($query) {
+    $query->with('comments');
+});
+```
 
-class Task extends Model
+## Model Casts & Attributes
+
+### Casts Method Pattern
+Use the `casts()` method instead of the `$casts` property:
+
+```php
+protected function casts(): array
 {
-    public function author(): BelongsTo
-    {
-        return $this->belongsTo(User::class, 'user_id');
-    }
-
-    public function assignedTasks(): HasMany
-    {
-        return $this->hasMany(UserAssignedTask::class);
-    }
-
-    public function recommendedOutcomes(): BelongsToMany
-    {
-        return $this->belongsToMany(Outcome::class, 'task_recommended_outcomes')
-            ->withPivot('sort_order')
-            ->orderBy('task_recommended_outcomes.sort_order');
-    }
-
-    public function recommendedRewards(): BelongsToMany
-    {
-        return $this->recommendedOutcomes()->where('intended_type', 'reward');
-    }
-
-    public function recommendedPunishments(): BelongsToMany
-    {
-        return $this->recommendedOutcomes()->where('intended_type', 'punishment');
-    }
-
-    public function reactions(): MorphMany
-    {
-        return $this->morphMany(Reaction::class, 'reactable');
-    }
-
-    public function tags(): MorphToMany
-    {
-        return $this->morphToMany(Tag::class, 'taggable', 'taggables', null, 'tag_id')
-            ->orderBy('order_column');
-    }
+    return [
+        'status' => CoupleTaskStatus::class,
+        'assigned_at' => 'datetime',
+        'deadline_at' => 'datetime',
+        'is_public' => 'boolean',
+        'metadata' => 'array',
+    ];
 }
 ```
 
-### Junction Model Relationships
+### Custom Attributes
 ```php
-<?php
-
-namespace App\Models\Tasks;
-
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasMany;
-
-class UserAssignedTask extends Model
+public function getFullNameAttribute(): string
 {
-    public function user(): BelongsTo
-    {
-        return $this->belongsTo(User::class);
-    }
+    return "{$this->first_name} {$this->last_name}";
+}
 
-    public function task(): BelongsTo
-    {
-        return $this->belongsTo(Task::class);
-    }
-
-    public function potentialReward(): BelongsTo
-    {
-        return $this->belongsTo(Outcome::class, 'potential_reward_id');
-    }
-
-    public function potentialPunishment(): BelongsTo
-    {
-        return $this->belongsTo(Outcome::class, 'potential_punishment_id');
-    }
-
-    public function taskActivities(): HasMany
-    {
-        return $this->hasMany(TaskActivity::class);
-    }
-
-    public function userOutcomes(): HasMany
-    {
-        return $this->hasMany(UserOutcome::class);
-    }
+// Using Attribute class for complex logic
+protected function status(): Attribute
+{
+    return Attribute::make(
+        get: fn (int $value) => CoupleTaskStatus::from($value),
+        set: fn (CoupleTaskStatus $value) => $value->value,
+    );
 }
 ```
 
-## Query Optimization Patterns
-
-### Eager Loading
-```php
-// Always eager load relationships to avoid N+1 queries
-$tasks = Task::with(['author', 'assignedTasks.user', 'recommendedOutcomes'])
-    ->approved()
-    ->get();
-
-$users = User::with(['assignedTasks.task', 'taskActivities.task'])
-    ->where('user_type', TargetUserType::Male)
-    ->get();
-```
+## Model Scopes
 
 ### Query Scopes
 ```php
-// Model scopes for common queries
+// Public scopes
+public function scopePublic($query)
+{
+    return $query->where('is_public', true);
+}
+
+public function scopeForUser($query, User $user)
+{
+    return $query->where('user_id', $user->id);
+}
+
+public function scopeRecent($query, int $limit = 10)
+{
+    return $query->orderBy('created_at', 'desc')->limit($limit);
+}
+
+// Local scopes with parameters
+public function scopeByStatus($query, int $status)
+{
+    return $query->where('status', $status);
+}
+```
+
+## Model Events & Boot
+
+### Model Boot Pattern
+```php
+protected static function boot()
+{
+    parent::boot();
+
+    static::creating(function ($model) {
+        // Validation logic
+        if ($model->assigned_by === $model->assigned_to) {
+            throw new \InvalidArgumentException('A user cannot assign tasks to themselves.');
+        }
+    });
+
+    static::created(function ($model) {
+        // Post-creation logic
+        $model->user->notify(new TaskAssigned($model));
+    });
+}
+```
+
+## Activity Logging
+
+### Spatie Activity Log Integration
+```php
+use Spatie\Activitylog\Traits\LogsActivity;
+use Spatie\Activitylog\LogOptions;
+
 class Task extends Model
 {
-    public function scopeApproved($query)
-    {
-        return $query->where('status', ContentStatus::Approved);
-    }
+    use LogsActivity;
 
-    public function scopePending($query)
+    public function getActivitylogOptions(): LogOptions
     {
-        return $query->where('status', ContentStatus::Pending);
-    }
-
-    public function scopeForUserType($query, TargetUserType $userType)
-    {
-        return $query->where('target_user_type', $userType);
-    }
-
-    public function scopePremium($query)
-    {
-        return $query->where('is_premium', true);
-    }
-
-    public function scopeByDifficulty($query, int $min, int $max)
-    {
-        return $query->whereBetween('difficulty_level', [$min, $max]);
+        return LogOptions::defaults()
+            ->logOnly(['title', 'description', 'status'])
+            ->logOnlyDirty()
+            ->dontSubmitEmptyLogs();
     }
 }
-
-// Usage
-$easyTasks = Task::approved()
-    ->forUserType(TargetUserType::Any)
-    ->byDifficulty(1, 3)
-    ->get();
 ```
 
-### Complex Queries
+## Media Library Integration
+
+### Spatie Media Library Patterns
 ```php
-// Complex queries with proper joins
-$userStats = User::select([
-        'users.id',
-        'users.name',
-        DB::raw('COUNT(CASE WHEN user_assigned_tasks.status = 2 THEN 1 END) as completed_tasks'),
-        DB::raw('COUNT(CASE WHEN user_assigned_tasks.status = 3 THEN 1 END) as failed_tasks'),
-        DB::raw('COUNT(user_assigned_tasks.id) as total_tasks')
-    ])
-    ->leftJoin('user_assigned_tasks', 'users.id', '=', 'user_assigned_tasks.user_id')
-    ->groupBy('users.id', 'users.name')
-    ->get();
+use Spatie\MediaLibrary\HasMedia;
+use Spatie\MediaLibrary\InteractsWithMedia;
+use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
-// Subqueries for complex filtering
-$tasksWithRecentActivity = Task::whereHas('assignedTasks', function ($query) {
-        $query->where('created_at', '>=', now()->subDays(7));
-    })
-    ->with(['author', 'assignedTasks' => function ($query) {
-        $query->where('created_at', '>=', now()->subDays(7));
-    }])
-    ->get();
-```
-
-## Database Seeding Patterns
-
-### Factory Usage
-```php
-<?php
-
-namespace Database\Factories;
-
-use App\Models\User;
-use App\Models\Tasks\Task;
-use App\TargetUserType;
-use App\ContentStatus;
-
-class TaskFactory extends Factory
+class Profile extends Model implements HasMedia
 {
-    protected $model = Task::class;
+    use InteractsWithMedia;
 
-    public function definition(): array
+    public function registerMediaCollections(): void
     {
-        return [
-            'title' => $this->faker->sentence(3),
-            'description' => $this->faker->paragraph(3),
-            'difficulty_level' => $this->faker->numberBetween(1, 10),
-            'duration_time' => $this->faker->numberBetween(1, 24),
-            'duration_type' => $this->faker->randomElement(['minutes', 'hours', 'days']),
-            'target_user_type' => $this->faker->randomElement(TargetUserType::cases()),
-            'user_id' => User::factory(),
-            'status' => ContentStatus::Approved,
-            'view_count' => $this->faker->numberBetween(0, 1000),
-            'is_premium' => $this->faker->boolean(20), // 20% chance of being premium
-        ];
+        $this->addMediaCollection('profile_pictures')
+            ->acceptsMimeTypes(['image/jpeg', 'image/png', 'image/gif', 'image/webp'])
+            ->singleFile();
+
+        $this->addMediaCollection('cover_photos')
+            ->acceptsMimeTypes(['image/jpeg', 'image/png', 'image/gif', 'image/webp'])
+            ->singleFile();
     }
 
-    public function pending(): static
+    public function registerMediaConversions(?Media $media = null): void
     {
-        return $this->state(fn (array $attributes) => [
-            'status' => ContentStatus::Pending,
-        ]);
-    }
-
-    public function premium(): static
-    {
-        return $this->state(fn (array $attributes) => [
-            'is_premium' => true,
-        ]);
-    }
-
-    public function forUserType(TargetUserType $userType): static
-    {
-        return $this->state(fn (array $attributes) => [
-            'target_user_type' => $userType,
-        ]);
+        $this->addMediaConversion('thumb')
+            ->width(150)
+            ->height(150)
+            ->sharpen(10);
     }
 }
 ```
 
-### Seeder Patterns
-```php
-<?php
+## Performance Patterns
 
-namespace Database\Seeders;
-
-use App\Models\User;
-use App\Models\Tasks\Task;
-use App\Models\Tasks\Outcome;
-use App\TargetUserType;
-use App\ContentStatus;
-
-class TaskDataSeeder extends Seeder
-{
-    public function run(): void
-    {
-        // Create users with different types
-        $maleUsers = User::factory()->count(10)->create(['user_type' => TargetUserType::Male]);
-        $femaleUsers = User::factory()->count(10)->create(['user_type' => TargetUserType::Female]);
-        $coupleUsers = User::factory()->count(5)->create(['user_type' => TargetUserType::Couple]);
-
-        // Create tasks for different user types
-        Task::factory()->count(50)->forUserType(TargetUserType::Any)->create();
-        Task::factory()->count(30)->forUserType(TargetUserType::Male)->create();
-        Task::factory()->count(30)->forUserType(TargetUserType::Female)->create();
-        Task::factory()->count(20)->forUserType(TargetUserType::Couple)->create();
-
-        // Create some pending tasks
-        Task::factory()->count(20)->pending()->create();
-
-        // Create premium tasks
-        Task::factory()->count(15)->premium()->create();
-
-        // Create outcomes
-        Outcome::factory()->count(100)->create(['intended_type' => 'reward']);
-        Outcome::factory()->count(100)->create(['intended_type' => 'punishment']);
-    }
-}
-```
-
-## Performance Optimization
-
-### Database Indexing Strategy
-```php
-// Always index foreign keys
-$table->index('user_id');
-$table->index('task_id');
-
-// Index commonly queried columns
-$table->index('status');
-$table->index('created_at');
-$table->index('user_type');
-
-// Composite indexes for complex queries
-$table->index(['status', 'target_user_type']);
-$table->index(['user_id', 'status']);
-$table->index(['difficulty_level', 'status']);
-
-// Partial indexes for specific conditions
-$table->index(['user_id', 'status'], 'active_tasks_index')
-    ->where('status', '!=', 3); // Exclude failed tasks
-```
+### Database Indexing
+- Always index foreign key columns
+- Index frequently queried columns (status, created_at, user_id)
+- Use composite indexes for common query patterns
+- Index columns used in WHERE clauses
 
 ### Query Optimization
 ```php
-// Use select to limit columns
-$users = User::select(['id', 'name', 'email'])
-    ->with(['assignedTasks:id,user_id,task_id,status'])
-    ->get();
+// Use select() to limit columns
+$users = User::select(['id', 'name', 'email'])->get();
 
-// Use chunk for large datasets
-Task::chunk(100, function ($tasks) {
-    foreach ($tasks as $task) {
-        // Process each task
+// Use chunk() for large datasets
+User::chunk(100, function ($users) {
+    foreach ($users as $user) {
+        // Process user
     }
 });
 
-// Use cursor for memory efficiency
-foreach (Task::cursor() as $task) {
-    // Process each task without loading all into memory
+// Use cursor() for memory efficiency
+foreach (User::cursor() as $user) {
+    // Process user
+}
+```
+
+## Validation Patterns
+
+### Model Validation
+```php
+// Use model events for validation
+protected static function boot()
+{
+    parent::boot();
+
+    static::saving(function ($model) {
+        if ($model->isDirty('status') && !$model->isValidStatusTransition()) {
+            throw new \InvalidArgumentException('Invalid status transition');
+        }
+    });
+}
+
+// Custom validation methods
+public function isValidStatusTransition(): bool
+{
+    $validTransitions = [
+        CoupleTaskStatus::Pending->value => [CoupleTaskStatus::Completed->value, CoupleTaskStatus::Failed->value],
+        CoupleTaskStatus::Completed->value => [CoupleTaskStatus::Thanked->value],
+    ];
+
+    $currentStatus = $this->getOriginal('status');
+    $newStatus = $this->status->value;
+
+    return in_array($newStatus, $validTransitions[$currentStatus] ?? []);
 }
 ```
 
 ## Best Practices
 
-### 1. Migration Design
-- Always use proper foreign key constraints
-- Add indexes for performance
-- Use integer columns for enums
-- Include proper rollback methods
-- Use descriptive table and column names
+### 1. Model Organization
+- Group related models in subdirectories (e.g., `Models/Tasks/`)
+- Use descriptive model names
+- Keep models focused on single responsibilities
 
-### 2. Model Relationships
-- Use appropriate relationship types
-- Always eager load relationships to avoid N+1 queries
-- Use query scopes for common queries
-- Implement proper model events and observers
+### 2. Relationship Naming
+- Use descriptive relationship method names
+- Use `assignedBy()` and `assignedTo()` for clarity
+- Use `belongsTo` for single relationships, `hasMany` for collections
 
-### 3. Query Optimization
-- Use select to limit columns when possible
-- Implement proper indexing strategy
-- Use chunk/cursor for large datasets
-- Monitor query performance with Laravel Debugbar
-
-### 4. Data Integrity
+### 3. Data Integrity
 - Use database constraints and foreign keys
-- Implement proper validation at model level
-- Use database transactions for complex operations
-- Handle soft deletes appropriately
+- Implement model-level validation
+- Use transactions for complex operations
 
-### 5. Testing
-- Use factories for test data generation
-- Test database constraints and relationships
-- Use RefreshDatabase trait for test isolation
-- Test query performance with realistic data volumes
+### 4. Performance
+- Always eager load relationships
+- Use appropriate indexes
+- Implement query scopes for common patterns
+- Use pagination for large datasets
+
+### 5. Security
+- Use `$fillable` or `$guarded` arrays
+- Validate input at the model level
+- Use casts for type safety
+- Implement proper authorization checks

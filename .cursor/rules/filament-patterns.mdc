@@ -3,11 +3,11 @@ description: Filament admin panel development patterns and best practices for th
 globs: app/Filament/**/*.php
 ---
 
-# Filament Admin Panel Patterns & Best Practices
+# Filament Admin Panel Patterns
 
-## Filament Architecture in Kink Master
+## Filament v4 Architecture
 
-This project uses Filament v4 for rapid admin panel development. All admin interfaces follow consistent patterns for maintainability and user experience.
+This project uses Filament v4, which is a Server-Driven UI (SDUI) framework built on Livewire, Alpine.js, and Tailwind CSS. All admin interfaces are defined in PHP using structured configuration objects.
 
 ## Resource Structure
 
@@ -15,327 +15,372 @@ This project uses Filament v4 for rapid admin panel development. All admin inter
 ```php
 <?php
 
-namespace App\Filament\Resources;
+namespace App\Filament\Resources\Users;
 
-use App\Filament\Resources\TaskResource\Pages;
-use App\Models\Tasks\Task;
-use Filament\Forms;
-use Filament\Forms\Form;
+use App\Filament\Resources\Users\Pages\CreateUser;
+use App\Filament\Resources\Users\Pages\EditUser;
+use App\Filament\Resources\Users\Pages\ListUsers;
+use App\Filament\Resources\Users\Schemas\UserForm;
+use App\Filament\Resources\Users\Tables\UsersTable;
+use App\Models\User;
+use BackedEnum;
 use Filament\Resources\Resource;
-use Filament\Tables;
+use Filament\Schemas\Schema;
+use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
 
-class TaskResource extends Resource
+class UserResource extends Resource
 {
-    protected static ?string $model = Task::class;
+    protected static ?string $model = User::class;
+    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
+    protected static ?string $recordTitleAttribute = 'username';
 
-    protected static ?string $navigationIcon = 'heroicon-o-clipboard-document-list';
-
-    protected static ?string $navigationGroup = 'Content Management';
-
-    protected static ?int $navigationSort = 1;
-
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
-                Forms\Components\Section::make('Task Details')
-                    ->schema([
-                        Forms\Components\TextInput::make('title')
-                            ->required()
-                            ->maxLength(255),
-                            
-                        Forms\Components\Textarea::make('description')
-                            ->required()
-                            ->rows(4),
-                            
-                        Forms\Components\Select::make('difficulty_level')
-                            ->options(range(1, 10))
-                            ->required()
-                            ->default(1),
-                            
-                        Forms\Components\Select::make('target_user_type')
-                            ->options(TargetUserType::class)
-                            ->required(),
-                            
-                        Forms\Components\Select::make('user_id')
-                            ->label('Author')
-                            ->relationship('author', 'name')
-                            ->required(),
-                            
-                        Forms\Components\Select::make('status')
-                            ->options(ContentStatus::class)
-                            ->required()
-                            ->default(ContentStatus::Pending),
-                            
-                        Forms\Components\Toggle::make('is_premium')
-                            ->label('Premium Content'),
-                    ])
-                    ->columns(2),
-            ]);
+        return UserForm::configure($schema);
     }
 
     public static function table(Table $table): Table
     {
-        return $table
-            ->columns([
-                Tables\Columns\TextColumn::make('title')
-                    ->searchable()
-                    ->sortable(),
-                    
-                Tables\Columns\TextColumn::make('author.name')
-                    ->label('Author')
-                    ->searchable()
-                    ->sortable(),
-                    
-                Tables\Columns\TextColumn::make('difficulty_level')
-                    ->sortable()
-                    ->badge()
-                    ->color(fn (int $state): string => match (true) {
-                        $state <= 3 => 'success',
-                        $state <= 6 => 'warning',
-                        default => 'danger',
-                    }),
-                    
-                Tables\Columns\TextColumn::make('target_user_type')
-                    ->badge()
-                    ->color(fn (TargetUserType $state): string => match ($state) {
-                        TargetUserType::Male => 'blue',
-                        TargetUserType::Female => 'pink',
-                        TargetUserType::Couple => 'purple',
-                        TargetUserType::Any => 'gray',
-                    }),
-                    
-                Tables\Columns\TextColumn::make('status')
-                    ->badge()
-                    ->color(fn (ContentStatus $state): string => $state->color()),
-                    
-                Tables\Columns\IconColumn::make('is_premium')
-                    ->boolean()
-                    ->label('Premium'),
-                    
-                Tables\Columns\TextColumn::make('view_count')
-                    ->sortable(),
-                    
-                Tables\Columns\TextColumn::make('created_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-            ])
-            ->filters([
-                Tables\Filters\SelectFilter::make('status')
-                    ->options(ContentStatus::class),
-                    
-                Tables\Filters\SelectFilter::make('target_user_type')
-                    ->options(TargetUserType::class),
-                    
-                Tables\Filters\TernaryFilter::make('is_premium')
-                    ->label('Premium Content'),
-                    
-                Tables\Filters\Filter::make('created_at')
-                    ->form([
-                        Forms\Components\DatePicker::make('created_from'),
-                        Forms\Components\DatePicker::make('created_until'),
-                    ])
-                    ->query(function (Builder $query, array $data): Builder {
-                        return $query
-                            ->when(
-                                $data['created_from'],
-                                fn (Builder $query, $date): Builder => $query->whereDate('created_at', '>=', $date),
-                            )
-                            ->when(
-                                $data['created_until'],
-                                fn (Builder $query, $date): Builder => $query->whereDate('created_at', '<=', $date),
-                            );
-                    }),
-            ])
-            ->actions([
-                Tables\Actions\ViewAction::make(),
-                Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(),
-            ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
-                ]),
-            ])
-            ->defaultSort('created_at', 'desc');
-    }
-
-    public static function getRelations(): array
-    {
-        return [
-            //
-        ];
+        return UsersTable::configure($table);
     }
 
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListTasks::route('/'),
-            'create' => Pages\CreateTask::route('/create'),
-            'view' => Pages\ViewTask::route('/{record}'),
-            'edit' => Pages\EditTask::route('/{record}/edit'),
+            'index' => ListUsers::route('/'),
+            'create' => CreateUser::route('/create'),
+            'edit' => EditUser::route('/{record}/edit'),
         ];
     }
 }
 ```
 
-## Form Component Patterns
+## Form Schema Patterns
 
-### Section Organization
+### Form Schema Class
 ```php
-Forms\Components\Section::make('Basic Information')
-    ->schema([
-        Forms\Components\TextInput::make('title')
-            ->required()
-            ->maxLength(255)
-            ->columnSpanFull(),
-            
-        Forms\Components\Textarea::make('description')
-            ->required()
-            ->rows(4)
-            ->columnSpanFull(),
-    ])
-    ->columns(2),
+<?php
 
-Forms\Components\Section::make('Settings')
-    ->schema([
-        Forms\Components\Select::make('status')
-            ->options(ContentStatus::class)
-            ->required(),
-            
-        Forms\Components\Toggle::make('is_premium')
-            ->label('Premium Content'),
-    ])
-    ->collapsible(),
+namespace App\Filament\Resources\Users\Schemas;
+
+use App\Enums\BdsmRole;
+use App\Enums\SubscriptionPlan;
+use App\TargetUserType;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Toggle;
+use Filament\Schemas\Components\Grid;
+use Filament\Schemas\Components\Section;
+use Filament\Schemas\Schema;
+
+class UserForm
+{
+    public static function configure(Schema $schema): Schema
+    {
+        return $schema
+            ->schema([
+                Section::make('User Information')
+                    ->schema([
+                        Grid::make(2)
+                            ->schema([
+                                TextInput::make('name')
+                                    ->required()
+                                    ->maxLength(255),
+                                
+                                TextInput::make('email')
+                                    ->email()
+                                    ->required()
+                                    ->unique(ignoreRecord: true),
+                            ]),
+                        
+                        Select::make('user_type')
+                            ->options(TargetUserType::options())
+                            ->required(),
+                            
+                        Select::make('subscription_plan')
+                            ->options(SubscriptionPlan::options())
+                            ->required(),
+                    ]),
+                    
+                Section::make('Profile')
+                    ->schema([
+                        TextInput::make('profile.username')
+                            ->maxLength(255),
+                            
+                        Select::make('profile.bdsm_role')
+                            ->options(BdsmRole::options()),
+                            
+                        Toggle::make('profile.is_public')
+                            ->label('Public Profile'),
+                    ]),
+            ]);
+    }
+}
 ```
 
-### Relationship Fields
+### Form Component Patterns
 ```php
-// Simple relationship
-Forms\Components\Select::make('user_id')
-    ->label('Author')
-    ->relationship('author', 'name')
+// Text inputs with validation
+TextInput::make('title')
+    ->required()
+    ->maxLength(255)
+    ->columnSpanFull(),
+
+// Select with enum options
+Select::make('status')
+    ->options(ContentStatus::options())
+    ->required()
+    ->default(ContentStatus::Draft),
+
+// Relationship selects
+Select::make('user_id')
+    ->relationship('user', 'name')
     ->searchable()
     ->preload()
     ->required(),
 
-// Relationship with custom query
-Forms\Components\Select::make('user_id')
-    ->label('Author')
-    ->relationship(
-        name: 'author',
-        titleAttribute: 'name',
-        modifyQueryUsing: fn (Builder $query) => $query->where('active', true)
-    )
-    ->searchable()
-    ->required(),
-
-// Belongs to many relationship
-Forms\Components\Select::make('tags')
-    ->relationship('tags', 'name')
-    ->multiple()
-    ->searchable()
-    ->preload(),
-```
-
-### Enum Integration
-```php
-Forms\Components\Select::make('status')
-    ->options(ContentStatus::class)
-    ->required()
-    ->default(ContentStatus::Pending),
-
-Forms\Components\Select::make('target_user_type')
-    ->options(TargetUserType::class)
-    ->required()
-    ->searchable(),
-```
-
-### Conditional Fields
-```php
-Forms\Components\Select::make('type')
+// Conditional fields
+Select::make('type')
     ->options([
-        'task' => 'Task',
-        'reward' => 'Reward',
-        'punishment' => 'Punishment',
+        'single' => 'Single',
+        'multiple' => 'Multiple',
     ])
-    ->required()
-    ->live(),
+    ->reactive(),
 
-Forms\Components\TextInput::make('difficulty_level')
-    ->visible(fn (Get $get): bool => $get('type') === 'task')
-    ->required(fn (Get $get): bool => $get('type') === 'task'),
+TextInput::make('quantity')
+    ->visible(fn (Get $get) => $get('type') === 'multiple')
+    ->required(fn (Get $get) => $get('type') === 'multiple'),
 ```
 
-## Table Component Patterns
+## Table Configuration
 
-### Column Types
+### Table Schema Class
 ```php
-// Text columns
-Tables\Columns\TextColumn::make('title')
+<?php
+
+namespace App\Filament\Resources\Users\Tables;
+
+use App\Enums\SubscriptionPlan;
+use Filament\Tables\Actions\Action;
+use Filament\Tables\Actions\BulkAction;
+use Filament\Tables\Actions\DeleteAction;
+use Filament\Tables\Actions\EditAction;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Columns\ToggleColumn;
+use Filament\Tables\Filters\SelectFilter;
+use Filament\Tables\Table;
+
+class UsersTable
+{
+    public static function configure(Table $table): Table
+    {
+        return $table
+            ->columns([
+                TextColumn::make('name')
+                    ->searchable()
+                    ->sortable(),
+                    
+                TextColumn::make('email')
+                    ->searchable()
+                    ->sortable(),
+                    
+                TextColumn::make('subscription_plan')
+                    ->badge()
+                    ->color(fn (SubscriptionPlan $state) => match ($state) {
+                        SubscriptionPlan::Free => 'gray',
+                        SubscriptionPlan::Premium => 'success',
+                        SubscriptionPlan::Lifetime => 'warning',
+                        default => 'primary',
+                    }),
+                    
+                TextColumn::make('created_at')
+                    ->dateTime()
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
+            ])
+            ->filters([
+                SelectFilter::make('subscription_plan')
+                    ->options(SubscriptionPlan::options()),
+                    
+                SelectFilter::make('user_type')
+                    ->options(TargetUserType::options()),
+            ])
+            ->actions([
+                EditAction::make(),
+                DeleteAction::make(),
+                
+                Action::make('impersonate')
+                    ->icon('heroicon-o-eye')
+                    ->action(fn (User $record) => auth()->login($record))
+                    ->requiresConfirmation(),
+            ])
+            ->bulkActions([
+                BulkAction::make('delete')
+                    ->requiresConfirmation()
+                    ->action(fn (Collection $records) => $records->each->delete()),
+            ])
+            ->defaultSort('created_at', 'desc');
+    }
+}
+```
+
+### Table Column Patterns
+```php
+// Text columns with formatting
+TextColumn::make('title')
     ->searchable()
     ->sortable()
     ->limit(50),
 
 // Badge columns
-Tables\Columns\TextColumn::make('status')
+TextColumn::make('status')
     ->badge()
-    ->color(fn (ContentStatus $state): string => $state->color()),
+    ->color(fn (string $state) => match ($state) {
+        'active' => 'success',
+        'inactive' => 'danger',
+        'pending' => 'warning',
+        default => 'gray',
+    }),
 
-// Icon columns
-Tables\Columns\IconColumn::make('is_premium')
-    ->boolean()
-    ->label('Premium'),
-
-// Image columns
-Tables\Columns\ImageColumn::make('author.profile_picture_url')
-    ->label('Author')
-    ->circular(),
+// Relationship columns
+TextColumn::make('user.name')
+    ->searchable()
+    ->sortable(),
 
 // Date columns
-Tables\Columns\TextColumn::make('created_at')
+TextColumn::make('created_at')
     ->dateTime()
     ->sortable()
-    ->toggleable(isToggledHiddenByDefault: true),
+    ->toggleable(),
+
+// Toggle columns
+ToggleColumn::make('is_active')
+    ->disabled(fn ($record) => !auth()->user()->can('update', $record)),
 ```
 
-### Custom Column Colors
-```php
-Tables\Columns\TextColumn::make('difficulty_level')
-    ->badge()
-    ->color(fn (int $state): string => match (true) {
-        $state <= 3 => 'success',
-        $state <= 6 => 'warning',
-        default => 'danger',
-    }),
+## Page Classes
 
-Tables\Columns\TextColumn::make('target_user_type')
-    ->badge()
-    ->color(fn (TargetUserType $state): string => match ($state) {
-        TargetUserType::Male => 'blue',
-        TargetUserType::Female => 'pink',
-        TargetUserType::Couple => 'purple',
-        TargetUserType::Any => 'gray',
+### List Page
+```php
+<?php
+
+namespace App\Filament\Resources\Users\Pages;
+
+use App\Filament\Resources\Users\UserResource;
+use Filament\Actions\CreateAction;
+use Filament\Resources\Pages\ListRecords;
+
+class ListUsers extends ListRecords
+{
+    protected static string $resource = UserResource::class;
+
+    protected function getHeaderActions(): array
+    {
+        return [
+            CreateAction::make(),
+        ];
+    }
+}
+```
+
+### Create/Edit Pages
+```php
+<?php
+
+namespace App\Filament\Resources\Users\Pages;
+
+use App\Filament\Resources\Users\UserResource;
+use Filament\Actions\DeleteAction;
+use Filament\Resources\Pages\EditRecord;
+
+class EditUser extends EditRecord
+{
+    protected static string $resource = UserResource::class;
+
+    protected function getHeaderActions(): array
+    {
+        return [
+            DeleteAction::make(),
+        ];
+    }
+    
+    protected function getRedirectUrl(): string
+    {
+        return $this->getResource()::getUrl('index');
+    }
+}
+```
+
+## Actions & Forms
+
+### Custom Actions
+```php
+Action::make('approve')
+    ->icon('heroicon-o-check')
+    ->color('success')
+    ->requiresConfirmation()
+    ->action(function (User $record) {
+        $record->update(['status' => 'approved']);
+        Notification::make()
+            ->success()
+            ->title('User approved')
+            ->send();
+    })
+    ->visible(fn (User $record) => $record->status === 'pending'),
+
+// Bulk actions
+BulkAction::make('approve')
+    ->icon('heroicon-o-check')
+    ->color('success')
+    ->requiresConfirmation()
+    ->action(function (Collection $records) {
+        $records->each->update(['status' => 'approved']);
+        Notification::make()
+            ->success()
+            ->title('Users approved')
+            ->send();
     }),
 ```
 
-### Filters
+### Form Actions
 ```php
-Tables\Filters\SelectFilter::make('status')
-    ->options(ContentStatus::class),
+Actions::make([
+    Action::make('save')
+        ->label('Save')
+        ->submit('save'),
+        
+    Action::make('save_and_create_another')
+        ->label('Save & Create Another')
+        ->submit('save_and_create_another'),
+        
+    Action::make('cancel')
+        ->label('Cancel')
+        ->url($this->getResource()::getUrl('index')),
+]),
+```
 
-Tables\Filters\SelectFilter::make('target_user_type')
-    ->options(TargetUserType::class),
+## Filters & Search
 
-Tables\Filters\TernaryFilter::make('is_premium')
-    ->label('Premium Content'),
+### Table Filters
+```php
+SelectFilter::make('status')
+    ->options([
+        'active' => 'Active',
+        'inactive' => 'Inactive',
+        'pending' => 'Pending',
+    ]),
 
-Tables\Filters\Filter::make('created_at')
+TernaryFilter::make('is_verified')
+    ->label('Verification Status')
+    ->placeholder('All users')
+    ->trueLabel('Verified users')
+    ->falseLabel('Unverified users'),
+
+Filter::make('created_at')
     ->form([
-        Forms\Components\DatePicker::make('created_from'),
-        Forms\Components\DatePicker::make('created_until'),
+        DatePicker::make('created_from'),
+        DatePicker::make('created_until'),
     ])
     ->query(function (Builder $query, array $data): Builder {
         return $query
@@ -350,159 +395,28 @@ Tables\Filters\Filter::make('created_at')
     }),
 ```
 
-## Actions Patterns
-
-### Table Actions
+### Global Search
 ```php
-Tables\Actions\ActionGroup::make([
-    Tables\Actions\ViewAction::make(),
-    Tables\Actions\EditAction::make(),
-    Tables\Actions\DeleteAction::make(),
-]),
-
-// Custom actions
-Tables\Actions\Action::make('approve')
-    ->icon('heroicon-o-check-circle')
-    ->color('success')
-    ->action(function (Task $record) {
-        $record->update(['status' => ContentStatus::Approved]);
-        Notification::make()
-            ->title('Task approved')
-            ->success()
-            ->send();
-    })
-    ->visible(fn (Task $record): bool => $record->status === ContentStatus::Pending),
-```
-
-### Bulk Actions
-```php
-Tables\Actions\BulkActionGroup::make([
-    Tables\Actions\DeleteBulkAction::make(),
-    
-    Tables\Actions\BulkAction::make('approve')
-        ->icon('heroicon-o-check-circle')
-        ->color('success')
-        ->action(function (Collection $records) {
-            $records->each->update(['status' => ContentStatus::Approved]);
-            Notification::make()
-                ->title('Tasks approved')
-                ->success()
-                ->send();
-        })
-        ->deselectRecordsAfterCompletion(),
-]),
-```
-
-## Page Patterns
-
-### Custom Page Actions
-```php
-<?php
-
-namespace App\Filament\Resources\TaskResource\Pages;
-
-use App\Filament\Resources\TaskResource;
-use Filament\Actions;
-use Filament\Resources\Pages\ListRecords;
-
-class ListTasks extends ListRecords
+public static function getGlobalSearchResultTitle(Model $record): string
 {
-    protected static string $resource = TaskResource::class;
+    return $record->name;
+}
 
-    protected function getHeaderActions(): array
-    {
-        return [
-            Actions\CreateAction::make(),
-            
-            Actions\Action::make('export')
-                ->icon('heroicon-o-arrow-down-tray')
-                ->action(function () {
-                    // Export logic
-                }),
-        ];
-    }
+public static function getGlobalSearchResultDetails(Model $record): array
+{
+    return [
+        'Email' => $record->email,
+        'Status' => $record->status,
+    ];
+}
+
+public static function getGloballySearchableAttributes(): array
+{
+    return ['name', 'email'];
 }
 ```
 
-### View Page with Tabs
-```php
-<?php
-
-namespace App\Filament\Resources\TaskResource\Pages;
-
-use App\Filament\Resources\TaskResource;
-use Filament\Resources\Pages\ViewRecord;
-use Filament\Infolists;
-use Filament\Infolists\Infolist;
-
-class ViewTask extends ViewRecord
-{
-    protected static string $resource = TaskResource::class;
-
-    public function infolist(Infolist $infolist): Infolist
-    {
-        return $infolist
-            ->schema([
-                Infolists\Components\Tabs::make('Task Details')
-                    ->tabs([
-                        Infolists\Components\Tabs\Tab::make('Basic Info')
-                            ->schema([
-                                Infolists\Components\TextEntry::make('title'),
-                                Infolists\Components\TextEntry::make('description'),
-                                Infolists\Components\TextEntry::make('difficulty_level'),
-                            ]),
-                            
-                        Infolists\Components\Tabs\Tab::make('Metadata')
-                            ->schema([
-                                Infolists\Components\TextEntry::make('author.name')
-                                    ->label('Author'),
-                                Infolists\Components\TextEntry::make('status')
-                                    ->badge()
-                                    ->color(fn (ContentStatus $state): string => $state->color()),
-                                Infolists\Components\TextEntry::make('created_at')
-                                    ->dateTime(),
-                            ]),
-                    ]),
-            ]);
-    }
-}
-```
-
-## Navigation Patterns
-
-### Navigation Groups
-```php
-protected static ?string $navigationGroup = 'Content Management';
-
-protected static ?int $navigationSort = 1;
-
-protected static ?string $navigationIcon = 'heroicon-o-clipboard-document-list';
-```
-
-### Conditional Navigation
-```php
-public static function shouldRegisterNavigation(): bool
-{
-    return auth()->user()->hasRole(['admin', 'moderator']);
-}
-
-public static function getNavigationLabel(): string
-{
-    return 'Tasks';
-}
-
-public static function getNavigationBadge(): ?string
-{
-    return static::getModel()::pending()->count();
-}
-
-public static function getNavigationBadgeColor(): ?string
-{
-    return 'warning';
-}
-```
-
-## Widget Patterns
+## Widgets
 
 ### Stats Widget
 ```php
@@ -510,29 +424,29 @@ public static function getNavigationBadgeColor(): ?string
 
 namespace App\Filament\Widgets;
 
-use App\Models\Tasks\Task;
+use App\Models\User;
 use Filament\Widgets\StatsOverviewWidget as BaseWidget;
 use Filament\Widgets\StatsOverviewWidget\Stat;
 
-class TaskStatsOverview extends BaseWidget
+class UserStatsWidget extends BaseWidget
 {
     protected function getStats(): array
     {
         return [
-            Stat::make('Total Tasks', Task::count())
-                ->description('All tasks in system')
-                ->descriptionIcon('heroicon-m-arrow-trending-up')
+            Stat::make('Total Users', User::count())
+                ->description('All registered users')
+                ->descriptionIcon('heroicon-m-users')
                 ->color('success'),
                 
-            Stat::make('Pending Tasks', Task::pending()->count())
-                ->description('Awaiting approval')
-                ->descriptionIcon('heroicon-m-clock')
-                ->color('warning'),
-                
-            Stat::make('Approved Tasks', Task::approved()->count())
-                ->description('Ready for users')
+            Stat::make('Active Users', User::where('status', 'active')->count())
+                ->description('Users with active status')
                 ->descriptionIcon('heroicon-m-check-circle')
                 ->color('success'),
+                
+            Stat::make('Premium Users', User::where('subscription_plan', 'premium')->count())
+                ->description('Users with premium subscription')
+                ->descriptionIcon('heroicon-m-star')
+                ->color('warning'),
         ];
     }
 }
@@ -544,18 +458,17 @@ class TaskStatsOverview extends BaseWidget
 
 namespace App\Filament\Widgets;
 
-use App\Models\Tasks\Task;
+use App\Models\User;
 use Filament\Widgets\ChartWidget;
-use Illuminate\Support\Carbon;
 
-class TaskCreationChart extends ChartWidget
+class UserRegistrationChart extends ChartWidget
 {
-    protected static ?string $heading = 'Task Creation Over Time';
+    protected static ?string $heading = 'User Registrations';
 
     protected function getData(): array
     {
-        $data = Task::selectRaw('DATE(created_at) as date, COUNT(*) as count')
-            ->where('created_at', '>=', Carbon::now()->subDays(30))
+        $data = User::selectRaw('DATE(created_at) as date, COUNT(*) as count')
+            ->where('created_at', '>=', now()->subDays(30))
             ->groupBy('date')
             ->orderBy('date')
             ->get();
@@ -563,10 +476,10 @@ class TaskCreationChart extends ChartWidget
         return [
             'datasets' => [
                 [
-                    'label' => 'Tasks Created',
+                    'label' => 'Registrations',
                     'data' => $data->pluck('count'),
+                    'backgroundColor' => 'rgba(59, 130, 246, 0.5)',
                     'borderColor' => 'rgb(59, 130, 246)',
-                    'backgroundColor' => 'rgba(59, 130, 246, 0.1)',
                 ],
             ],
             'labels' => $data->pluck('date'),
@@ -580,95 +493,86 @@ class TaskCreationChart extends ChartWidget
 }
 ```
 
-## Testing Filament Resources
+## Navigation & Menu
 
-### Resource Tests
+### Custom Navigation
 ```php
-<?php
-
-use App\Filament\Resources\TaskResource;
-use App\Models\Tasks\Task;
-use App\Models\User;
-use Filament\Tables\Actions\DeleteAction;
-use Livewire\Livewire;
-
-it('can list tasks', function () {
-    $user = User::factory()->create();
-    $user->assignRole('admin');
-    
-    $tasks = Task::factory()->count(3)->create();
-    
-    Livewire::actingAs($user)
-        ->test(TaskResource\Pages\ListTasks::class)
-        ->assertCanSeeTableRecords($tasks);
-});
-
-it('can create task', function () {
-    $user = User::factory()->create();
-    $user->assignRole('admin');
-    
-    Livewire::actingAs($user)
-        ->test(TaskResource\Pages\CreateTask::class)
-        ->fillForm([
-            'title' => 'Test Task',
-            'description' => 'Test Description',
-            'difficulty_level' => 5,
-            'target_user_type' => TargetUserType::Any,
-            'user_id' => $user->id,
-            'status' => ContentStatus::Pending,
-        ])
-        ->call('create')
-        ->assertHasNoFormErrors();
-        
-    $this->assertDatabaseHas('tasks', [
-        'title' => 'Test Task',
-        'description' => 'Test Description',
+// In AppServiceProvider
+Filament::serving(function () {
+    Filament::registerNavigationGroups([
+        'User Management',
+        'Content Management',
+        'System',
     ]);
 });
 
-it('can delete task', function () {
-    $user = User::factory()->create();
-    $user->assignRole('admin');
-    
-    $task = Task::factory()->create();
-    
-    Livewire::actingAs($user)
-        ->test(TaskResource\Pages\ListTasks::class)
-        ->callTableAction(DeleteAction::class, $task);
-        
-    $this->assertDatabaseMissing('tasks', [
-        'id' => $task->id,
-    ]);
-});
+// In Resource
+protected static ?string $navigationGroup = 'User Management';
+protected static ?int $navigationSort = 1;
+```
+
+## Permissions & Authorization
+
+### Resource Permissions
+```php
+public static function canViewAny(): bool
+{
+    return auth()->user()->can('viewAny', static::getModel());
+}
+
+public static function canCreate(): bool
+{
+    return auth()->user()->can('create', static::getModel());
+}
+
+public static function canEdit(Model $record): bool
+{
+    return auth()->user()->can('update', $record);
+}
+
+public static function canDelete(Model $record): bool
+{
+    return auth()->user()->can('delete', $record);
+}
+```
+
+### Action Permissions
+```php
+Action::make('approve')
+    ->visible(fn (User $record) => auth()->user()->can('approve', $record))
+    ->action(function (User $record) {
+        // Action logic
+    }),
 ```
 
 ## Best Practices
 
-### 1. Resource Organization
-- Group related resources in navigation groups
-- Use consistent naming conventions
-- Organize pages logically
+### 1. Organization
+- Group related resources in subdirectories
+- Use separate classes for forms, tables, and pages
+- Follow consistent naming conventions
+- Keep resources focused on single models
 
-### 2. Form Design
-- Use sections to group related fields
+### 2. Performance
+- Use `preload()` for relationship selects
+- Implement proper indexing for searchable columns
+- Use `toggleable()` for less important columns
+- Optimize queries with eager loading
+
+### 3. User Experience
+- Provide clear labels and descriptions
+- Use appropriate icons and colors
 - Implement proper validation
-- Use conditional fields for dynamic forms
-- Leverage relationships for dropdowns
+- Show helpful error messages
 
-### 3. Table Design
-- Use appropriate column types
-- Implement search and filtering
-- Add meaningful actions
-- Use badges and colors for status
+### 4. Security
+- Implement proper authorization checks
+- Validate all user input
+- Use policies for model permissions
+- Sanitize output in custom columns
 
-### 4. Performance
-- Use eager loading for relationships
-- Implement proper indexing
-- Use pagination for large datasets
-- Optimize queries in filters
-
-### 5. User Experience
-- Provide clear navigation
-- Use consistent icons and colors
-- Implement proper notifications
-- Add helpful descriptions and labels
+### 5. Maintainability
+- Use enum classes for options
+- Create reusable form components
+- Implement consistent styling
+- Document complex logic

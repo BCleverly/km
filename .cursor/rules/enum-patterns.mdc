@@ -1,287 +1,507 @@
 ---
 description: PHP enum usage patterns and best practices for the Kink Master platform
-globs: app/*.php,app/Models/*.php,app/Models/**/*.php
+globs: app/Enums/**/*.php
 ---
 
 # PHP Enum Patterns & Best Practices
 
-## Enum Usage in Kink Master
+## Enum Architecture
 
-This project uses PHP enums extensively for type safety and business logic. All enums follow consistent patterns and are used with Laravel model casts.
+This project uses PHP 8.1+ backed enums with integer values for database storage. Enums provide type safety, better performance, and cleaner code compared to string constants or database enums.
 
-## Core Enums
+## Basic Enum Structure
 
-### TargetUserType Enum
-Located in [app/TargetUserType.php](mdc:app/TargetUserType.php)
-
-```php
-enum TargetUserType: int
-{
-    case Male = 1;
-    case Female = 2;
-    case Couple = 3;
-    case Any = 4;
-
-    public function label(): string
-    {
-        return match($this) {
-            self::Male => 'Male',
-            self::Female => 'Female',
-            self::Couple => 'Couple',
-            self::Any => 'Anyone',
-        };
-    }
-
-    public function description(): string
-    {
-        return match($this) {
-            self::Male => 'For individual male users',
-            self::Female => 'For individual female users',
-            self::Couple => 'For couple accounts',
-            self::Any => 'For all user types',
-        };
-    }
-}
-```
-
-### ContentStatus Enum
-Located in [app/ContentStatus.php](mdc:app/ContentStatus.php)
-
-```php
-enum ContentStatus: int
-{
-    case Pending = 1;
-    case Approved = 2;
-    case InReview = 3;
-    case Rejected = 4;
-
-    public function label(): string
-    {
-        return match($this) {
-            self::Pending => 'Pending Review',
-            self::Approved => 'Approved',
-            self::InReview => 'Under Review',
-            self::Rejected => 'Rejected',
-        };
-    }
-
-    public function color(): string
-    {
-        return match($this) {
-            self::Pending => 'yellow',
-            self::Approved => 'green',
-            self::InReview => 'orange',
-            self::Rejected => 'red',
-        };
-    }
-
-    public function isVisible(): bool
-    {
-        return $this === self::Approved;
-    }
-}
-```
-
-## Enum Best Practices
-
-### 1. Always Use Integer Backing Types
-- Use `enum EnumName: int` for database storage
-- Integer values are more efficient and database-friendly
-- Avoid string enums unless absolutely necessary
-
-### 2. Consistent Method Patterns
-Every enum should include:
-- `label()` - Human-readable display name
-- `description()` - Detailed explanation (optional)
-- `color()` - UI color mapping (for status enums)
-- Business logic methods (e.g., `isVisible()`, `isActive()`)
-
-### 3. Model Casting
-Always cast enum fields in models:
-
-```php
-protected function casts(): array
-{
-    return [
-        'user_type' => TargetUserType::class,
-        'status' => ContentStatus::class,
-    ];
-}
-```
-
-### 4. Database Migration Pattern
-Use integer columns with meaningful default values:
-
-```php
-$table->integer('target_user_type')->default(4); // 4 = Any
-$table->integer('status')->default(1); // 1 = Pending
-```
-
-### 5. Query Scopes
-Create query scopes for common enum filtering:
-
-```php
-public function scopeApproved($query)
-{
-    return $query->where('status', ContentStatus::Approved);
-}
-
-public function scopeForUserType($query, TargetUserType $userType)
-{
-    return $query->where('target_user_type', $userType);
-}
-```
-
-### 6. Validation Rules
-Use enum validation in form requests:
-
-```php
-public function rules(): array
-{
-    return [
-        'user_type' => ['required', Rule::enum(TargetUserType::class)],
-        'status' => ['required', Rule::enum(ContentStatus::class)],
-    ];
-}
-```
-
-### 7. Filament Integration
-Use enums in Filament resources:
-
-```php
-Forms\Components\Select::make('user_type')
-    ->options(TargetUserType::class)
-    ->required(),
-
-Tables\Columns\TextColumn::make('status')
-    ->badge()
-    ->color(fn (ContentStatus $state): string => $state->color()),
-```
-
-### 8. Blade Template Usage
-Use enum methods in Blade templates:
-
-```blade
-<span class="badge badge-{{ $task->status->color() }}">
-    {{ $task->status->label() }}
-</span>
-
-@if($task->status->isVisible())
-    <!-- Show content -->
-@endif
-```
-
-## Creating New Enums
-
-### Template for New Enums
+### Standard Enum Template
 ```php
 <?php
 
 declare(strict_types=1);
 
-namespace App;
+namespace App\Enums;
 
-enum NewEnum: int
+enum ExampleEnum: int
 {
-    case Value1 = 1;
-    case Value2 = 2;
-    case Value3 = 3;
+    case First = 1;
+    case Second = 2;
+    case Third = 3;
+
+    /**
+     * Get the human-readable label
+     */
+    public function label(): string
+    {
+        return match ($this) {
+            self::First => 'First Option',
+            self::Second => 'Second Option',
+            self::Third => 'Third Option',
+        };
+    }
+
+    /**
+     * Get the description
+     */
+    public function description(): string
+    {
+        return match ($this) {
+            self::First => 'Description for first option',
+            self::Second => 'Description for second option',
+            self::Third => 'Description for third option',
+        };
+    }
+
+    /**
+     * Get all options for forms/selects
+     */
+    public static function options(): array
+    {
+        return collect(self::cases())
+            ->mapWithKeys(fn ($case) => [$case->value => $case->label()])
+            ->toArray();
+    }
+}
+```
+
+## Enum Patterns
+
+### Status Enums
+```php
+<?php
+
+namespace App\Enums;
+
+enum CoupleTaskStatus: int
+{
+    case Pending = 1;
+    case Completed = 2;
+    case Failed = 3;
+    case Declined = 4;
 
     public function label(): string
     {
-        return match($this) {
-            self::Value1 => 'Value 1',
-            self::Value2 => 'Value 2',
-            self::Value3 => 'Value 3',
+        return match ($this) {
+            self::Pending => 'Pending',
+            self::Completed => 'Completed',
+            self::Failed => 'Failed',
+            self::Declined => 'Declined',
+        };
+    }
+
+    public function color(): string
+    {
+        return match ($this) {
+            self::Pending => 'yellow',
+            self::Completed => 'green',
+            self::Failed => 'red',
+            self::Declined => 'gray',
+        };
+    }
+
+    public function isActive(): bool
+    {
+        return $this === self::Pending;
+    }
+
+    public function isFinished(): bool
+    {
+        return in_array($this, [self::Completed, self::Failed, self::Declined]);
+    }
+
+    public static function options(): array
+    {
+        return collect(self::cases())
+            ->mapWithKeys(fn ($case) => [$case->value => $case->label()])
+            ->toArray();
+    }
+}
+```
+
+### Complex Business Logic Enums
+```php
+<?php
+
+namespace App\Enums;
+
+enum SubscriptionPlan: int
+{
+    case Free = 0;
+    case Solo = 1;
+    case Premium = 2;
+    case Couple = 3;
+    case Lifetime = 4;
+
+    public function label(): string
+    {
+        return match ($this) {
+            self::Free => 'Free',
+            self::Solo => 'Solo',
+            self::Premium => 'Premium',
+            self::Couple => 'Couple',
+            self::Lifetime => 'Lifetime',
         };
     }
 
     public function description(): string
     {
-        return match($this) {
-            self::Value1 => 'Description for value 1',
-            self::Value2 => 'Description for value 2',
-            self::Value3 => 'Description for value 3',
+        return match ($this) {
+            self::Free => 'Limited access with 1 task per day',
+            self::Solo => 'Individual access with unlimited tasks',
+            self::Premium => 'Full access with premium features',
+            self::Couple => 'Shared access for couples',
+            self::Lifetime => 'One-time payment for lifetime access',
         };
     }
 
-    // Add business logic methods as needed
-    public function isActive(): bool
+    public function price(): int
     {
-        return $this === self::Value1 || $this === self::Value2;
+        return match ($this) {
+            self::Free => 0,
+            self::Solo => (int) (config('subscription.prices.solo', 1.99) * 100),
+            self::Premium => (int) (config('subscription.prices.premium', 2.99) * 100),
+            self::Couple => (int) (config('subscription.prices.couple', 3.99) * 100),
+            self::Lifetime => (int) (config('subscription.prices.lifetime', 99.99) * 100),
+        };
+    }
+
+    public function priceFormatted(): string
+    {
+        $currency = config('cashier.currency', 'gbp');
+        $symbol = match (strtolower($currency)) {
+            'gbp' => '£',
+            'usd' => '$',
+            'eur' => '€',
+            default => '£',
+        };
+        
+        return $symbol . number_format($this->price() / 100, 2);
+    }
+
+    public function isRecurring(): bool
+    {
+        return match ($this) {
+            self::Free, self::Lifetime => false,
+            self::Solo, self::Premium, self::Couple => true,
+        };
+    }
+
+    public function features(): array
+    {
+        return match ($this) {
+            self::Free => [
+                '1 task per day',
+                'Basic rewards and punishments',
+                'Community content viewing',
+            ],
+            self::Solo => [
+                'Unlimited tasks',
+                'All rewards and punishments',
+                'Story creation and viewing',
+                'Priority support',
+            ],
+            self::Premium => [
+                'Everything in Solo',
+                'Premium content access',
+                'Advanced analytics',
+                'Custom task creation',
+                'Image uploads',
+            ],
+            self::Couple => [
+                'Everything in Premium',
+                'Shared task management',
+                'Partner synchronization',
+                'Couple-specific content',
+            ],
+            self::Lifetime => [
+                'Everything in Couple',
+                'One-time payment',
+                'No recurring charges',
+                'Lifetime updates',
+            ],
+        };
+    }
+
+    public function maxTasksPerDay(): ?int
+    {
+        return match ($this) {
+            self::Free => 1,
+            self::Solo, self::Premium, self::Couple, self::Lifetime => null,
+        };
+    }
+
+    public function canCreateStories(): bool
+    {
+        return match ($this) {
+            self::Free => false,
+            self::Solo, self::Premium, self::Couple, self::Lifetime => true,
+        };
+    }
+
+    public function canUploadImages(): bool
+    {
+        return match ($this) {
+            self::Free, self::Solo => false,
+            self::Premium, self::Couple, self::Lifetime => true,
+        };
+    }
+
+    public function canAccessPremiumContent(): bool
+    {
+        return match ($this) {
+            self::Free, self::Solo => false,
+            self::Premium, self::Couple, self::Lifetime => true,
+        };
+    }
+
+    public function canCreateCustomTasks(): bool
+    {
+        return match ($this) {
+            self::Free, self::Solo => false,
+            self::Premium, self::Couple, self::Lifetime => true,
+        };
+    }
+
+    public function isCouplePlan(): bool
+    {
+        return $this === self::Couple;
+    }
+
+    public function isLifetime(): bool
+    {
+        return $this === self::Lifetime;
+    }
+
+    public function isPaid(): bool
+    {
+        return $this !== self::Free;
+    }
+
+    public static function fromStripePriceId(string $priceId): ?self
+    {
+        foreach (self::cases() as $plan) {
+            if ($plan->stripePriceId() === $priceId) {
+                return $plan;
+            }
+        }
+
+        return null;
     }
 }
 ```
 
-### Steps for Adding New Enums
-1. Create enum file in `app/` directory
-2. Add database migration with integer column
-3. Add cast to relevant model(s)
-4. Create query scopes if needed
-5. Add validation rules
-6. Update Filament resources
-7. Add tests for enum functionality
+## Model Integration
 
-## Common Enum Patterns
-
-### Status Enums
-Always include these methods:
-- `label()` - Display name
-- `color()` - UI color
-- `isActive()` or `isVisible()` - Business logic
-
-### Type Enums
-Always include:
-- `label()` - Display name
-- `description()` - Detailed explanation
-- Business logic methods as needed
-
-### Validation Patterns
+### Enum Casts in Models
 ```php
-// In form requests
-'field' => ['required', Rule::enum(YourEnum::class)],
+<?php
 
-// In controllers
-$enum = YourEnum::from($request->input('field'));
+namespace App\Models;
+
+use App\Enums\CoupleTaskStatus;
+use Illuminate\Database\Eloquent\Model;
+
+class CoupleTask extends Model
+{
+    protected function casts(): array
+    {
+        return [
+            'status' => CoupleTaskStatus::class,
+            'assigned_at' => 'datetime',
+            'deadline_at' => 'datetime',
+        ];
+    }
+}
 ```
 
-### Database Query Patterns
+### Using Enums in Queries
 ```php
-// Using enum values directly
-Model::where('status', ContentStatus::Approved)->get();
+// Query by enum value
+$pendingTasks = CoupleTask::where('status', CoupleTaskStatus::Pending)->get();
 
-// Using query scopes
-Model::approved()->get();
+// Query by enum cases
+$activeTasks = CoupleTask::whereIn('status', [
+    CoupleTaskStatus::Pending,
+    CoupleTaskStatus::Completed,
+])->get();
 
-// Using enum methods
-Model::where('status', ContentStatus::Approved)->get();
+// Using enum methods in queries
+$finishedTasks = CoupleTask::where('status', '!=', CoupleTaskStatus::Pending)->get();
+```
+
+## Form Integration
+
+### Filament Form Components
+```php
+use App\Enums\SubscriptionPlan;
+
+Select::make('subscription_plan')
+    ->options(SubscriptionPlan::options())
+    ->required()
+    ->default(SubscriptionPlan::Free),
+
+Select::make('status')
+    ->options(CoupleTaskStatus::options())
+    ->required()
+    ->default(CoupleTaskStatus::Pending),
+```
+
+### Livewire Form Validation
+```php
+#[Validate('required')]
+public $status;
+
+public function rules(): array
+{
+    return [
+        'status' => 'required|integer|in:' . implode(',', array_column(CoupleTaskStatus::cases(), 'value')),
+    ];
+}
+```
+
+## Blade Template Usage
+
+### Displaying Enum Values
+```blade
+<!-- Display label -->
+<span>{{ $task->status->label() }}</span>
+
+<!-- Display with color -->
+<span class="badge badge-{{ $task->status->color() }}">
+    {{ $task->status->label() }}
+</span>
+
+<!-- Conditional display -->
+@if($task->status->isActive())
+    <span class="text-green-600">Active</span>
+@else
+    <span class="text-gray-600">Inactive</span>
+@endif
+```
+
+### Form Select Options
+```blade
+<select name="status">
+    @foreach(\App\Enums\CoupleTaskStatus::cases() as $status)
+        <option value="{{ $status->value }}" {{ $task->status === $status ? 'selected' : '' }}>
+            {{ $status->label() }}
+        </option>
+    @endforeach
+</select>
+```
+
+## API Integration
+
+### JSON Serialization
+```php
+// Enum values are automatically serialized to their backing value
+$task = CoupleTask::find(1);
+return response()->json($task); // status will be 1, 2, 3, or 4
+
+// Custom serialization
+public function toArray(): array
+{
+    return [
+        'id' => $this->id,
+        'status' => $this->status->value,
+        'status_label' => $this->status->label(),
+        'status_color' => $this->status->color(),
+    ];
+}
+```
+
+### API Validation
+```php
+public function rules(): array
+{
+    return [
+        'status' => 'required|integer|in:' . implode(',', array_column(CoupleTaskStatus::cases(), 'value')),
+    ];
+}
 ```
 
 ## Testing Enums
 
-### Unit Tests for Enums
+### Enum Value Testing
 ```php
-it('returns correct label for each enum value', function () {
-    expect(TargetUserType::Male->label())->toBe('Male');
-    expect(TargetUserType::Female->label())->toBe('Female');
-    expect(TargetUserType::Couple->label())->toBe('Couple');
-    expect(TargetUserType::Any->label())->toBe('Anyone');
+it('has correct enum values', function () {
+    expect(CoupleTaskStatus::Pending->value)->toBe(1);
+    expect(CoupleTaskStatus::Completed->value)->toBe(2);
+    expect(CoupleTaskStatus::Failed->value)->toBe(3);
+    expect(CoupleTaskStatus::Declined->value)->toBe(4);
 });
 
-it('returns correct color for status enum', function () {
-    expect(ContentStatus::Pending->color())->toBe('yellow');
-    expect(ContentStatus::Approved->color())->toBe('green');
-    expect(ContentStatus::InReview->color())->toBe('orange');
-    expect(ContentStatus::Rejected->color())->toBe('red');
+it('has correct labels', function () {
+    expect(CoupleTaskStatus::Pending->label())->toBe('Pending');
+    expect(CoupleTaskStatus::Completed->label())->toBe('Completed');
+    expect(CoupleTaskStatus::Failed->label())->toBe('Failed');
+    expect(CoupleTaskStatus::Declined->label())->toBe('Declined');
 });
 ```
 
-### Integration Tests
+### Enum Method Testing
 ```php
-it('can cast enum values in models', function () {
-    $user = User::factory()->create(['user_type' => TargetUserType::Male]);
+it('correctly identifies active status', function () {
+    expect(CoupleTaskStatus::Pending->isActive())->toBeTrue();
+    expect(CoupleTaskStatus::Completed->isActive())->toBeFalse();
+    expect(CoupleTaskStatus::Failed->isActive())->toBeFalse();
+    expect(CoupleTaskStatus::Declined->isActive())->toBeFalse();
+});
+
+it('correctly identifies finished status', function () {
+    expect(CoupleTaskStatus::Pending->isFinished())->toBeFalse();
+    expect(CoupleTaskStatus::Completed->isFinished())->toBeTrue();
+    expect(CoupleTaskStatus::Failed->isFinished())->toBeTrue();
+    expect(CoupleTaskStatus::Declined->isFinished())->toBeTrue();
+});
+```
+
+### Model Integration Testing
+```php
+it('casts enum values correctly', function () {
+    $task = CoupleTask::create([
+        'status' => CoupleTaskStatus::Pending,
+        // ... other fields
+    ]);
     
-    expect($user->user_type)->toBeInstanceOf(TargetUserType::class);
-    expect($user->user_type)->toBe(TargetUserType::Male);
+    expect($task->status)->toBeInstanceOf(CoupleTaskStatus::class);
+    expect($task->status)->toBe(CoupleTaskStatus::Pending);
+    expect($task->getAttributes()['status'])->toBe(1);
 });
 ```
+
+## Best Practices
+
+### 1. Naming Conventions
+- Use descriptive enum names (e.g., `CoupleTaskStatus`, `SubscriptionPlan`)
+- Use PascalCase for enum names
+- Use descriptive case names (e.g., `Pending`, `Completed`, `Failed`)
+
+### 2. Value Assignment
+- Start with 1 for the first case (not 0) for better database compatibility
+- Use sequential integers when possible
+- Document any non-sequential values
+
+### 3. Method Organization
+- Always include `label()` method for human-readable names
+- Include `options()` static method for form selects
+- Add business logic methods (e.g., `isActive()`, `canDoSomething()`)
+- Use `match` expressions for clean, readable code
+
+### 4. Documentation
+- Add PHPDoc comments for complex methods
+- Document the purpose of each enum case
+- Include usage examples in comments
+
+### 5. Performance
+- Use integer-backed enums for better performance
+- Cache `options()` results if called frequently
+- Use enum methods instead of switch statements
+
+### 6. Type Safety
+- Always use strict typing (`declare(strict_types=1)`)
+- Use enum types in method parameters and return types
+- Leverage PHP's type system for better IDE support
+
+### 7. Backward Compatibility
+- Never change existing enum values
+- Add new cases at the end
+- Use deprecation notices for removed cases
+- Maintain consistent API across versions
