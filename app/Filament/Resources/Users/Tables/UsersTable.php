@@ -7,6 +7,7 @@ use App\TargetUserType;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
+use Filament\Actions\ViewAction;
 use Filament\Tables\Columns\BadgeColumn;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
@@ -19,18 +20,19 @@ class UsersTable
     public static function configure(Table $table): Table
     {
         return $table
+            ->modifyQueryUsing(fn ($query) => $query->with('profile'))
             ->columns([
-                TextColumn::make('name')
-                    ->searchable(),
-                TextColumn::make('email')
-                    ->label('Email address')
-                    ->searchable(),
-                TextColumn::make('email_verified_at')
-                    ->dateTime()
-                    ->sortable(),
+                // Essential columns (always visible)
                 TextColumn::make('username')
-                    ->searchable(),
+                    ->label('Username')
+                    ->getStateUsing(function ($record) {
+                        // Check profile username first, then fallback to user table username
+                        return $record->profile?->username ?? $record->username ?? 'No username';
+                    })
+                    ->searchable(['username', 'profiles.username'])
+                    ->sortable(),
                 BadgeColumn::make('user_type')
+                    ->label('User Type')
                     ->formatStateUsing(fn (TargetUserType $state): string => $state->label())
                     ->colors([
                         'primary' => TargetUserType::Male,
@@ -40,6 +42,7 @@ class UsersTable
                     ])
                     ->sortable(),
                 BadgeColumn::make('subscription_plan')
+                    ->label('Subscription Plan')
                     ->formatStateUsing(fn (SubscriptionPlan $state): string => $state->label())
                     ->colors([
                         'gray' => SubscriptionPlan::Free,
@@ -50,29 +53,60 @@ class UsersTable
                     ])
                     ->sortable(),
                 TextColumn::make('partner.name')
-                    ->searchable(),
+                    ->label('Partner')
+                    ->searchable()
+                    ->placeholder('No partner'),
+
+                // Toggleable columns (hidden by default)
+                TextColumn::make('name')
+                    ->label('Full Name')
+                    ->searchable()
+                    ->toggleable(isToggledHiddenByDefault: true),
+                TextColumn::make('email')
+                    ->label('Email Address')
+                    ->searchable()
+                    ->toggleable(isToggledHiddenByDefault: true),
+                TextColumn::make('email_verified_at')
+                    ->label('Email Verified')
+                    ->dateTime()
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('created_at')
+                    ->label('Created At')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('updated_at')
+                    ->label('Updated At')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('stripe_id')
-                    ->searchable(),
+                    ->label('Stripe ID')
+                    ->searchable()
+                    ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('pm_type')
-                    ->searchable(),
+                    ->label('Payment Method Type')
+                    ->searchable()
+                    ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('pm_last_four')
-                    ->searchable(),
+                    ->label('Payment Method Last 4')
+                    ->searchable()
+                    ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('trial_ends_at')
+                    ->label('Trial Ends At')
                     ->dateTime()
-                    ->sortable(),
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('subscription_ends_at')
+                    ->label('Subscription Ends At')
                     ->dateTime()
-                    ->sortable(),
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
                 IconColumn::make('has_used_trial')
-                    ->boolean(),
+                    ->label('Used Trial')
+                    ->boolean()
+                    ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
                 SelectFilter::make('user_type')
@@ -97,6 +131,10 @@ class UsersTable
                     ->label('Used Trial'),
             ])
             ->recordActions([
+                ViewAction::make()
+                    ->url(fn ($record) => route('app.profile', ['username' => $record->profile?->username ?? $record->username ?? $record->id]))
+                    ->openUrlInNewTab()
+                    ->label('View Profile'),
                 EditAction::make(),
             ])
             ->toolbarActions([

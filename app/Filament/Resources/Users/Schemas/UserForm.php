@@ -5,6 +5,7 @@ namespace App\Filament\Resources\Users\Schemas;
 use App\Enums\SubscriptionPlan;
 use App\TargetUserType;
 use Filament\Forms\Components\DateTimePicker;
+use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
@@ -26,7 +27,25 @@ class UserForm
                 TextInput::make('password')
                     ->password()
                     ->required(),
-                TextInput::make('username'),
+                TextInput::make('username')
+                    ->required()
+                    ->unique(ignoreRecord: true)
+                    ->minLength(3)
+                    ->maxLength(50)
+                    ->regex('/^[a-zA-Z0-9_]+$/')
+                    ->helperText('Username must be 3-50 characters, letters, numbers, and underscores only'),
+
+                Section::make('Profile Information')
+                    ->schema([
+                        TextInput::make('profile.username')
+                            ->label('Profile Username')
+                            ->unique('profiles', 'username', ignoreRecord: true)
+                            ->minLength(3)
+                            ->maxLength(50)
+                            ->regex('/^[a-zA-Z0-9_]+$/')
+                            ->helperText('Profile username (takes precedence over user username)'),
+                    ])
+                    ->collapsible(),
                 Select::make('user_type')
                     ->options(TargetUserType::class)
                     ->default(4)
