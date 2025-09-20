@@ -18,7 +18,17 @@ class UserResource extends Resource
 {
     protected static ?string $model = User::class;
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
+    protected static ?string $navigationIcon = Heroicon::OutlineUsers;
+
+    protected static ?string $navigationLabel = 'Users';
+
+    protected static ?string $modelLabel = 'User';
+
+    protected static ?string $pluralModelLabel = 'Users';
+
+    protected static ?string $navigationGroup = 'User Management';
+
+    protected static ?int $navigationSort = 1;
 
     protected static ?string $recordTitleAttribute = 'username';
 
@@ -37,6 +47,25 @@ class UserResource extends Resource
         return [
             //
         ];
+    }
+
+    public static function getGlobalSearchResultTitle($record): string
+    {
+        return $record->username . ' (' . $record->email . ')';
+    }
+
+    public static function getGlobalSearchResultDetails($record): array
+    {
+        return [
+            'Email' => $record->email,
+            'User Type' => $record->user_type->value,
+            'Created' => $record->created_at->format('M j, Y'),
+        ];
+    }
+
+    public static function getGloballySearchableAttributes(): array
+    {
+        return ['username', 'email', 'first_name', 'last_name'];
     }
 
     public static function getPages(): array

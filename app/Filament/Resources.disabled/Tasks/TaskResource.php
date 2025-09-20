@@ -18,7 +18,17 @@ class TaskResource extends Resource
 {
     protected static ?string $model = Task::class;
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
+    protected static ?string $navigationIcon = Heroicon::OutlineClipboardDocumentList;
+
+    protected static ?string $navigationLabel = 'Tasks';
+
+    protected static ?string $modelLabel = 'Task';
+
+    protected static ?string $pluralModelLabel = 'Tasks';
+
+    protected static ?string $navigationGroup = 'Task Management';
+
+    protected static ?int $navigationSort = 1;
 
     protected static ?string $recordTitleAttribute = 'title';
 
@@ -37,6 +47,26 @@ class TaskResource extends Resource
         return [
             //
         ];
+    }
+
+    public static function getGlobalSearchResultTitle($record): string
+    {
+        return $record->title;
+    }
+
+    public static function getGlobalSearchResultDetails($record): array
+    {
+        return [
+            'Author' => $record->author->username ?? 'Unknown',
+            'Status' => $record->status->value,
+            'Target User Type' => $record->target_user_type->value,
+            'Created' => $record->created_at->format('M j, Y'),
+        ];
+    }
+
+    public static function getGloballySearchableAttributes(): array
+    {
+        return ['title', 'description'];
     }
 
     public static function getPages(): array
