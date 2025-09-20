@@ -4,26 +4,30 @@ use App\Livewire\Auth\ForgotPassword;
 use App\Livewire\Auth\Login;
 use App\Livewire\Auth\Register;
 use App\Livewire\Auth\ResetPassword;
+use App\Livewire\Comments\CommentsDemo;
 use App\Livewire\Dashboard;
+use App\Livewire\Fantasies\CreateFantasy;
+use App\Livewire\Fantasies\ListFantasies;
 use App\Livewire\Homepage;
-use App\Livewire\Tasks\Dashboard as TasksDashboard;
+use App\Livewire\Search\SearchContent;
+use App\Livewire\Stories\CreateStory;
+use App\Livewire\Stories\ListStories;
+use App\Livewire\Stories\ShowStory;
 use App\Livewire\Tasks\CreateCustomTask;
+use App\Livewire\Tasks\Dashboard as TasksDashboard;
 use App\Livewire\User\Profile;
 use App\Livewire\User\PublicProfile;
 use App\Livewire\User\Settings;
-use App\Livewire\Fantasies\ListFantasies;
-use App\Livewire\Fantasies\CreateFantasy;
-use App\Livewire\Stories\ListStories;
-use App\Livewire\Stories\ShowStory;
-use App\Livewire\Stories\CreateStory;
-use App\Livewire\Comments\CommentsDemo;
-use App\Livewire\Search\SearchContent;
 use Illuminate\Support\Facades\Route;
 
 Route::passkeys();
 
 // Stripe Webhook (must be outside middleware)
 Route::post('/stripe/webhook', [\App\Http\Controllers\StripeWebhookController::class, 'handleWebhook']);
+
+// Partner Invitation Routes (outside middleware for public access)
+Route::get('/partner-invitation/{token}', [\App\Http\Controllers\PartnerInvitationController::class, 'accept'])->name('partner-invitation.accept');
+Route::post('/partner-invitation/{token}', [\App\Http\Controllers\PartnerInvitationController::class, 'processAcceptance'])->name('partner-invitation.process');
 
 Route::get('/', Homepage::class);
 
@@ -42,6 +46,7 @@ Route::post('/logout', function () {
     auth()->logout();
     request()->session()->invalidate();
     request()->session()->regenerateToken();
+
     return redirect('/');
 })->middleware('auth')->name('logout');
 
@@ -49,7 +54,7 @@ Route::post('/logout', function () {
 Route::middleware('auth')->prefix('app')->name('app.')->group(function () {
     // Dashboard
     Route::get('/dashboard', Dashboard::class)->name('dashboard');
-    
+
     // Profile & Settings
     Route::get('/profile/{username}', PublicProfile::class)->name('profile');
     Route::get('/settings', Settings::class)->name('settings');

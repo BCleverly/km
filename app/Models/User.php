@@ -424,7 +424,7 @@ class User extends Authenticatable implements FilamentUser, HasPassKeys, ReactsI
         }
 
         // Check if has active subscription (not trial)
-        if ($this->subscription() && $this->subscription()->active() && !$this->subscription()->onTrial()) {
+        if ($this->subscription() && $this->subscription()->active() && ! $this->subscription()->onTrial()) {
             return true;
         }
 
@@ -503,7 +503,7 @@ class User extends Authenticatable implements FilamentUser, HasPassKeys, ReactsI
     public function hasReachedDailyTaskLimit(): bool
     {
         $maxTasks = $this->getMaxTasksPerDay();
-        
+
         if ($maxTasks === null) {
             return false; // Unlimited
         }
@@ -556,7 +556,7 @@ class User extends Authenticatable implements FilamentUser, HasPassKeys, ReactsI
      */
     public function startTrial(): void
     {
-        if (!$this->has_used_trial) {
+        if (! $this->has_used_trial) {
             $this->update([
                 'trial_ends_at' => now()->addDays((int) config('subscription.trial_days')),
                 'has_used_trial' => true,
@@ -663,8 +663,8 @@ class User extends Authenticatable implements FilamentUser, HasPassKeys, ReactsI
     public function canAssignCoupleTasks(): bool
     {
         // Must be admin, have lifetime subscription, or be in a couple
-        return $this->hasRole('Admin') || 
-               $this->hasLifetimeSubscription() || 
+        return $this->hasRole('Admin') ||
+               $this->hasLifetimeSubscription() ||
                $this->user_type === \App\TargetUserType::Couple;
     }
 
@@ -674,8 +674,8 @@ class User extends Authenticatable implements FilamentUser, HasPassKeys, ReactsI
     public function canReceiveCoupleTasks(): bool
     {
         // Must be admin, have lifetime subscription, or be in a couple
-        return $this->hasRole('Admin') || 
-               $this->hasLifetimeSubscription() || 
+        return $this->hasRole('Admin') ||
+               $this->hasLifetimeSubscription() ||
                $this->user_type === \App\TargetUserType::Couple;
     }
 
@@ -687,7 +687,34 @@ class User extends Authenticatable implements FilamentUser, HasPassKeys, ReactsI
         if ($this->user_type === \App\TargetUserType::Couple) {
             return $this->partner;
         }
-        
+
         return null;
+    }
+
+    /**
+     * Check if user can send partner invitations
+     */
+    public function canSendPartnerInvitations(): bool
+    {
+        // Couple users, lifetime subscribers, and admins can send invitations
+        return $this->user_type === \App\TargetUserType::Couple ||
+               $this->hasLifetimeSubscription() ||
+               $this->hasRole('Admin');
+    }
+
+    /**
+     * Get all sent partner invitations
+     */
+    public function sentPartnerInvitations()
+    {
+        return $this->hasMany(\App\Models\PartnerInvitation::class, 'invited_by');
+    }
+
+    /**
+     * Get all accepted partner invitations
+     */
+    public function acceptedPartnerInvitations()
+    {
+        return $this->hasMany(\App\Models\PartnerInvitation::class, 'accepted_by');
     }
 }

@@ -413,7 +413,62 @@
                         </a>
                     </div>
                 @endif
+
+                <!-- Partner Invitation Component -->
+                <div class="mt-6">
+                    <livewire:user.invite-partner />
+                </div>
             </div>
         </div>
     </div>
 </div>
+
+<script>
+function countdownTimer(expiresAt) {
+    return {
+        timeRemaining: 'Calculating...',
+        interval: null,
+        
+        init() {
+            this.updateCountdown();
+            this.interval = setInterval(() => {
+                this.updateCountdown();
+            }, 1000);
+        },
+        
+        updateCountdown() {
+            const now = new Date().getTime();
+            const expiry = new Date(expiresAt).getTime();
+            const distance = expiry - now;
+            
+            if (distance < 0) {
+                this.timeRemaining = 'Expired';
+                clearInterval(this.interval);
+                // Refresh the component to update the UI
+                setTimeout(() => {
+                    @this.call('refreshInvitationStatus');
+                }, 1000);
+                return;
+            }
+            
+            const hours = Math.floor(distance / (1000 * 60 * 60));
+            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+            
+            if (hours > 0) {
+                this.timeRemaining = `${hours}h ${minutes}m ${seconds}s remaining`;
+            } else if (minutes > 0) {
+                this.timeRemaining = `${minutes}m ${seconds}s remaining`;
+            } else {
+                this.timeRemaining = `${seconds}s remaining`;
+            }
+        },
+        
+        destroy() {
+            if (this.interval) {
+                clearInterval(this.interval);
+            }
+        }
+    }
+}
+</script>
