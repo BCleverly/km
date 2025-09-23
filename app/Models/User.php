@@ -657,6 +657,11 @@ class User extends Authenticatable implements FilamentUser, HasPassKeys, ReactsI
         return $this->belongsTo(User::class, 'partner_id');
     }
 
+    public function partnerResponses(): HasMany
+    {
+        return $this->hasMany(PartnerDesireResponse::class, 'user_id');
+    }
+
     /**
      * Check if user can assign couple tasks
      */

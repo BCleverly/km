@@ -59,6 +59,9 @@ Route::middleware('auth')->prefix('app')->name('app.')->group(function () {
     Route::get('/profile/{username}', PublicProfile::class)->name('profile');
     Route::get('/settings', Settings::class)->name('settings');
 
+    // Partner Management
+    Route::get('/partner/invite', \App\Livewire\User\InvitePartner::class)->name('partner.invite');
+
     // Tasks
     Route::get('/tasks', TasksDashboard::class)->name('tasks');
     Route::get('/tasks/create', CreateCustomTask::class)->name('tasks.create');
@@ -85,6 +88,14 @@ Route::middleware('auth')->prefix('app')->name('app.')->group(function () {
 
     // Search
     Route::get('/search', SearchContent::class)->name('search');
+
+    // Desire Discovery (Partner-only feature)
+    Route::prefix('desire-discovery')->name('desire-discovery.')->group(function () {
+        Route::get('/explore', \App\Livewire\DesireDiscovery\DesireDiscovery::class)->name('explore');
+        Route::get('/submit', \App\Livewire\DesireDiscovery\DesireDiscovery::class)->name('submit');
+        Route::get('/compatibility', \App\Livewire\DesireDiscovery\DesireDiscovery::class)->name('compatibility');
+        Route::get('/history', \App\Livewire\DesireDiscovery\DesireDiscovery::class)->name('history');
+    });
 
     // Subscription Routes
     Route::prefix('subscription')->name('subscription.')->group(function () {
