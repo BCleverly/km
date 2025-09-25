@@ -16,7 +16,6 @@ use App\Livewire\Stories\ShowStory;
 use App\Livewire\Tasks\CreateCustomTask;
 use App\Livewire\Tasks\Dashboard as TasksDashboard;
 use App\Livewire\User\Profile;
-use App\Livewire\User\PublicProfile;
 use App\Livewire\User\Settings;
 use Illuminate\Support\Facades\Route;
 
@@ -56,7 +55,7 @@ Route::middleware('auth')->prefix('app')->name('app.')->group(function () {
     Route::get('/dashboard', Dashboard::class)->name('dashboard');
 
     // Profile & Settings
-    Route::get('/profile/{username}', PublicProfile::class)->name('profile');
+    Route::get('/profile/{username?}', \App\Livewire\User\SocialProfile::class)->name('profile');
     Route::get('/settings', Settings::class)->name('settings');
 
     // Partner Management

@@ -11,7 +11,7 @@ use Livewire\Attributes\Computed;
 use Livewire\Attributes\On;
 use Livewire\Component;
 
-class StatusList extends Component
+class StatusListWithImages extends Component
 {
     public ?User $user = null;
 
@@ -105,6 +105,6 @@ class StatusList extends Component
 
     public function render()
     {
-        return view('livewire.status.status-list');
+        return view('livewire.status.status-list-with-images');
     }
 }

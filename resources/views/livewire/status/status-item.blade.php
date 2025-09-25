@@ -30,8 +30,8 @@
                 @endif
             </div>
             
-            <div class="mt-2">
-                <p class="text-gray-900 dark:text-white whitespace-pre-wrap">{{ $status->content }}</p>
+            <div class="mt-2 status-content">
+                <p class="text-gray-900 dark:text-white whitespace-pre-wrap status-text">{{ $status->content }}</p>
             </div>
             
             <div class="mt-4 flex items-center justify-between">

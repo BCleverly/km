@@ -8,13 +8,20 @@ use App\Models\Status;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Attributes\Validate;
 use Livewire\Component;
+use Livewire\WithFileUploads;
 
-class CreateStatus extends Component
+class CreateStatusWithImage extends Component
 {
-    #[Validate('required|string|max:280')]
+    use WithFileUploads;
+
+    #[Validate('nullable|string|max:280')]
     public string $content = '';
 
     public bool $isPublic = true;
+
+    public $image = null;
+
+    public bool $showImagePreview = false;
 
     public function mount(): void
     {
@@ -27,9 +34,36 @@ class CreateStatus extends Component
         }
     }
 
+    public function updatedImage(): void
+    {
+        $this->validate([
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:10240',
+        ]);
+
+        if ($this->image) {
+            $this->showImagePreview = true;
+        }
+    }
+
+    public function removeImage(): void
+    {
+        $this->image = null;
+        $this->showImagePreview = false;
+    }
+
     public function create(): void
     {
-        $this->validate();
+        $this->validate([
+            'content' => 'nullable|string|max:280',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:10240',
+        ]);
+
+        // Ensure at least content or image is provided
+        if (empty(trim($this->content)) && ! $this->image) {
+            $this->addError('content', 'Please provide either text content or an image.');
+
+            return;
+        }
 
         if (! Auth::check()) {
             $this->dispatch('notify', [
@@ -55,7 +89,15 @@ class CreateStatus extends Component
             'is_public' => $this->isPublic,
         ]);
 
-        $this->reset(['content']);
+        // Handle image upload if present
+        if ($this->image && $this->image->isValid()) {
+            $status->addMedia($this->image->getRealPath())
+                ->usingName($this->image->getClientOriginalName())
+                ->usingFileName($this->image->getClientOriginalName())
+                ->toMediaCollection('status_images');
+        }
+
+        $this->reset(['content', 'image', 'showImagePreview']);
         $this->isPublic = true;
 
         $this->dispatch('notify', [
@@ -83,6 +125,15 @@ class CreateStatus extends Component
         return Status::getMaxLength();
     }
 
+    public function getImagePreviewUrlProperty(): ?string
+    {
+        if ($this->image && $this->image->isValid()) {
+            return $this->image->temporaryUrl();
+        }
+
+        return null;
+    }
+
     private function hasReachedDailyLimit(): bool
     {
         if (! Auth::check()) {
@@ -94,6 +145,6 @@ class CreateStatus extends Component
 
     public function render()
     {
-        return view('livewire.status.create-status');
+        return view('livewire.status.create-status-with-image');
     }
 }

@@ -15,6 +15,21 @@
     display: none !important;
 }
 
+/* Prevent unwanted text selection highlighting on status content */
+.status-content {
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+/* Ensure clean spacing for status text */
+.status-text {
+    line-height: 1.6;
+    margin: 0;
+    padding: 0;
+}
+
 @source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
 @source '../../storage/framework/views/*.php';
 @source '../**/*.blade.php';

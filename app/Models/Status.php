@@ -13,10 +13,13 @@ use Qirolab\Laravel\Reactions\Contracts\ReactableInterface;
 use Qirolab\Laravel\Reactions\Traits\Reactable;
 use Spatie\Activitylog\LogOptions;
 use Spatie\Activitylog\Traits\LogsActivity;
+use Spatie\MediaLibrary\HasMedia;
+use Spatie\MediaLibrary\InteractsWithMedia;
+use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
-class Status extends Model implements ReactableInterface
+class Status extends Model implements HasMedia, ReactableInterface
 {
-    use HasFactory, Reactable, LogsActivity, SoftDeletes;
+    use HasFactory, InteractsWithMedia, LogsActivity, Reactable, SoftDeletes;
 
     protected $fillable = [
         'content',
@@ -113,6 +116,67 @@ class Status extends Model implements ReactableInterface
     public function getRemainingCharactersAttribute(): int
     {
         return max(0, self::getMaxLength() - $this->character_count);
+    }
+
+    /**
+     * Register media collections for the status
+     */
+    public function registerMediaCollections(): void
+    {
+        $this->addMediaCollection('status_images')
+            ->acceptsMimeTypes(['image/jpeg', 'image/png', 'image/gif', 'image/webp'])
+            ->singleFile();
+    }
+
+    /**
+     * Register media conversions for the status
+     */
+    public function registerMediaConversions(?Media $media = null): void
+    {
+        // Status image conversions
+        $this->addMediaConversion('status_thumb')
+            ->width(300)
+            ->height(300)
+            ->sharpen(10)
+            ->performOnCollections('status_images');
+
+        $this->addMediaConversion('status_medium')
+            ->width(600)
+            ->height(600)
+            ->sharpen(10)
+            ->performOnCollections('status_images');
+
+        $this->addMediaConversion('status_large')
+            ->width(1200)
+            ->height(1200)
+            ->sharpen(10)
+            ->performOnCollections('status_images');
+    }
+
+    /**
+     * Get the status image URL
+     */
+    public function getStatusImageUrlAttribute(): ?string
+    {
+        $media = $this->getFirstMedia('status_images');
+
+        if ($media) {
+            try {
+                return $media->getUrl('status_medium');
+            } catch (\Exception $e) {
+                return $media->getUrl();
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * Check if the status has an image
+     */
+    public function hasImage(): bool
+    {
+        return $this->getFirstMedia('status_images') !== null;
     }
 
     /**
