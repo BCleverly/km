@@ -36,12 +36,19 @@ class CreateStatusWithImage extends Component
 
     public function updatedImage(): void
     {
-        $this->validate([
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:10240',
-        ]);
+        try {
+            $this->validate([
+                'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:10240',
+            ]);
 
-        if ($this->image) {
-            $this->showImagePreview = true;
+            if ($this->image) {
+                $this->showImagePreview = true;
+            }
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            // Reset image on validation failure
+            $this->image = null;
+            $this->showImagePreview = false;
+            throw $e;
         }
     }
 
@@ -49,6 +56,13 @@ class CreateStatusWithImage extends Component
     {
         $this->image = null;
         $this->showImagePreview = false;
+    }
+
+    public function resetImage(): void
+    {
+        $this->image = null;
+        $this->showImagePreview = false;
+        $this->clearErrors('image');
     }
 
     public function create(): void
@@ -91,10 +105,17 @@ class CreateStatusWithImage extends Component
 
         // Handle image upload if present
         if ($this->image && $this->image->isValid()) {
-            $status->addMedia($this->image->getRealPath())
-                ->usingName($this->image->getClientOriginalName())
-                ->usingFileName($this->image->getClientOriginalName())
-                ->toMediaCollection('status_images');
+            try {
+                $status->addMedia($this->image->getRealPath())
+                    ->usingName($this->image->getClientOriginalName())
+                    ->usingFileName($this->image->getClientOriginalName())
+                    ->toMediaCollection('status_images');
+            } catch (\Exception $e) {
+                // If image upload fails, delete the status and show error
+                $status->delete();
+                $this->addError('image', 'Failed to upload image. Please try again.');
+                return;
+            }
         }
 
         $this->reset(['content', 'image', 'showImagePreview']);
