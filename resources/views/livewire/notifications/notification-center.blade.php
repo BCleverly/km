@@ -52,7 +52,7 @@
 
         {{-- Notifications List --}}
         <div class="max-h-96 overflow-y-auto">
-            <div x-show="!showAll">
+            <div x-show="!showAll" x-cloak>
                 @if($this->unreadNotifications->count() > 0)
                     @foreach($this->unreadNotifications as $notification)
                     <div class="px-4 py-3 border-b border-gray-100 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
@@ -174,7 +174,7 @@
             </div>
 
             {{-- Show All Notifications --}}
-            <div x-show="showAll">
+            <div x-show="showAll" x-cloak>
                 @if($this->allNotifications->count() > 0)
                     @foreach($this->allNotifications as $notification)
                     <div class="px-4 py-3 border-b border-gray-100 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">

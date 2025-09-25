@@ -77,7 +77,7 @@
                         </div>
 
                     <!-- Existing Task Selection -->
-                    <div x-show="taskMode === 'existing'" wire:key="existing-task-selection">
+                    <div x-show="taskMode === 'existing'" x-cloak wire:key="existing-task-selection">
                         <label for="taskSearch" class="block text-sm font-medium text-gray-900 dark:text-white mb-2">
                             Search & Select Task
                         </label>
@@ -98,6 +98,7 @@
                             >
                             
                             <div x-show="showDropdown && !$wire.selected_task_id" 
+                                 x-cloak
                                  x-transition
                                  class="absolute z-10 w-full mt-1 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm max-h-48 overflow-y-auto">
                                 @if(isset($filteredTasks) && $filteredTasks->count() > 0)
@@ -276,6 +277,7 @@
                             >
                             
                             <div x-show="showRewardDropdown && !$wire.reward_id" 
+                                 x-cloak
                                  x-transition
                                  class="absolute z-10 w-full mt-1 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm max-h-48 overflow-y-auto">
                                 @if(isset($filteredRewards) && $filteredRewards->count() > 0)
@@ -340,6 +342,7 @@
                             >
                             
                             <div x-show="showPunishmentDropdown && !$wire.punishment_id" 
+                                 x-cloak
                                  x-transition
                                  class="absolute z-10 w-full mt-1 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm max-h-48 overflow-y-auto">
                                 @if(isset($filteredPunishments) && $filteredPunishments->count() > 0)

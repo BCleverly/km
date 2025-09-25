@@ -58,7 +58,7 @@
                 </div>
 
                 <!-- Existing Task Selection -->
-                <div x-show="taskSelection === 'existing'">
+                <div x-show="taskSelection === 'existing'" x-cloak>
                     <div>
                         <label for="taskAutocomplete" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                             Search & Select Task *
@@ -77,6 +77,7 @@
                             >
                             
                             <div x-show="showDropdown && !$wire.form.selectedTaskId" 
+                                 x-cloak
                                  x-transition
                                  class="absolute z-10 w-full mt-1 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm max-h-48 overflow-y-auto">
                                 @foreach($this->getAllAvailableTasks() as $id => $title)
@@ -117,7 +118,7 @@
                 </div>
 
                 <!-- Custom Task Creation -->
-                <div x-show="taskSelection === 'create'">
+                <div x-show="taskSelection === 'create'" x-cloak>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <!-- Title -->
                         <div class="md:col-span-2">
@@ -268,7 +269,7 @@
                 </div>
 
                 <!-- Existing Reward Selection -->
-                <div x-show="rewardSelection === 'existing'">
+                <div x-show="rewardSelection === 'existing'" x-cloak>
                     <div>
                         <label for="rewardAutocomplete" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                             Search & Select Outcome (will be used as reward)

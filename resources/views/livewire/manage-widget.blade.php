@@ -57,7 +57,7 @@
                 </div>
             </div>
 
-            <div x-show="!showUpload" class="flex flex-col sm:flex-row gap-3">
+            <div x-show="!showUpload" x-cloak class="flex flex-col sm:flex-row gap-3">
                 <button @click="showModalOrComplete" 
                         wire:loading.attr="disabled"
                         wire:target="completeTask,failTask"
@@ -80,7 +80,7 @@
             </div>
 
             {{-- Image Upload Form --}}
-            <div x-show="showUpload" x-transition class="mt-4 p-4 bg-gray-50 dark:bg-gray-700/50 rounded-lg border border-gray-200 dark:border-gray-600">
+            <div x-show="showUpload" x-cloak x-transition class="mt-4 p-4 bg-gray-50 dark:bg-gray-700/50 rounded-lg border border-gray-200 dark:border-gray-600">
                 <h4 class="text-sm font-medium text-gray-900 dark:text-white mb-3">Upload completion image (optional)</h4>
                 <input type="file"
                        id="completionImage"
