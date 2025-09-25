@@ -2,10 +2,13 @@
 
 namespace App\Filament\Resources\Users\Schemas;
 
+use App\Enums\SubscriptionPlan;
 use App\TargetUserType;
 use Filament\Forms\Components\DateTimePicker;
+use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Toggle;
 use Filament\Schemas\Schema;
 
 class UserForm
@@ -22,18 +25,44 @@ class UserForm
                     ->required(),
                 DateTimePicker::make('email_verified_at'),
                 TextInput::make('password')
-                ->password()
-                ->dehydrateStateUsing(fn ($state) => Hash::make($state))
-                ->dehydrated(fn ($state) => filled($state)),
-                TextInput::make('username'),
+                    ->password()
+                    ->required(),
+                TextInput::make('username')
+                    ->required()
+                    ->unique(ignoreRecord: true)
+                    ->minLength(3)
+                    ->maxLength(50)
+                    ->regex('/^[a-zA-Z0-9_]+$/')
+                    ->helperText('Username must be 3-50 characters, letters, numbers, and underscores only'),
+
+                Section::make('Profile Information')
+                    ->schema([
+                        TextInput::make('profile.username')
+                            ->label('Profile Username')
+                            ->unique('profiles', 'username', ignoreRecord: true)
+                            ->minLength(3)
+                            ->maxLength(50)
+                            ->regex('/^[a-zA-Z0-9_]+$/')
+                            ->helperText('Profile username (takes precedence over user username)'),
+                    ])
+                    ->collapsible(),
                 Select::make('user_type')
                     ->options(TargetUserType::class)
                     ->default(4)
                     ->required(),
-                // TextInput::make('stripe_id'),
-                // TextInput::make('pm_type'),
-                // TextInput::make('pm_last_four'),
-                // DateTimePicker::make('trial_ends_at'),
+                Select::make('subscription_plan')
+                    ->options(SubscriptionPlan::class)
+                    ->required()
+                    ->default(0),
+                Select::make('partner_id')
+                    ->relationship('partner', 'name'),
+                TextInput::make('stripe_id'),
+                TextInput::make('pm_type'),
+                TextInput::make('pm_last_four'),
+                DateTimePicker::make('trial_ends_at'),
+                DateTimePicker::make('subscription_ends_at'),
+                Toggle::make('has_used_trial')
+                    ->required(),
             ]);
     }
 }

@@ -21,15 +21,19 @@ return Application::configure(basePath: dirname(__DIR__))
     })
     ->withSchedule(function (Schedule $schedule): void {
         //        $schedule->command('activitylog:clean --days=7')->daily();
-        
+
         // Sync view counts from Redis to database daily at 00:01
         $schedule->command('views:sync')->dailyAt('00:01');
+
+        // Clean up expired partner invitations every minute
+        $schedule->command('invitations:cleanup')->everyMinute();
     })
     ->withCommands([
         // Register custom production setup commands
         \App\Console\Commands\SetupProduction::class,
         \App\Console\Commands\CreateAdminUser::class,
         \App\Console\Commands\SyncViewCountsCommand::class,
+        \App\Console\Commands\CleanupExpiredInvitations::class,
     ])
     ->withExceptions(function (Exceptions $exceptions): void {
         //

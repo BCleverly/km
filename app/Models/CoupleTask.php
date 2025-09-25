@@ -80,7 +80,7 @@ class CoupleTask extends Model
      */
     public function reward(): BelongsTo
     {
-        return $this->belongsTo(\App\Models\Tasks\TaskOutcome::class, 'reward_id');
+        return $this->belongsTo(\App\Models\Tasks\Outcome::class, 'reward_id');
     }
 
     /**
@@ -88,7 +88,7 @@ class CoupleTask extends Model
      */
     public function punishment(): BelongsTo
     {
-        return $this->belongsTo(\App\Models\Tasks\TaskOutcome::class, 'punishment_id');
+        return $this->belongsTo(\App\Models\Tasks\Outcome::class, 'punishment_id');
     }
 
     /**
