@@ -54,7 +54,7 @@ class SocialProfile extends Component
             return auth()->user()?->profile;
         }
 
-        return Profile::where('username', $this->username)->first();
+        return Profile::with(['user', 'media'])->where('username', $this->username)->first();
     }
 
     #[Computed]
@@ -84,7 +84,7 @@ class SocialProfile extends Component
     #[Computed]
     public function profilePictureUrl(): string
     {
-        if ($this->profile) {
+        if ($this->profile && $this->profile->relationLoaded('media')) {
             $media = $this->profile->getFirstMedia('profile_pictures');
             if ($media) {
                 try {
@@ -101,7 +101,7 @@ class SocialProfile extends Component
     #[Computed]
     public function coverPhotoUrl(): ?string
     {
-        if ($this->profile) {
+        if ($this->profile && $this->profile->relationLoaded('media')) {
             $media = $this->profile->getFirstMedia('cover_photos');
             if ($media) {
                 try {
@@ -142,7 +142,7 @@ class SocialProfile extends Component
         }
 
         return $this->user->taskActivities()
-            ->with(['task', 'userAssignedTask'])
+            ->with(['task', 'userAssignedTask.media'])
             ->latest('activity_at')
             ->limit(5)
             ->get();

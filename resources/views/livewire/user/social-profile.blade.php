@@ -1,4 +1,4 @@
-<div class="min-h-screen">
+<div class="min-h-screen" x-data="{ activeTab: '{{ $activeTab }}' }">
     <div class="max-w-4xl mx-auto">
         <!-- Cover Photo Section -->
         <div class="relative">
@@ -114,202 +114,81 @@
             <div class="px-4 sm:px-6">
                 <nav class="flex space-x-4 sm:space-x-8 overflow-x-auto">
                     <button 
-                        wire:click="setActiveTab('posts')"
-                        @class([
-                            'py-3 sm:py-4 px-2 sm:px-1 border-b-2 font-medium text-sm transition-colors whitespace-nowrap cursor-pointer',
-                            'border-red-500 text-red-600' => $activeTab === 'posts',
-                            'border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300' => $activeTab !== 'posts'
-                        ])>
+                        @click="activeTab = 'posts'; $wire.setActiveTab('posts')"
+                        :class="{
+                            'border-red-500 text-red-600': activeTab === 'posts',
+                            'border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300': activeTab !== 'posts'
+                        }"
+                        class="py-3 sm:py-4 px-2 sm:px-1 border-b-2 font-medium text-sm transition-colors whitespace-nowrap cursor-pointer">
                         Posts
                     </button>
                     <button 
-                        wire:click="setActiveTab('about')"
-                        @class([
-                            'py-3 sm:py-4 px-2 sm:px-1 border-b-2 font-medium text-sm transition-colors whitespace-nowrap cursor-pointer',
-                            'border-red-500 text-red-600' => $activeTab === 'about',
-                            'border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300' => $activeTab !== 'about'
-                        ])>
+                        @click="activeTab = 'about'; $wire.setActiveTab('about')"
+                        :class="{
+                            'border-red-500 text-red-600': activeTab === 'about',
+                            'border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300': activeTab !== 'about'
+                        }"
+                        class="py-3 sm:py-4 px-2 sm:px-1 border-b-2 font-medium text-sm transition-colors whitespace-nowrap cursor-pointer">
                         About
                     </button>
                     <button 
-                        wire:click="setActiveTab('activity')"
-                        @class([
-                            'py-3 sm:py-4 px-2 sm:px-1 border-b-2 font-medium text-sm transition-colors whitespace-nowrap cursor-pointer',
-                            'border-red-500 text-red-600' => $activeTab === 'activity',
-                            'border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300' => $activeTab !== 'activity'
-                        ])>
+                        @click="activeTab = 'activity'; $wire.setActiveTab('activity')"
+                        :class="{
+                            'border-red-500 text-red-600': activeTab === 'activity',
+                            'border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300': activeTab !== 'activity'
+                        }"
+                        class="py-3 sm:py-4 px-2 sm:px-1 border-b-2 font-medium text-sm transition-colors whitespace-nowrap cursor-pointer">
                         Activity
+                    </button>
+                    <button 
+                        @click="activeTab = 'media'; $wire.setActiveTab('media')"
+                        :class="{
+                            'border-red-500 text-red-600': activeTab === 'media',
+                            'border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300': activeTab !== 'media'
+                        }"
+                        class="py-3 sm:py-4 px-2 sm:px-1 border-b-2 font-medium text-sm transition-colors whitespace-nowrap cursor-pointer">
+                        Media
                     </button>
                 </nav>
             </div>
         </div>
 
-        <!-- Main Content -->
-        @if($activeTab === 'posts')
-            <div class="max-w-4xl mx-auto p-2 sm:p-3">
-                <!-- Main Feed -->
-                <div class="space-y-2">
-                        <!-- Status Creation -->
-                        @if($this->isOwnProfile)
-                            <livewire:status.create-status-with-image />
-                        @endif
+        <!-- Main Content with Lazy Loading -->
+        <div x-show="activeTab === 'posts'" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 transform scale-95" x-transition:enter-end="opacity-100 transform scale-100">
+            <livewire:user.social-profile.posts-tab :user="$this->user" :is-own-profile="$this->isOwnProfile" lazy />
+        </div>
 
-                    <!-- Status Feed -->
-                    <div class="space-y-2">
-                        <livewire:status.status-list-with-images :user="$this->user" :limit="10" />
-                    </div>
+        <div x-show="activeTab === 'about'" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 transform scale-95" x-transition:enter-end="opacity-100 transform scale-100">
+            <livewire:user.social-profile.about-tab :user="$this->user" :profile="$this->profile" :is-own-profile="$this->isOwnProfile" lazy />
+        </div>
+
+        <div x-show="activeTab === 'activity'" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 transform scale-95" x-transition:enter-end="opacity-100 transform scale-100">
+            <livewire:user.social-profile.activity-tab :user="$this->user" :is-own-profile="$this->isOwnProfile" lazy />
+        </div>
+
+        <div x-show="activeTab === 'media'" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 transform scale-95" x-transition:enter-end="opacity-100 transform scale-100">
+            <livewire:user.social-profile.media-tab :user="$this->user" :profile="$this->profile" :is-own-profile="$this->isOwnProfile" lazy />
+        </div>
+    </div>
+
+    <!-- Image Modal -->
+    <div x-data="{ showImageModal: false, imageUrl: '' }" x-show="showImageModal" x-cloak class="fixed inset-0 z-50 overflow-y-auto">
+        <div class="flex items-center justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:block sm:p-0">
+            <!-- Backdrop -->
+            <div class="fixed inset-0 transition-opacity bg-black bg-opacity-75" @click="showImageModal = false"></div>
+
+            <!-- Modal Content -->
+            <div class="inline-block w-full max-w-4xl overflow-hidden text-left align-bottom transition-all transform bg-white dark:bg-gray-800 rounded-lg shadow-xl sm:my-8 sm:align-middle">
+                <div class="relative">
+                    <img :src="imageUrl" alt="Full size image" class="w-full h-auto max-h-[80vh] object-contain">
+                    <button @click="showImageModal = false" class="absolute top-4 right-4 bg-black/50 hover:bg-black/70 text-white p-2 rounded-full transition-colors">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                        </svg>
+                    </button>
                 </div>
             </div>
-        @elseif($activeTab === 'about')
-            <div class="p-4 sm:p-6">
-                <div class="max-w-4xl mx-auto">
-                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                        <!-- About Section -->
-                        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6">
-                            <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-4">About {{ $this->displayName }}</h3>
-                            @if($this->about)
-                                <p class="text-gray-600 dark:text-gray-300 leading-relaxed mb-6">
-                                    {{ $this->about }}
-                                </p>
-                            @else
-                                <p class="text-gray-500 dark:text-gray-400 italic">
-                                    {{ $this->isOwnProfile ? 'You haven\'t added any information about yourself yet.' : 'No information available.' }}
-                                </p>
-                            @endif
-                            
-                            @if($this->profile?->bdsm_role)
-                                <div class="border-t border-gray-200 dark:border-gray-700 pt-4">
-                                    <h4 class="text-sm font-medium text-gray-900 dark:text-white mb-2">BDSM Role</h4>
-                                    <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-red-100 text-red-800 dark:bg-red-900/20 dark:text-red-400">
-                                        {{ $this->profile->bdsm_role->label() }}
-                                    </span>
-                                </div>
-                            @endif
-                        </div>
-
-                        <!-- Stats Section -->
-                        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6">
-                            <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-6">Statistics</h3>
-                            <div class="space-y-6">
-                                <div class="flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-700 rounded-lg">
-                                    <div class="flex items-center space-x-3">
-                                        <div class="w-10 h-10 bg-green-100 dark:bg-green-900/20 rounded-full flex items-center justify-center">
-                                            <svg class="w-5 h-5 text-green-600 dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
-                                            </svg>
-                                        </div>
-                                        <div>
-                                            <p class="text-sm font-medium text-gray-900 dark:text-white">Tasks Completed</p>
-                                            <p class="text-xs text-gray-500 dark:text-gray-400">Total completed tasks</p>
-                                        </div>
-                                    </div>
-                                    <span class="text-2xl font-bold text-gray-900 dark:text-white">{{ $this->completedTasksCount }}</span>
-                                </div>
-
-                                <div class="flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-700 rounded-lg">
-                                    <div class="flex items-center space-x-3">
-                                        <div class="w-10 h-10 bg-orange-100 dark:bg-orange-900/20 rounded-full flex items-center justify-center">
-                                            <svg class="w-5 h-5 text-orange-600 dark:text-orange-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
-                                            </svg>
-                                        </div>
-                                        <div>
-                                            <p class="text-sm font-medium text-gray-900 dark:text-white">Current Streak</p>
-                                            <p class="text-xs text-gray-500 dark:text-gray-400">Days in a row</p>
-                                        </div>
-                                    </div>
-                                    <span class="text-2xl font-bold text-gray-900 dark:text-white">{{ $this->currentStreak }}</span>
-                                </div>
-
-                                <div class="flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-700 rounded-lg">
-                                    <div class="flex items-center space-x-3">
-                                        <div class="w-10 h-10 bg-purple-100 dark:bg-purple-900/20 rounded-full flex items-center justify-center">
-                                            <svg class="w-5 h-5 text-purple-600 dark:text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"/>
-                                            </svg>
-                                        </div>
-                                        <div>
-                                            <p class="text-sm font-medium text-gray-900 dark:text-white">Total Points</p>
-                                            <p class="text-xs text-gray-500 dark:text-gray-400">Earned points</p>
-                                        </div>
-                                    </div>
-                                    <span class="text-2xl font-bold text-gray-900 dark:text-white">{{ $this->totalPoints }}</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        @elseif($activeTab === 'activity')
-            <div class="p-4 sm:p-6">
-                <div class="max-w-4xl mx-auto">
-                    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6">
-                        <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-6">Recent Activity</h3>
-                        
-                        @php
-                            $recentActivities = $this->recentActivities;
-                        @endphp
-                        
-                        @if($recentActivities->count() > 0)
-                            <div class="space-y-4">
-                                @foreach($recentActivities as $activity)
-                                    <div class="flex items-center gap-4 p-4 bg-gray-50 dark:bg-gray-700 rounded-lg">
-                                        <div class="flex-shrink-0">
-                                            @if($activity->activity_type === \App\TaskActivityType::Completed)
-                                                <div class="w-10 h-10 bg-green-100 dark:bg-green-900/20 rounded-full flex items-center justify-center">
-                                                    <svg class="w-5 h-5 text-green-600 dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
-                                                    </svg>
-                                                </div>
-                                            @else
-                                                <div class="w-10 h-10 bg-red-100 dark:bg-red-900/20 rounded-full flex items-center justify-center">
-                                                    <svg class="w-5 h-5 text-red-600 dark:text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-                                                    </svg>
-                                                </div>
-                                            @endif
-                                        </div>
-                                        <div class="flex-1">
-                                            <p class="text-sm font-medium text-gray-900 dark:text-white">
-                                                {{ $activity->activity_type->label() }}: {{ $activity->task->title }}
-                                            </p>
-                                            <p class="text-xs text-gray-500 dark:text-gray-400">
-                                                {{ $activity->activity_at->diffForHumans() }}
-                                            </p>
-                                            
-                                            {{-- Completion Image Display --}}
-                                            @if($activity->activity_type === \App\TaskActivityType::Completed && $activity->userAssignedTask && $activity->userAssignedTask->has_completion_image)
-                                                @php
-                                                    $completionImage = $activity->userAssignedTask->getFirstMedia('completion_images');
-                                                @endphp
-                                                @if($completionImage)
-                                                    <div class="mt-3">
-                                                        <img src="{{ $completionImage->getUrl('medium') }}" 
-                                                             alt="Task completion image" 
-                                                             class="w-full max-w-xs rounded-lg shadow-sm border border-gray-200 dark:border-gray-600 cursor-pointer hover:shadow-md transition-shadow"
-                                                             onclick="openImageModal('{{ $completionImage->getUrl('large') }}')">
-                                                    </div>
-                                                @endif
-                                            @endif
-                                        </div>
-                                    </div>
-                                @endforeach
-                            </div>
-                        @else
-                            <div class="text-center py-8">
-                                <svg class="mx-auto h-12 w-12 text-gray-400 dark:text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
-                                </svg>
-                                <h3 class="mt-2 text-sm font-medium text-gray-900 dark:text-white">No recent activity</h3>
-                                <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">
-                                    {{ $this->isOwnProfile ? 'You haven\'t completed any tasks yet.' : 'This user hasn\'t completed any tasks yet.' }}
-                                </p>
-                            </div>
-                        @endif
-                    </div>
-                </div>
-            </div>
-        @endif
+        </div>
     </div>
 
     <!-- Edit Profile Modal -->
@@ -542,3 +421,13 @@
         </div>
     @endif
 </div>
+
+<script>
+    document.addEventListener('open-image-modal', function(event) {
+        const modal = document.querySelector('[x-data*="showImageModal"]');
+        if (modal) {
+            modal._x_dataStack[0].showImageModal = true;
+            modal._x_dataStack[0].imageUrl = event.detail.url;
+        }
+    });
+</script>
