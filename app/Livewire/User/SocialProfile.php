@@ -26,7 +26,6 @@ class SocialProfile extends Component
 
     public bool $showEditForm = false;
 
-    public string $activeTab = 'posts';
 
     public function mount(?string $username = null): void
     {
@@ -354,10 +353,6 @@ class SocialProfile extends Component
         // The UI will automatically update when the computed properties return the converted URLs
     }
 
-    public function setActiveTab(string $tab): void
-    {
-        $this->activeTab = $tab;
-    }
 
     #[On('status-created')]
     public function handleStatusCreated(): void

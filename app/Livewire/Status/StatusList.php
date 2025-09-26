@@ -29,6 +29,7 @@ class StatusList extends Component
     public function statuses(): Collection
     {
         $query = Status::with(['user', 'user.profile'])
+            ->withCount('approvedComments')
             ->public()
             ->recent($this->limit);
 

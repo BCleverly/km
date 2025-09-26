@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Traits\Commentable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -19,7 +20,7 @@ use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
 class Status extends Model implements HasMedia, ReactableInterface
 {
-    use HasFactory, InteractsWithMedia, LogsActivity, Reactable, SoftDeletes;
+    use HasFactory, InteractsWithMedia, LogsActivity, Reactable, SoftDeletes, Commentable;
 
     protected $fillable = [
         'content',
@@ -41,26 +42,6 @@ class Status extends Model implements HasMedia, ReactableInterface
         return $this->belongsTo(User::class);
     }
 
-    /**
-     * Get the comments for this status.
-     */
-    public function comments(): HasMany
-    {
-        return $this->hasMany(Comment::class, 'commentable_id')
-            ->where('commentable_type', self::class)
-            ->approved()
-            ->orderBy('created_at', 'asc');
-    }
-
-    /**
-     * Get all comments for this status (including unapproved).
-     */
-    public function allComments(): HasMany
-    {
-        return $this->hasMany(Comment::class, 'commentable_id')
-            ->where('commentable_type', self::class)
-            ->orderBy('created_at', 'asc');
-    }
 
     /**
      * Scope to get only public statuses.

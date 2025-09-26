@@ -1,4 +1,4 @@
-<div class="min-h-screen" x-data="{ activeTab: '{{ $activeTab }}' }">
+<div class="min-h-screen" x-data="{ activeTab: 'posts' }">
     <div class="max-w-4xl mx-auto">
         <!-- Cover Photo Section -->
         <div class="relative">
@@ -114,7 +114,7 @@
             <div class="px-4 sm:px-6">
                 <nav class="flex space-x-4 sm:space-x-8 overflow-x-auto">
                     <button 
-                        @click="activeTab = 'posts'; $wire.setActiveTab('posts')"
+                        @click="activeTab = 'posts'"
                         :class="{
                             'border-red-500 text-red-600': activeTab === 'posts',
                             'border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300': activeTab !== 'posts'
@@ -123,7 +123,7 @@
                         Posts
                     </button>
                     <button 
-                        @click="activeTab = 'about'; $wire.setActiveTab('about')"
+                        @click="activeTab = 'about'"
                         :class="{
                             'border-red-500 text-red-600': activeTab === 'about',
                             'border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300': activeTab !== 'about'
@@ -132,7 +132,7 @@
                         About
                     </button>
                     <button 
-                        @click="activeTab = 'activity'; $wire.setActiveTab('activity')"
+                        @click="activeTab = 'activity'"
                         :class="{
                             'border-red-500 text-red-600': activeTab === 'activity',
                             'border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300': activeTab !== 'activity'
@@ -141,7 +141,7 @@
                         Activity
                     </button>
                     <button 
-                        @click="activeTab = 'media'; $wire.setActiveTab('media')"
+                        @click="activeTab = 'media'"
                         :class="{
                             'border-red-500 text-red-600': activeTab === 'media',
                             'border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300': activeTab !== 'media'

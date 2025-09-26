@@ -14,7 +14,6 @@ class StatusItemWithImage extends Component
     #[Locked]
     public Status $status;
 
-    public bool $showComments = false;
 
     public bool $showImageModal = false;
 
@@ -23,10 +22,6 @@ class StatusItemWithImage extends Component
         $this->status = $status;
     }
 
-    public function toggleComments(): void
-    {
-        $this->showComments = ! $this->showComments;
-    }
 
     public function toggleImageModal(): void
     {

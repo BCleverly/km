@@ -1,4 +1,4 @@
-<div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-2 sm:p-3">
+<div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-2 sm:p-3" x-data="{ showComments: false }">
     <div class="flex items-start space-x-2">
         <!-- Profile Picture -->
         <img 
@@ -65,22 +65,26 @@
             <!-- Actions -->
             <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between pt-2 border-t border-gray-100 dark:border-gray-700 gap-2">
                 <div class="flex items-center space-x-4 sm:space-x-6">
-                    <!-- Like Button -->
-                    <button class="flex items-center space-x-2 text-gray-500 hover:text-red-500 transition-colors cursor-pointer">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/>
-                        </svg>
-                        <span class="text-sm">Like</span>
-                    </button>
+                    <!-- Reaction Button -->
+                    <livewire:components.reaction-button 
+                        :model-type="'status'" 
+                        :model-id="$status->id" 
+                    />
 
                     <!-- Comment Button -->
                     <button 
-                        wire:click="toggleComments"
-                        class="flex items-center space-x-2 text-gray-500 hover:text-blue-500 transition-colors cursor-pointer">
+                        @click="showComments = !showComments"
+                        class="flex items-center space-x-2 text-gray-500 hover:text-blue-500 transition-colors cursor-pointer"
+                        :class="{ 'text-blue-600 dark:text-blue-400': showComments }">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
                         </svg>
                         <span class="text-sm">Comment</span>
+                        @if($status->approved_comments_count > 0)
+                            <span class="text-xs bg-gray-200 dark:bg-gray-600 text-gray-700 dark:text-gray-300 px-1.5 py-0.5 rounded-full">
+                                {{ $status->approved_comments_count }}
+                            </span>
+                        @endif
                     </button>
 
                 </div>
@@ -91,14 +95,16 @@
                 </div>
             </div>
 
-            <!-- Comments Section -->
-            @if($showComments)
-                <div class="mt-4 pt-4 border-t border-gray-100 dark:border-gray-700">
-                    <div class="text-center py-4 text-gray-500 dark:text-gray-400">
-                        <p class="text-sm">Comments are currently disabled</p>
-                    </div>
-                </div>
-            @endif
+            <!-- Lazy-loaded Comments Section -->
+            <div x-show="showComments" 
+                 x-transition:enter="transition ease-out duration-200"
+                 x-transition:enter-start="opacity-0 transform scale-95"
+                 x-transition:enter-end="opacity-100 transform scale-100"
+                 x-transition:leave="transition ease-in duration-150"
+                 x-transition:leave-start="opacity-100 transform scale-100"
+                 x-transition:leave-end="opacity-0 transform scale-95">
+                <livewire:status.status-comments :status="$status" lazy />
+            </div>
         </div>
     </div>
 
