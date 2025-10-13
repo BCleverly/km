@@ -1,134 +1,1547 @@
 [
-    {
-        "id": 1,
-        "title": "Finish it",
-        "description": "You have one hour to orgasm as many times as possible.",
-        "difficulty_level": 1,
-        "status": 1,
-        "tags": {
-            "target_kink": [],
-            "required_accessories": []
-        }
-    },
-    {
-        "id": 2,
-        "title": "Nipple tickle",
-        "description": "Sit back and relax and start your play session off with eyes closed massaging your nipples. Feel free to suck and lick them as much as you want.",
-        "difficulty_level": 1,
-        "status": 1,
-        "tags": {
-            "target_kink": [],
-            "required_accessories": []
-        }
-    },
-    {
-        "id": 3,
-        "title": "Vibrator Heaven",
-        "description": "Use your favorite vibrator for 30 minutes of pure pleasure. No restrictions, just enjoy yourself.",
-        "difficulty_level": 1,
-        "status": 1,
-        "tags": {
-            "target_kink": ["Masturbation"],
-            "required_accessories": ["Vibrator"]
-        }
-    },
-    {
-        "id": 4,
-        "title": "Multiple Orgasms",
-        "description": "Give yourself 3 orgasms in one session. Take your time and enjoy each one.",
-        "difficulty_level": 2,
-        "status": 1,
-        "tags": {
-            "target_kink": ["Masturbation"],
-            "required_accessories": []
-        }
-    },
-    {
-        "id": 5,
-        "title": "Sensual Bath",
-        "description": "Take a luxurious bath with candles and music. Touch yourself gently while relaxing in the warm water.",
-        "difficulty_level": 1,
-        "status": 1,
-        "tags": {
-            "target_kink": ["Relaxation", "Masturbation"],
-            "required_accessories": ["Candles"]
-        }
-    },
-    {
-        "id": 6,
-        "title": "Edging Session",
-        "description": "Edge yourself for 45 minutes, getting close to orgasm but not quite there. Then finish with a powerful climax.",
-        "difficulty_level": 3,
-        "status": 1,
-        "tags": {
-            "target_kink": ["Edging", "Masturbation"],
-            "required_accessories": []
-        }
-    },
-    {
-        "id": 7,
-        "title": "Anal Play Reward",
-        "description": "Take your time with anal play using plenty of lube. Explore at your own pace and enjoy the sensations.",
-        "difficulty_level": 2,
-        "status": 1,
-        "tags": {
-            "target_kink": ["Anal Play"],
-            "required_accessories": ["Lube", "Butt plug"]
-        }
-    },
-    {
-        "id": 8,
-        "title": "Nipple Clamp Pleasure",
-        "description": "Wear nipple clamps for 20 minutes while masturbating. Enjoy the heightened sensitivity when you remove them.",
-        "difficulty_level": 2,
-        "status": 1,
-        "tags": {
-            "target_kink": ["Nipple Play", "Pain Play"],
-            "required_accessories": ["Nipple clamps"]
-        }
-    },
-    {
-        "id": 9,
-        "title": "Blindfolded Sensation",
-        "description": "Wear a blindfold and explore your body with different textures - silk, feathers, ice cubes. Let your other senses take over.",
-        "difficulty_level": 2,
-        "status": 1,
-        "tags": {
-            "target_kink": ["Sensory Deprivation", "Sensation Play"],
-            "required_accessories": ["Blindfold", "Feather", "Ice cubes"]
-        }
-    },
-    {
-        "id": 10,
-        "title": "Dildo Marathon",
-        "description": "Use your dildo for 40 minutes, trying different positions and speeds. Take your time to find what feels best.",
-        "difficulty_level": 2,
-        "status": 1,
-        "tags": {
-            "target_kink": ["Masturbation", "Penetration"],
-            "required_accessories": ["Dildo"]
-        }
-    },
-    {
-        "id": 11,
-        "title": "Temperature Play",
-        "description": "Alternate between ice cubes and warm water on your sensitive areas. Enjoy the contrast of sensations.",
-        "difficulty_level": 2,
-        "status": 1,
-        "tags": {
-            "target_kink": ["Temperature Play"],
-            "required_accessories": ["Ice cubes"]
-        }
-    },
-    {
-        "id": 12,
-        "title": "Mirror Masturbation",
-        "description": "Masturbate while watching yourself in a mirror. Admire your body and enjoy the visual stimulation.",
-        "difficulty_level": 1,
-        "status": 1,
-        "tags": {
-            "target_kink": ["Exhibitionism", "Masturbation"],
-            "required_accessories": []
-        }
+  {
+    "id": 1,
+    "title": "Finish it",
+    "description": "You have one hour to orgasm as many times as possible.",
+    "difficulty_level": 1,
+    "status": 1,
+    "tags": {
+      "target_kink": [],
+      "required_accessories": []
     }
+  },
+  {
+    "id": 2,
+    "title": "Nipple tickle",
+    "description": "Sit back and relax and start your play session off with eyes closed massaging your nipples. Feel free to suck and lick them as much as you want.",
+    "difficulty_level": 1,
+    "status": 1,
+    "tags": {
+      "target_kink": [],
+      "required_accessories": []
+    }
+  },
+  {
+    "id": 3,
+    "title": "Vibrator Heaven",
+    "description": "Use your favorite vibrator for 30 minutes of pure pleasure. No restrictions, just enjoy yourself.",
+    "difficulty_level": 1,
+    "status": 1,
+    "tags": {
+      "target_kink": [
+        "Masturbation"
+      ],
+      "required_accessories": [
+        "Vibrator"
+      ]
+    }
+  },
+  {
+    "id": 4,
+    "title": "Multiple Orgasms",
+    "description": "Give yourself 3 orgasms in one session. Take your time and enjoy each one.",
+    "difficulty_level": 2,
+    "status": 1,
+    "tags": {
+      "target_kink": [
+        "Masturbation"
+      ],
+      "required_accessories": []
+    }
+  },
+  {
+    "id": 5,
+    "title": "Sensual Bath",
+    "description": "Take a luxurious bath with candles and music. Touch yourself gently while relaxing in the warm water.",
+    "difficulty_level": 1,
+    "status": 1,
+    "tags": {
+      "target_kink": [
+        "Relaxation",
+        "Masturbation"
+      ],
+      "required_accessories": [
+        "Candles"
+      ]
+    }
+  },
+  {
+    "id": 6,
+    "title": "Edging Session",
+    "description": "Edge yourself for 45 minutes, getting close to orgasm but not quite there. Then finish with a powerful climax.",
+    "difficulty_level": 3,
+    "status": 1,
+    "tags": {
+      "target_kink": [
+        "Edging",
+        "Masturbation"
+      ],
+      "required_accessories": []
+    }
+  },
+  {
+    "id": 7,
+    "title": "Anal Play Reward",
+    "description": "Take your time with anal play using plenty of lube. Explore at your own pace and enjoy the sensations.",
+    "difficulty_level": 2,
+    "status": 1,
+    "tags": {
+      "target_kink": [
+        "Anal Play"
+      ],
+      "required_accessories": [
+        "Lube",
+        "Butt plug"
+      ]
+    }
+  },
+  {
+    "id": 8,
+    "title": "Nipple Clamp Pleasure",
+    "description": "Wear nipple clamps for 20 minutes while masturbating. Enjoy the heightened sensitivity when you remove them.",
+    "difficulty_level": 2,
+    "status": 1,
+    "tags": {
+      "target_kink": [
+        "Nipple Play",
+        "Pain Play"
+      ],
+      "required_accessories": [
+        "Nipple clamps"
+      ]
+    }
+  },
+  {
+    "id": 9,
+    "title": "Blindfolded Sensation",
+    "description": "Wear a blindfold and explore your body with different textures - silk, feathers, ice cubes. Let your other senses take over.",
+    "difficulty_level": 2,
+    "status": 1,
+    "tags": {
+      "target_kink": [
+        "Sensory Deprivation",
+        "Sensation Play"
+      ],
+      "required_accessories": [
+        "Blindfold",
+        "Feather",
+        "Ice cubes"
+      ]
+    }
+  },
+  {
+    "id": 10,
+    "title": "Dildo Marathon",
+    "description": "Use your dildo for 40 minutes, trying different positions and speeds. Take your time to find what feels best.",
+    "difficulty_level": 2,
+    "status": 1,
+    "tags": {
+      "target_kink": [
+        "Masturbation",
+        "Penetration"
+      ],
+      "required_accessories": [
+        "Dildo"
+      ]
+    }
+  },
+  {
+    "id": 11,
+    "title": "Temperature Play",
+    "description": "Alternate between ice cubes and warm water on your sensitive areas. Enjoy the contrast of sensations.",
+    "difficulty_level": 2,
+    "status": 1,
+    "tags": {
+      "target_kink": [
+        "Temperature Play"
+      ],
+      "required_accessories": [
+        "Ice cubes"
+      ]
+    }
+  },
+  {
+    "id": 12,
+    "title": "Mirror Masturbation",
+    "description": "Masturbate while watching yourself in a mirror. Admire your body and enjoy the visual stimulation.",
+    "difficulty_level": 1,
+    "status": 1,
+    "tags": {
+      "target_kink": [
+        "Exhibitionism",
+        "Masturbation"
+      ],
+      "required_accessories": []
+    }
+  },
+  {
+    "id": 13,
+    "title": "BDSM Service Reward",
+    "description": "You have earned a full day of service to your partner. Follow their commands and fulfill their desires for 24 hours.",
+    "difficulty_level": 6,
+    "status": 1,
+    "tags": {
+      "target_kink": [
+        "BDSM",
+        "Service"
+      ],
+      "required_accessories": []
+    }
+  },
+  {
+    "id": 14,
+    "title": "Sensory Overload",
+    "description": "Enjoy 2 hours of intense sensory stimulation using all five senses. Blindfold yourself and let your partner explore your body with different textures, temperatures, and sensations.",
+    "difficulty_level": 4,
+    "status": 1,
+    "tags": {
+      "target_kink": [
+        "Sensory",
+        "BDSM"
+      ],
+      "required_accessories": [
+        "Blindfold",
+        "Various textures"
+      ]
+    }
+  },
+  {
+    "id": 15,
+    "title": "Edging Mastery",
+    "description": "You have mastered the art of edging. Enjoy 1 hour of intense edging with your partner, building to the perfect orgasm.",
+    "difficulty_level": 5,
+    "status": 1,
+    "tags": {
+      "target_kink": [
+        "Edging",
+        "Control"
+      ],
+      "required_accessories": []
+    }
+  },
+  {
+    "id": 16,
+    "title": "Public Exhibition",
+    "description": "You have earned the right to show off. Wear something sexy under your clothes and go out in public, knowing you have a secret that makes you feel powerful.",
+    "difficulty_level": 7,
+    "status": 1,
+    "tags": {
+      "target_kink": [
+        "Public",
+        "Exhibition"
+      ],
+      "required_accessories": [
+        "Sexy underwear"
+      ]
+    }
+  },
+  {
+    "id": 17,
+    "title": "Temperature Play Paradise",
+    "description": "Enjoy 1 hour of temperature play with ice cubes, warm oil, and different temperatures. Let your partner explore your body with various sensations.",
+    "difficulty_level": 3,
+    "status": 1,
+    "tags": {
+      "target_kink": [
+        "Temperature Play",
+        "Sensory"
+      ],
+      "required_accessories": [
+        "Ice cubes",
+        "Warm oil"
+      ]
+    }
+  },
+  {
+    "id": 18,
+    "title": "Roleplay Fantasy",
+    "description": "Live out your favorite sexual fantasy with your partner. Choose any scenario you desire and act it out for 2 hours.",
+    "difficulty_level": 4,
+    "status": 1,
+    "tags": {
+      "target_kink": [
+        "Roleplay",
+        "Fantasy"
+      ],
+      "required_accessories": []
+    }
+  },
+  {
+    "id": 19,
+    "title": "Bondage Bliss",
+    "description": "You have earned a 2-hour bondage session. Let your partner tie you up and explore your body while you're completely at their mercy.",
+    "difficulty_level": 6,
+    "status": 1,
+    "tags": {
+      "target_kink": [
+        "BDSM",
+        "Bondage"
+      ],
+      "required_accessories": [
+        "Rope",
+        "Restraints"
+      ]
+    }
+  },
+  {
+    "id": 20,
+    "title": "Communication Mastery",
+    "description": "You have earned a deep, intimate conversation with your partner about your desires, fantasies, and boundaries. Share everything openly and honestly.",
+    "difficulty_level": 5,
+    "status": 1,
+    "tags": {
+      "target_kink": [
+        "Communication",
+        "Intimacy"
+      ],
+      "required_accessories": []
+    }
+  },
+  {
+    "id": 21,
+    "title": "Wellness Retreat",
+    "description": "Take a day for self-care and wellness. Practice yoga, meditation, and self-love. Focus on your mental and physical well-being.",
+    "difficulty_level": 2,
+    "status": 1,
+    "tags": {
+      "target_kink": [
+        "Wellness",
+        "Self-Care"
+      ],
+      "required_accessories": []
+    }
+  },
+  {
+    "id": 22,
+    "title": "Creative Expression",
+    "description": "Express your sexuality through art. Take sensual photos, write erotic poetry, or create something beautiful that represents your desires.",
+    "difficulty_level": 3,
+    "status": 1,
+    "tags": {
+      "target_kink": [
+        "Art",
+        "Self-Expression"
+      ],
+      "required_accessories": [
+        "Camera",
+        "Art supplies"
+      ]
+    }
+  },
+  {
+    "id": 23,
+    "title": "Educational Adventure",
+    "description": "Learn something new about sexuality. Research a new technique, read an educational book, or take an online course about sexual wellness.",
+    "difficulty_level": 2,
+    "status": 1,
+    "tags": {
+      "target_kink": [
+        "Education",
+        "Learning"
+      ],
+      "required_accessories": []
+    }
+  },
+  {
+    "id": 24,
+    "title": "Solo Exploration",
+    "description": "Spend 2 hours exploring your body and discovering new erogenous zones. Use different techniques and focus on what feels good.",
+    "difficulty_level": 3,
+    "status": 1,
+    "tags": {
+      "target_kink": [
+        "Self-Exploration",
+        "Masturbation"
+      ],
+      "required_accessories": []
+    }
+  },
+  {
+    "id": 25,
+    "title": "Partner Worship",
+    "description": "Spend 1 hour worshiping your partner's body. Focus on every inch of them and make them feel desired and beautiful.",
+    "difficulty_level": 4,
+    "status": 1,
+    "tags": {
+      "target_kink": [
+        "Intimacy",
+        "Worship"
+      ],
+      "required_accessories": []
+    }
+  },
+  {
+    "id": 26,
+    "title": "Sensory Deprivation",
+    "description": "Experience 1 hour of sensory deprivation. Use blindfolds, earplugs, and other tools to focus on touch and other senses.",
+    "difficulty_level": 5,
+    "status": 1,
+    "tags": {
+      "target_kink": [
+        "Sensory Deprivation",
+        "BDSM"
+      ],
+      "required_accessories": [
+        "Blindfold",
+        "Earplugs"
+      ]
+    }
+  },
+  {
+    "id": 27,
+    "title": "Power Exchange",
+    "description": "Experience a 2-hour power exchange with your partner. One of you takes complete control while the other submits completely.",
+    "difficulty_level": 7,
+    "status": 1,
+    "tags": {
+      "target_kink": [
+        "BDSM",
+        "Power Dynamic"
+      ],
+      "required_accessories": []
+    }
+  },
+  {
+    "id": 28,
+    "title": "Impact Play Session",
+    "description": "Enjoy a 30-minute impact play session with your partner. Use spanking, flogging, or other impact tools to create pleasurable sensations.",
+    "difficulty_level": 6,
+    "status": 1,
+    "tags": {
+      "target_kink": [
+        "BDSM",
+        "Impact Play"
+      ],
+      "required_accessories": [
+        "Impact toys"
+      ]
+    }
+  },
+  {
+    "id": 29,
+    "title": "Temperature Play Extreme",
+    "description": "Experience extreme temperature play with ice, wax, and heat. Let your partner explore your body with various temperatures for 1 hour.",
+    "difficulty_level": 8,
+    "status": 1,
+    "tags": {
+      "target_kink": [
+        "Temperature Play",
+        "BDSM"
+      ],
+      "required_accessories": [
+        "Ice",
+        "Wax",
+        "Heat sources"
+      ]
+    }
+  },
+  {
+    "id": 30,
+    "title": "Public Teasing",
+    "description": "Go out in public with a remote-controlled vibrator. Let your partner control your pleasure while you're in a safe, legal location.",
+    "difficulty_level": 8,
+    "status": 1,
+    "tags": {
+      "target_kink": [
+        "Public",
+        "Toys"
+      ],
+      "required_accessories": [
+        "Remote-controlled vibrator"
+      ]
+    }
+  },
+  {
+    "id": 31,
+    "title": "Bondage Art",
+    "description": "Create beautiful bondage art with your partner. Use rope, restraints, and other tools to create aesthetically pleasing positions.",
+    "difficulty_level": 6,
+    "status": 1,
+    "tags": {
+      "target_kink": [
+        "BDSM",
+        "Bondage",
+        "Art"
+      ],
+      "required_accessories": [
+        "Rope",
+        "Restraints"
+      ]
+    }
+  },
+  {
+    "id": 32,
+    "title": "Sensory Overload",
+    "description": "Experience 1 hour of intense sensory stimulation. Use different textures, temperatures, sounds, and smells to overwhelm your senses.",
+    "difficulty_level": 7,
+    "status": 1,
+    "tags": {
+      "target_kink": [
+        "Sensory",
+        "Overload"
+      ],
+      "required_accessories": [
+        "Various sensory items"
+      ]
+    }
+  },
+  {
+    "id": 33,
+    "title": "Communication Deep Dive",
+    "description": "Have a 3-hour deep conversation with your partner about your relationship, desires, and future. Share your deepest thoughts and feelings.",
+    "difficulty_level": 6,
+    "status": 1,
+    "tags": {
+      "target_kink": [
+        "Communication",
+        "Intimacy"
+      ],
+      "required_accessories": []
+    }
+  },
+  {
+    "id": 34,
+    "title": "Wellness Weekend",
+    "description": "Take a full weekend for wellness and self-care. Practice yoga, meditation, healthy eating, and self-love activities.",
+    "difficulty_level": 4,
+    "status": 1,
+    "tags": {
+      "target_kink": [
+        "Wellness",
+        "Self-Care"
+      ],
+      "required_accessories": []
+    }
+  },
+  {
+    "id": 35,
+    "title": "Creative Collaboration",
+    "description": "Create something beautiful together with your partner. Write a story, take photos, or make art that represents your relationship.",
+    "difficulty_level": 4,
+    "status": 1,
+    "tags": {
+      "target_kink": [
+        "Art",
+        "Collaboration"
+      ],
+      "required_accessories": [
+        "Art supplies"
+      ]
+    }
+  },
+  {
+    "id": 36,
+    "title": "Educational Teaching",
+    "description": "Teach your partner something new about sexuality. Share your knowledge and help them learn a new technique or concept.",
+    "difficulty_level": 5,
+    "status": 1,
+    "tags": {
+      "target_kink": [
+        "Education",
+        "Teaching"
+      ],
+      "required_accessories": []
+    }
+  },
+  {
+    "id": 37,
+    "title": "Solo Mastery",
+    "description": "Spend 3 hours mastering a new solo technique. Practice until you can perform it perfectly and confidently.",
+    "difficulty_level": 6,
+    "status": 1,
+    "tags": {
+      "target_kink": [
+        "Self-Improvement",
+        "Skill Building"
+      ],
+      "required_accessories": []
+    }
+  },
+  {
+    "id": 38,
+    "title": "Partner Appreciation",
+    "description": "Spend 2 hours showing your partner how much you appreciate them. Use words, touch, and actions to make them feel loved and desired.",
+    "difficulty_level": 3,
+    "status": 1,
+    "tags": {
+      "target_kink": [
+        "Intimacy",
+        "Appreciation"
+      ],
+      "required_accessories": []
+    }
+  },
+  {
+    "id": 39,
+    "title": "Sensory Deprivation Extended",
+    "description": "Experience 2 hours of extended sensory deprivation. Use multiple tools to block out all senses except touch.",
+    "difficulty_level": 8,
+    "status": 1,
+    "tags": {
+      "target_kink": [
+        "Sensory Deprivation",
+        "BDSM"
+      ],
+      "required_accessories": [
+        "Blindfold",
+        "Earplugs",
+        "Restraints"
+      ]
+    }
+  },
+  {
+    "id": 40,
+    "title": "Power Exchange Extended",
+    "description": "Experience a full day of power exchange with your partner. One of you takes complete control for 24 hours.",
+    "difficulty_level": 9,
+    "status": 1,
+    "tags": {
+      "target_kink": [
+        "BDSM",
+        "Power Dynamic"
+      ],
+      "required_accessories": []
+    }
+  },
+  {
+    "id": 41,
+    "title": "Impact Play Extended",
+    "description": "Enjoy a 1-hour extended impact play session with your partner. Use multiple impact tools and techniques.",
+    "difficulty_level": 8,
+    "status": 1,
+    "tags": {
+      "target_kink": [
+        "BDSM",
+        "Impact Play"
+      ],
+      "required_accessories": [
+        "Multiple impact toys"
+      ]
+    }
+  },
+  {
+    "id": 42,
+    "title": "Temperature Play Mastery",
+    "description": "Master temperature play with your partner. Use ice, wax, heat, and cold to create intense sensations for 2 hours.",
+    "difficulty_level": 9,
+    "status": 1,
+    "tags": {
+      "target_kink": [
+        "Temperature Play",
+        "BDSM"
+      ],
+      "required_accessories": [
+        "Ice",
+        "Wax",
+        "Heat sources",
+        "Cold sources"
+      ]
+    }
+  },
+  {
+    "id": 43,
+    "title": "Public Exhibition Extended",
+    "description": "Go out in public with a remote-controlled vibrator for 2 hours. Let your partner control your pleasure while you're in a safe, legal location.",
+    "difficulty_level": 9,
+    "status": 1,
+    "tags": {
+      "target_kink": [
+        "Public",
+        "Toys"
+      ],
+      "required_accessories": [
+        "Remote-controlled vibrator"
+      ]
+    }
+  },
+  {
+    "id": 44,
+    "title": "Bondage Mastery",
+    "description": "Master the art of bondage with your partner. Create complex, beautiful ties and positions for 3 hours.",
+    "difficulty_level": 9,
+    "status": 1,
+    "tags": {
+      "target_kink": [
+        "BDSM",
+        "Bondage"
+      ],
+      "required_accessories": [
+        "Rope",
+        "Restraints",
+        "Safety equipment"
+      ]
+    }
+  },
+  {
+    "id": 45,
+    "title": "Sensory Overload Extreme",
+    "description": "Experience 2 hours of extreme sensory overload. Use every sense to create an overwhelming but pleasurable experience.",
+    "difficulty_level": 9,
+    "status": 1,
+    "tags": {
+      "target_kink": [
+        "Sensory",
+        "Overload"
+      ],
+      "required_accessories": [
+        "Various sensory items"
+      ]
+    }
+  },
+  {
+    "id": 46,
+    "title": "Communication Mastery",
+    "description": "Master the art of sexual communication with your partner. Have a 4-hour deep conversation about your relationship and desires.",
+    "difficulty_level": 8,
+    "status": 1,
+    "tags": {
+      "target_kink": [
+        "Communication",
+        "Intimacy"
+      ],
+      "required_accessories": []
+    }
+  },
+  {
+    "id": 47,
+    "title": "Wellness Mastery",
+    "description": "Master the art of sexual wellness. Practice yoga, meditation, and self-care for a full week.",
+    "difficulty_level": 7,
+    "status": 1,
+    "tags": {
+      "target_kink": [
+        "Wellness",
+        "Self-Care"
+      ],
+      "required_accessories": []
+    }
+  },
+  {
+    "id": 48,
+    "title": "Creative Mastery",
+    "description": "Master the art of sexual creativity. Create something beautiful and meaningful that represents your sexuality.",
+    "difficulty_level": 8,
+    "status": 1,
+    "tags": {
+      "target_kink": [
+        "Art",
+        "Creativity"
+      ],
+      "required_accessories": [
+        "Art supplies"
+      ]
+    }
+  },
+  {
+    "id": 49,
+    "title": "Educational Mastery",
+    "description": "Master the art of sexual education. Learn something new and teach it to your partner.",
+    "difficulty_level": 7,
+    "status": 1,
+    "tags": {
+      "target_kink": [
+        "Education",
+        "Learning"
+      ],
+      "required_accessories": []
+    }
+  },
+  {
+    "id": 50,
+    "title": "Solo Mastery Extended",
+    "description": "Master the art of solo pleasure. Spend 4 hours exploring your body and discovering new techniques.",
+    "difficulty_level": 8,
+    "status": 1,
+    "tags": {
+      "target_kink": [
+        "Self-Exploration",
+        "Masturbation"
+      ],
+      "required_accessories": []
+    }
+  },
+  {
+    "id": 51,
+    "title": "Partner Worship Extended",
+    "description": "Master the art of partner worship. Spend 3 hours making your partner feel desired and beautiful.",
+    "difficulty_level": 7,
+    "status": 1,
+    "tags": {
+      "target_kink": [
+        "Intimacy",
+        "Worship"
+      ],
+      "required_accessories": []
+    }
+  },
+  {
+    "id": 52,
+    "title": "Sensory Deprivation Mastery",
+    "description": "Master the art of sensory deprivation. Experience 3 hours of complete sensory deprivation with your partner.",
+    "difficulty_level": 9,
+    "status": 1,
+    "tags": {
+      "target_kink": [
+        "Sensory Deprivation",
+        "BDSM"
+      ],
+      "required_accessories": [
+        "Blindfold",
+        "Earplugs",
+        "Restraints"
+      ]
+    }
+  },
+  {
+    "id": 53,
+    "title": "Power Exchange Mastery",
+    "description": "Master the art of power exchange. Experience a full week of power exchange with your partner.",
+    "difficulty_level": 10,
+    "status": 1,
+    "tags": {
+      "target_kink": [
+        "BDSM",
+        "Power Dynamic"
+      ],
+      "required_accessories": []
+    }
+  },
+  {
+    "id": 54,
+    "title": "Impact Play Mastery",
+    "description": "Master the art of impact play. Enjoy a 2-hour extended impact play session with your partner using multiple techniques.",
+    "difficulty_level": 9,
+    "status": 1,
+    "tags": {
+      "target_kink": [
+        "BDSM",
+        "Impact Play"
+      ],
+      "required_accessories": [
+        "Multiple impact toys"
+      ]
+    }
+  },
+  {
+    "id": 55,
+    "title": "Temperature Play Mastery Extended",
+    "description": "Master the art of temperature play. Use ice, wax, heat, and cold to create intense sensations for 3 hours.",
+    "difficulty_level": 10,
+    "status": 1,
+    "tags": {
+      "target_kink": [
+        "Temperature Play",
+        "BDSM"
+      ],
+      "required_accessories": [
+        "Ice",
+        "Wax",
+        "Heat sources",
+        "Cold sources"
+      ]
+    }
+  },
+  {
+    "id": 56,
+    "title": "Public Exhibition Mastery",
+    "description": "Master the art of public exhibition. Go out in public with a remote-controlled vibrator for 3 hours.",
+    "difficulty_level": 10,
+    "status": 1,
+    "tags": {
+      "target_kink": [
+        "Public",
+        "Toys"
+      ],
+      "required_accessories": [
+        "Remote-controlled vibrator"
+      ]
+    }
+  },
+  {
+    "id": 57,
+    "title": "Bondage Mastery Extended",
+    "description": "Master the art of bondage. Create complex, beautiful ties and positions for 4 hours.",
+    "difficulty_level": 10,
+    "status": 1,
+    "tags": {
+      "target_kink": [
+        "BDSM",
+        "Bondage"
+      ],
+      "required_accessories": [
+        "Rope",
+        "Restraints",
+        "Safety equipment"
+      ]
+    }
+  },
+  {
+    "id": 58,
+    "title": "Sensory Overload Mastery",
+    "description": "Master the art of sensory overload. Experience 3 hours of extreme sensory overload with your partner.",
+    "difficulty_level": 10,
+    "status": 1,
+    "tags": {
+      "target_kink": [
+        "Sensory",
+        "Overload"
+      ],
+      "required_accessories": [
+        "Various sensory items"
+      ]
+    }
+  },
+  {
+    "id": 59,
+    "title": "Communication Mastery Extended",
+    "description": "Master the art of sexual communication. Have a 6-hour deep conversation about your relationship and desires.",
+    "difficulty_level": 9,
+    "status": 1,
+    "tags": {
+      "target_kink": [
+        "Communication",
+        "Intimacy"
+      ],
+      "required_accessories": []
+    }
+  },
+  {
+    "id": 60,
+    "title": "Wellness Mastery Extended",
+    "description": "Master the art of sexual wellness. Practice yoga, meditation, and self-care for a full month.",
+    "difficulty_level": 9,
+    "status": 1,
+    "tags": {
+      "target_kink": [
+        "Wellness",
+        "Self-Care"
+      ],
+      "required_accessories": []
+    }
+  },
+  {
+    "id": 61,
+    "title": "Creative Mastery Extended",
+    "description": "Master the art of sexual creativity. Create something beautiful and meaningful that represents your sexuality.",
+    "difficulty_level": 9,
+    "status": 1,
+    "tags": {
+      "target_kink": [
+        "Art",
+        "Creativity"
+      ],
+      "required_accessories": [
+        "Art supplies"
+      ]
+    }
+  },
+  {
+    "id": 62,
+    "title": "Educational Mastery Extended",
+    "description": "Master the art of sexual education. Learn something new and teach it to your partner.",
+    "difficulty_level": 8,
+    "status": 1,
+    "tags": {
+      "target_kink": [
+        "Education",
+        "Learning"
+      ],
+      "required_accessories": []
+    }
+  },
+  {
+    "id": 63,
+    "title": "Solo Mastery Extended Plus",
+    "description": "Master the art of solo pleasure. Spend 6 hours exploring your body and discovering new techniques.",
+    "difficulty_level": 9,
+    "status": 1,
+    "tags": {
+      "target_kink": [
+        "Self-Exploration",
+        "Masturbation"
+      ],
+      "required_accessories": []
+    }
+  },
+  {
+    "id": 64,
+    "title": "Partner Worship Extended Plus",
+    "description": "Master the art of partner worship. Spend 4 hours making your partner feel desired and beautiful.",
+    "difficulty_level": 8,
+    "status": 1,
+    "tags": {
+      "target_kink": [
+        "Intimacy",
+        "Worship"
+      ],
+      "required_accessories": []
+    }
+  },
+  {
+    "id": 65,
+    "title": "Sensory Deprivation Mastery Extended",
+    "description": "Master the art of sensory deprivation. Experience 4 hours of complete sensory deprivation with your partner.",
+    "difficulty_level": 10,
+    "status": 1,
+    "tags": {
+      "target_kink": [
+        "Sensory Deprivation",
+        "BDSM"
+      ],
+      "required_accessories": [
+        "Blindfold",
+        "Earplugs",
+        "Restraints"
+      ]
+    }
+  },
+  {
+    "id": 66,
+    "title": "Power Exchange Mastery Extended",
+    "description": "Master the art of power exchange. Experience a full month of power exchange with your partner.",
+    "difficulty_level": 10,
+    "status": 1,
+    "tags": {
+      "target_kink": [
+        "BDSM",
+        "Power Dynamic"
+      ],
+      "required_accessories": []
+    }
+  },
+  {
+    "id": 67,
+    "title": "Impact Play Mastery Extended",
+    "description": "Master the art of impact play. Enjoy a 3-hour extended impact play session with your partner using multiple techniques.",
+    "difficulty_level": 10,
+    "status": 1,
+    "tags": {
+      "target_kink": [
+        "BDSM",
+        "Impact Play"
+      ],
+      "required_accessories": [
+        "Multiple impact toys"
+      ]
+    }
+  },
+  {
+    "id": 68,
+    "title": "Temperature Play Mastery Extended Plus",
+    "description": "Master the art of temperature play. Use ice, wax, heat, and cold to create intense sensations for 4 hours.",
+    "difficulty_level": 10,
+    "status": 1,
+    "tags": {
+      "target_kink": [
+        "Temperature Play",
+        "BDSM"
+      ],
+      "required_accessories": [
+        "Ice",
+        "Wax",
+        "Heat sources",
+        "Cold sources"
+      ]
+    }
+  },
+  {
+    "id": 69,
+    "title": "Public Exhibition Mastery Extended",
+    "description": "Master the art of public exhibition. Go out in public with a remote-controlled vibrator for 4 hours.",
+    "difficulty_level": 10,
+    "status": 1,
+    "tags": {
+      "target_kink": [
+        "Public",
+        "Toys"
+      ],
+      "required_accessories": [
+        "Remote-controlled vibrator"
+      ]
+    }
+  },
+  {
+    "id": 70,
+    "title": "Bondage Mastery Extended Plus",
+    "description": "Master the art of bondage. Create complex, beautiful ties and positions for 5 hours.",
+    "difficulty_level": 10,
+    "status": 1,
+    "tags": {
+      "target_kink": [
+        "BDSM",
+        "Bondage"
+      ],
+      "required_accessories": [
+        "Rope",
+        "Restraints",
+        "Safety equipment"
+      ]
+    }
+  },
+  {
+    "id": 71,
+    "title": "Sensory Overload Mastery Extended",
+    "description": "Master the art of sensory overload. Experience 4 hours of extreme sensory overload with your partner.",
+    "difficulty_level": 10,
+    "status": 1,
+    "tags": {
+      "target_kink": [
+        "Sensory",
+        "Overload"
+      ],
+      "required_accessories": [
+        "Various sensory items"
+      ]
+    }
+  },
+  {
+    "id": 72,
+    "title": "Communication Mastery Extended Plus",
+    "description": "Master the art of sexual communication. Have an 8-hour deep conversation about your relationship and desires.",
+    "difficulty_level": 10,
+    "status": 1,
+    "tags": {
+      "target_kink": [
+        "Communication",
+        "Intimacy"
+      ],
+      "required_accessories": []
+    }
+  },
+  {
+    "id": 73,
+    "title": "Wellness Mastery Extended Plus",
+    "description": "Master the art of sexual wellness. Practice yoga, meditation, and self-care for a full year.",
+    "difficulty_level": 10,
+    "status": 1,
+    "tags": {
+      "target_kink": [
+        "Wellness",
+        "Self-Care"
+      ],
+      "required_accessories": []
+    }
+  },
+  {
+    "id": 74,
+    "title": "Creative Mastery Extended Plus",
+    "description": "Master the art of sexual creativity. Create something beautiful and meaningful that represents your sexuality.",
+    "difficulty_level": 10,
+    "status": 1,
+    "tags": {
+      "target_kink": [
+        "Art",
+        "Creativity"
+      ],
+      "required_accessories": [
+        "Art supplies"
+      ]
+    }
+  },
+  {
+    "id": 75,
+    "title": "Educational Mastery Extended Plus",
+    "description": "Master the art of sexual education. Learn something new and teach it to your partner.",
+    "difficulty_level": 9,
+    "status": 1,
+    "tags": {
+      "target_kink": [
+        "Education",
+        "Learning"
+      ],
+      "required_accessories": []
+    }
+  },
+  {
+    "id": 76,
+    "title": "Solo Mastery Extended Plus Plus",
+    "description": "Master the art of solo pleasure. Spend 8 hours exploring your body and discovering new techniques.",
+    "difficulty_level": 10,
+    "status": 1,
+    "tags": {
+      "target_kink": [
+        "Self-Exploration",
+        "Masturbation"
+      ],
+      "required_accessories": []
+    }
+  },
+  {
+    "id": 77,
+    "title": "Partner Worship Extended Plus Plus",
+    "description": "Master the art of partner worship. Spend 5 hours making your partner feel desired and beautiful.",
+    "difficulty_level": 9,
+    "status": 1,
+    "tags": {
+      "target_kink": [
+        "Intimacy",
+        "Worship"
+      ],
+      "required_accessories": []
+    }
+  },
+  {
+    "id": 78,
+    "title": "Sensory Deprivation Mastery Extended Plus",
+    "description": "Master the art of sensory deprivation. Experience 5 hours of complete sensory deprivation with your partner.",
+    "difficulty_level": 10,
+    "status": 1,
+    "tags": {
+      "target_kink": [
+        "Sensory Deprivation",
+        "BDSM"
+      ],
+      "required_accessories": [
+        "Blindfold",
+        "Earplugs",
+        "Restraints"
+      ]
+    }
+  },
+  {
+    "id": 79,
+    "title": "Power Exchange Mastery Extended Plus",
+    "description": "Master the art of power exchange. Experience a full year of power exchange with your partner.",
+    "difficulty_level": 10,
+    "status": 1,
+    "tags": {
+      "target_kink": [
+        "BDSM",
+        "Power Dynamic"
+      ],
+      "required_accessories": []
+    }
+  },
+  {
+    "id": 80,
+    "title": "Impact Play Mastery Extended Plus",
+    "description": "Master the art of impact play. Enjoy a 4-hour extended impact play session with your partner using multiple techniques.",
+    "difficulty_level": 10,
+    "status": 1,
+    "tags": {
+      "target_kink": [
+        "BDSM",
+        "Impact Play"
+      ],
+      "required_accessories": [
+        "Multiple impact toys"
+      ]
+    }
+  },
+  {
+    "id": 81,
+    "title": "Temperature Play Mastery Extended Plus Plus",
+    "description": "Master the art of temperature play. Use ice, wax, heat, and cold to create intense sensations for 5 hours.",
+    "difficulty_level": 10,
+    "status": 1,
+    "tags": {
+      "target_kink": [
+        "Temperature Play",
+        "BDSM"
+      ],
+      "required_accessories": [
+        "Ice",
+        "Wax",
+        "Heat sources",
+        "Cold sources"
+      ]
+    }
+  },
+  {
+    "id": 82,
+    "title": "Public Exhibition Mastery Extended Plus",
+    "description": "Master the art of public exhibition. Go out in public with a remote-controlled vibrator for 5 hours.",
+    "difficulty_level": 10,
+    "status": 1,
+    "tags": {
+      "target_kink": [
+        "Public",
+        "Toys"
+      ],
+      "required_accessories": [
+        "Remote-controlled vibrator"
+      ]
+    }
+  },
+  {
+    "id": 83,
+    "title": "Bondage Mastery Extended Plus Plus",
+    "description": "Master the art of bondage. Create complex, beautiful ties and positions for 6 hours.",
+    "difficulty_level": 10,
+    "status": 1,
+    "tags": {
+      "target_kink": [
+        "BDSM",
+        "Bondage"
+      ],
+      "required_accessories": [
+        "Rope",
+        "Restraints",
+        "Safety equipment"
+      ]
+    }
+  },
+  {
+    "id": 84,
+    "title": "Sensory Overload Mastery Extended Plus",
+    "description": "Master the art of sensory overload. Experience 5 hours of extreme sensory overload with your partner.",
+    "difficulty_level": 10,
+    "status": 1,
+    "tags": {
+      "target_kink": [
+        "Sensory",
+        "Overload"
+      ],
+      "required_accessories": [
+        "Various sensory items"
+      ]
+    }
+  },
+  {
+    "id": 85,
+    "title": "Communication Mastery Extended Plus Plus",
+    "description": "Master the art of sexual communication. Have a 10-hour deep conversation about your relationship and desires.",
+    "difficulty_level": 10,
+    "status": 1,
+    "tags": {
+      "target_kink": [
+        "Communication",
+        "Intimacy"
+      ],
+      "required_accessories": []
+    }
+  },
+  {
+    "id": 86,
+    "title": "Wellness Mastery Extended Plus Plus",
+    "description": "Master the art of sexual wellness. Practice yoga, meditation, and self-care for a full lifetime.",
+    "difficulty_level": 10,
+    "status": 1,
+    "tags": {
+      "target_kink": [
+        "Wellness",
+        "Self-Care"
+      ],
+      "required_accessories": []
+    }
+  },
+  {
+    "id": 87,
+    "title": "Creative Mastery Extended Plus Plus",
+    "description": "Master the art of sexual creativity. Create something beautiful and meaningful that represents your sexuality.",
+    "difficulty_level": 10,
+    "status": 1,
+    "tags": {
+      "target_kink": [
+        "Art",
+        "Creativity"
+      ],
+      "required_accessories": [
+        "Art supplies"
+      ]
+    }
+  },
+  {
+    "id": 88,
+    "title": "Educational Mastery Extended Plus Plus",
+    "description": "Master the art of sexual education. Learn something new and teach it to your partner.",
+    "difficulty_level": 10,
+    "status": 1,
+    "tags": {
+      "target_kink": [
+        "Education",
+        "Learning"
+      ],
+      "required_accessories": []
+    }
+  },
+  {
+    "id": 89,
+    "title": "Solo Mastery Extended Plus Plus Plus",
+    "description": "Master the art of solo pleasure. Spend 10 hours exploring your body and discovering new techniques.",
+    "difficulty_level": 10,
+    "status": 1,
+    "tags": {
+      "target_kink": [
+        "Self-Exploration",
+        "Masturbation"
+      ],
+      "required_accessories": []
+    }
+  },
+  {
+    "id": 90,
+    "title": "Partner Worship Extended Plus Plus Plus",
+    "description": "Master the art of partner worship. Spend 6 hours making your partner feel desired and beautiful.",
+    "difficulty_level": 10,
+    "status": 1,
+    "tags": {
+      "target_kink": [
+        "Intimacy",
+        "Worship"
+      ],
+      "required_accessories": []
+    }
+  },
+  {
+    "id": 91,
+    "title": "Sensory Deprivation Mastery Extended Plus Plus",
+    "description": "Master the art of sensory deprivation. Experience 6 hours of complete sensory deprivation with your partner.",
+    "difficulty_level": 10,
+    "status": 1,
+    "tags": {
+      "target_kink": [
+        "Sensory Deprivation",
+        "BDSM"
+      ],
+      "required_accessories": [
+        "Blindfold",
+        "Earplugs",
+        "Restraints"
+      ]
+    }
+  },
+  {
+    "id": 92,
+    "title": "Power Exchange Mastery Extended Plus Plus",
+    "description": "Master the art of power exchange. Experience a full lifetime of power exchange with your partner.",
+    "difficulty_level": 10,
+    "status": 1,
+    "tags": {
+      "target_kink": [
+        "BDSM",
+        "Power Dynamic"
+      ],
+      "required_accessories": []
+    }
+  },
+  {
+    "id": 93,
+    "title": "Impact Play Mastery Extended Plus Plus",
+    "description": "Master the art of impact play. Enjoy a 5-hour extended impact play session with your partner using multiple techniques.",
+    "difficulty_level": 10,
+    "status": 1,
+    "tags": {
+      "target_kink": [
+        "BDSM",
+        "Impact Play"
+      ],
+      "required_accessories": [
+        "Multiple impact toys"
+      ]
+    }
+  },
+  {
+    "id": 94,
+    "title": "Temperature Play Mastery Extended Plus Plus Plus",
+    "description": "Master the art of temperature play. Use ice, wax, heat, and cold to create intense sensations for 6 hours.",
+    "difficulty_level": 10,
+    "status": 1,
+    "tags": {
+      "target_kink": [
+        "Temperature Play",
+        "BDSM"
+      ],
+      "required_accessories": [
+        "Ice",
+        "Wax",
+        "Heat sources",
+        "Cold sources"
+      ]
+    }
+  },
+  {
+    "id": 95,
+    "title": "Public Exhibition Mastery Extended Plus Plus",
+    "description": "Master the art of public exhibition. Go out in public with a remote-controlled vibrator for 6 hours.",
+    "difficulty_level": 10,
+    "status": 1,
+    "tags": {
+      "target_kink": [
+        "Public",
+        "Toys"
+      ],
+      "required_accessories": [
+        "Remote-controlled vibrator"
+      ]
+    }
+  },
+  {
+    "id": 96,
+    "title": "Bondage Mastery Extended Plus Plus Plus",
+    "description": "Master the art of bondage. Create complex, beautiful ties and positions for 7 hours.",
+    "difficulty_level": 10,
+    "status": 1,
+    "tags": {
+      "target_kink": [
+        "BDSM",
+        "Bondage"
+      ],
+      "required_accessories": [
+        "Rope",
+        "Restraints",
+        "Safety equipment"
+      ]
+    }
+  },
+  {
+    "id": 97,
+    "title": "Sensory Overload Mastery Extended Plus Plus",
+    "description": "Master the art of sensory overload. Experience 6 hours of extreme sensory overload with your partner.",
+    "difficulty_level": 10,
+    "status": 1,
+    "tags": {
+      "target_kink": [
+        "Sensory",
+        "Overload"
+      ],
+      "required_accessories": [
+        "Various sensory items"
+      ]
+    }
+  },
+  {
+    "id": 98,
+    "title": "Communication Mastery Extended Plus Plus Plus",
+    "description": "Master the art of sexual communication. Have a 12-hour deep conversation about your relationship and desires.",
+    "difficulty_level": 10,
+    "status": 1,
+    "tags": {
+      "target_kink": [
+        "Communication",
+        "Intimacy"
+      ],
+      "required_accessories": []
+    }
+  },
+  {
+    "id": 99,
+    "title": "Wellness Mastery Extended Plus Plus Plus",
+    "description": "Master the art of sexual wellness. Practice yoga, meditation, and self-care for a full eternity.",
+    "difficulty_level": 10,
+    "status": 1,
+    "tags": {
+      "target_kink": [
+        "Wellness",
+        "Self-Care"
+      ],
+      "required_accessories": []
+    }
+  },
+  {
+    "id": 100,
+    "title": "Creative Mastery Extended Plus Plus Plus",
+    "description": "Master the art of sexual creativity. Create something beautiful and meaningful that represents your sexuality.",
+    "difficulty_level": 10,
+    "status": 1,
+    "tags": {
+      "target_kink": [
+        "Art",
+        "Creativity"
+      ],
+      "required_accessories": [
+        "Art supplies"
+      ]
+    }
+  }
 ]

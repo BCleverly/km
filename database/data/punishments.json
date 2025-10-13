@@ -1,210 +1,831 @@
 [
-    {
-        "id": 1,
-        "title": "Orgasm Denial",
-        "description": "You will not be allowed to orgasm for 24 hours. No playing with yourself at all.",
-        "difficulty_level": 6,
-        "status": 1
-    },
-    {
-        "id": 2,
-        "title": "Hard Orgasm Denial",
-        "description": "You will not be allowed to orgasm for 48 hours. No playing with yourself at all.",
-        "difficulty_level": 3,
-        "status": 1
-    },
-    {
-        "id": 3,
-        "title": "Long Orgasm Denial",
-        "description": "You will not be allowed to orgasm for 1 week. No playing with yourself at all.",
-        "difficulty_level": 5,
-        "status": 1,
-        "tags": {
-            "target_kink": [],
-            "required_accessories": []
-        }
-    },
-    {
-        "id": 4,
-        "title": "Kneeling pain",
-        "description": "Put a small patch of rice on the floor and kneel on it for 2 minutes, 2 minute break, then 3 minutes more..",
-        "difficulty_level": 5,
-        "status": 1,
-        "tags": {
-            "target_kink": [],
-            "required_accessories": []
-        }
-    },
-    {
-        "id": 5,
-        "title": "Teasing Kneeling pain",
-        "description": "Put a small patch of rice on the floor and kneel on it for 2 minutes, 2 minute break, then 3 minutes more. You also must have a dildo positioned at your pussy so you can feel it. But you're not allowed to insert untill the 5 minutes of kneeling are up.",
-        "difficulty_level": 5,
-        "status": 1
-    },
-    {
-        "id": 6,
-        "title": "Anal Kneeling pain",
-        "description": "Put a small patch of rice on the floor and kneel on it for 2 minutes, 2 minute break, then 3 minutes more. You also must have a dildo positioned at your asshole so you can feel it. But you're not allowed to insert untill the 5 minutes of kneeling are up.",
-        "difficulty_level": 5,
-        "status": 1,
-        "tags": {
-            "target_kink": [],
-            "required_accessories": []
-        }
-    },
-    {
-        "id": 7,
-        "title": "Mini spanks",
-        "description": "Spank each bum each twice when your ass is next out",
-        "difficulty_level": 5,
-        "status": 1,
-        "tags": {
-            "target_kink": [],
-            "required_accessories": []
-        }
-    },
-    {
-        "id": 8,
-        "title": "Cold Shower",
-        "description": "Take a 5-minute cold shower while standing completely still. No touching yourself allowed.",
-        "difficulty_level": 4,
-        "status": 1,
-        "tags": {
-            "target_kink": ["Temperature Play"],
-            "required_accessories": []
-        }
-    },
-    {
-        "id": 9,
-        "title": "Ice Cube Torture",
-        "description": "Hold an ice cube on your clit/head for 2 minutes without moving it. Take a 1-minute break, then repeat.",
-        "difficulty_level": 6,
-        "status": 1,
-        "tags": {
-            "target_kink": ["Temperature Play", "Pain Play"],
-            "required_accessories": ["Ice cubes"]
-        }
-    },
-    {
-        "id": 10,
-        "title": "Wall Sit",
-        "description": "Do a wall sit for 3 minutes while wearing a plug. No touching yourself during or after.",
-        "difficulty_level": 5,
-        "status": 1,
-        "tags": {
-            "target_kink": ["Exercise", "Anal Play"],
-            "required_accessories": ["Butt plug"]
-        }
-    },
-    {
-        "id": 11,
-        "title": "Nipple Clamp Time",
-        "description": "Wear nipple clamps for 15 minutes while doing household chores. No removal until time is up.",
-        "difficulty_level": 4,
-        "status": 1,
-        "tags": {
-            "target_kink": ["Pain Play", "Submission"],
-            "required_accessories": ["Nipple clamps"]
-        }
-    },
-    {
-        "id": 12,
-        "title": "Ball Gag Silence",
-        "description": "Wear a ball gag for 30 minutes while doing your normal activities. No talking or moaning allowed.",
-        "difficulty_level": 3,
-        "status": 1,
-        "tags": {
-            "target_kink": ["BDSM", "Submission"],
-            "required_accessories": ["Ball gag"]
-        }
-    },
-    {
-        "id": 13,
-        "title": "Cock Cage Lock",
-        "description": "Wear a chastity cage for 6 hours. No touching or stimulation of any kind.",
-        "difficulty_level": 6,
-        "status": 1,
-        "tags": {
-            "target_kink": ["Chastity", "Submission"],
-            "required_accessories": ["Chastity cage"]
-        }
-    },
-    {
-        "id": 14,
-        "title": "Kneeling on Rice Extended",
-        "description": "Kneel on rice for 5 minutes, 2-minute break, then 5 more minutes. Focus on the discomfort.",
-        "difficulty_level": 6,
-        "status": 1,
-        "tags": {
-            "target_kink": ["Pain Play", "Submission"],
-            "required_accessories": ["Rice"]
-        }
-    },
-    {
-        "id": 15,
-        "title": "No Touch Day",
-        "description": "You cannot touch yourself anywhere below the waist for 24 hours. No exceptions.",
-        "difficulty_level": 7,
-        "status": 1,
-        "tags": {
-            "target_kink": ["Denial", "Submission"],
-            "required_accessories": []
-        }
-    },
-    {
-        "id": 16,
-        "title": "Ice Water Soak",
-        "description": "Soak your hands in ice water for 3 minutes. No warming them up afterwards for 5 minutes.",
-        "difficulty_level": 4,
-        "status": 1,
-        "tags": {
-            "target_kink": ["Temperature Play", "Pain Play"],
-            "required_accessories": ["Ice water"]
-        }
-    },
-    {
-        "id": 17,
-        "title": "Blindfolded Restraint",
-        "description": "Wear a blindfold and sit still for 20 minutes. No touching yourself or moving around.",
-        "difficulty_level": 3,
-        "status": 1,
-        "tags": {
-            "target_kink": ["Sensory Deprivation", "Submission"],
-            "required_accessories": ["Blindfold"]
-        }
-    },
-    {
-        "id": 18,
-        "title": "Cock Ring Restriction",
-        "description": "Wear a cock ring for 2 hours without any stimulation. Feel the restriction and frustration.",
-        "difficulty_level": 5,
-        "status": 1,
-        "tags": {
-            "target_kink": ["Restriction", "Submission"],
-            "required_accessories": ["Cock ring"]
-        }
-    },
-    {
-        "id": 19,
-        "title": "Anal Plug Punishment",
-        "description": "Wear a plug for 3 hours while doing normal activities. No removal or adjustment allowed.",
-        "difficulty_level": 4,
-        "status": 1,
-        "tags": {
-            "target_kink": ["Anal Play", "Submission"],
-            "required_accessories": ["Butt plug"]
-        }
-    },
-    {
-        "id": 20,
-        "title": "Writing Lines",
-        "description": "Write 'I will complete my tasks properly' 50 times by hand. No shortcuts or typing allowed.",
-        "difficulty_level": 2,
-        "status": 1,
-        "tags": {
-            "target_kink": ["Humiliation", "Submission"],
-            "required_accessories": ["Paper", "Pen"]
-        }
+  {
+    "id": 1,
+    "title": "Orgasm Denial",
+    "description": "You will not be allowed to orgasm for 24 hours. No playing with yourself at all.",
+    "difficulty_level": 6,
+    "status": 1
+  },
+  {
+    "id": 2,
+    "title": "Hard Orgasm Denial",
+    "description": "You will not be allowed to orgasm for 48 hours. No playing with yourself at all.",
+    "difficulty_level": 3,
+    "status": 1
+  },
+  {
+    "id": 3,
+    "title": "Long Orgasm Denial",
+    "description": "You will not be allowed to orgasm for 1 week. No playing with yourself at all.",
+    "difficulty_level": 5,
+    "status": 1,
+    "tags": {
+      "target_kink": [],
+      "required_accessories": []
     }
+  },
+  {
+    "id": 4,
+    "title": "Kneeling pain",
+    "description": "Put a small patch of rice on the floor and kneel on it for 2 minutes, 2 minute break, then 3 minutes more..",
+    "difficulty_level": 5,
+    "status": 1,
+    "tags": {
+      "target_kink": [],
+      "required_accessories": []
+    }
+  },
+  {
+    "id": 5,
+    "title": "Teasing Kneeling pain",
+    "description": "Put a small patch of rice on the floor and kneel on it for 2 minutes, 2 minute break, then 3 minutes more. You also must have a dildo positioned at your pussy so you can feel it. But you're not allowed to insert untill the 5 minutes of kneeling are up.",
+    "difficulty_level": 5,
+    "status": 1
+  },
+  {
+    "id": 6,
+    "title": "Anal Kneeling pain",
+    "description": "Put a small patch of rice on the floor and kneel on it for 2 minutes, 2 minute break, then 3 minutes more. You also must have a dildo positioned at your asshole so you can feel it. But you're not allowed to insert untill the 5 minutes of kneeling are up.",
+    "difficulty_level": 5,
+    "status": 1,
+    "tags": {
+      "target_kink": [],
+      "required_accessories": []
+    }
+  },
+  {
+    "id": 7,
+    "title": "Mini spanks",
+    "description": "Spank each bum each twice when your ass is next out",
+    "difficulty_level": 5,
+    "status": 1,
+    "tags": {
+      "target_kink": [],
+      "required_accessories": []
+    }
+  },
+  {
+    "id": 8,
+    "title": "Cold Shower",
+    "description": "Take a 5-minute cold shower while standing completely still. No touching yourself allowed.",
+    "difficulty_level": 4,
+    "status": 1,
+    "tags": {
+      "target_kink": [
+        "Temperature Play"
+      ],
+      "required_accessories": []
+    }
+  },
+  {
+    "id": 9,
+    "title": "Ice Cube Torture",
+    "description": "Hold an ice cube on your clit/head for 2 minutes without moving it. Take a 1-minute break, then repeat.",
+    "difficulty_level": 6,
+    "status": 1,
+    "tags": {
+      "target_kink": [
+        "Temperature Play",
+        "Pain Play"
+      ],
+      "required_accessories": [
+        "Ice cubes"
+      ]
+    }
+  },
+  {
+    "id": 10,
+    "title": "Wall Sit",
+    "description": "Do a wall sit for 3 minutes while wearing a plug. No touching yourself during or after.",
+    "difficulty_level": 5,
+    "status": 1,
+    "tags": {
+      "target_kink": [
+        "Exercise",
+        "Anal Play"
+      ],
+      "required_accessories": [
+        "Butt plug"
+      ]
+    }
+  },
+  {
+    "id": 11,
+    "title": "Nipple Clamp Time",
+    "description": "Wear nipple clamps for 15 minutes while doing household chores. No removal until time is up.",
+    "difficulty_level": 4,
+    "status": 1,
+    "tags": {
+      "target_kink": [
+        "Pain Play",
+        "Submission"
+      ],
+      "required_accessories": [
+        "Nipple clamps"
+      ]
+    }
+  },
+  {
+    "id": 12,
+    "title": "Ball Gag Silence",
+    "description": "Wear a ball gag for 30 minutes while doing your normal activities. No talking or moaning allowed.",
+    "difficulty_level": 3,
+    "status": 1,
+    "tags": {
+      "target_kink": [
+        "BDSM",
+        "Submission"
+      ],
+      "required_accessories": [
+        "Ball gag"
+      ]
+    }
+  },
+  {
+    "id": 13,
+    "title": "Cock Cage Lock",
+    "description": "Wear a chastity cage for 6 hours. No touching or stimulation of any kind.",
+    "difficulty_level": 6,
+    "status": 1,
+    "tags": {
+      "target_kink": [
+        "Chastity",
+        "Submission"
+      ],
+      "required_accessories": [
+        "Chastity cage"
+      ]
+    }
+  },
+  {
+    "id": 14,
+    "title": "Kneeling on Rice Extended",
+    "description": "Kneel on rice for 5 minutes, 2-minute break, then 5 more minutes. Focus on the discomfort.",
+    "difficulty_level": 6,
+    "status": 1,
+    "tags": {
+      "target_kink": [
+        "Pain Play",
+        "Submission"
+      ],
+      "required_accessories": [
+        "Rice"
+      ]
+    }
+  },
+  {
+    "id": 15,
+    "title": "No Touch Day",
+    "description": "You cannot touch yourself anywhere below the waist for 24 hours. No exceptions.",
+    "difficulty_level": 7,
+    "status": 1,
+    "tags": {
+      "target_kink": [
+        "Denial",
+        "Submission"
+      ],
+      "required_accessories": []
+    }
+  },
+  {
+    "id": 16,
+    "title": "Ice Water Soak",
+    "description": "Soak your hands in ice water for 3 minutes. No warming them up afterwards for 5 minutes.",
+    "difficulty_level": 4,
+    "status": 1,
+    "tags": {
+      "target_kink": [
+        "Temperature Play",
+        "Pain Play"
+      ],
+      "required_accessories": [
+        "Ice water"
+      ]
+    }
+  },
+  {
+    "id": 17,
+    "title": "Blindfolded Restraint",
+    "description": "Wear a blindfold and sit still for 20 minutes. No touching yourself or moving around.",
+    "difficulty_level": 3,
+    "status": 1,
+    "tags": {
+      "target_kink": [
+        "Sensory Deprivation",
+        "Submission"
+      ],
+      "required_accessories": [
+        "Blindfold"
+      ]
+    }
+  },
+  {
+    "id": 18,
+    "title": "Cock Ring Restriction",
+    "description": "Wear a cock ring for 2 hours without any stimulation. Feel the restriction and frustration.",
+    "difficulty_level": 5,
+    "status": 1,
+    "tags": {
+      "target_kink": [
+        "Restriction",
+        "Submission"
+      ],
+      "required_accessories": [
+        "Cock ring"
+      ]
+    }
+  },
+  {
+    "id": 19,
+    "title": "Anal Plug Punishment",
+    "description": "Wear a plug for 3 hours while doing normal activities. No removal or adjustment allowed.",
+    "difficulty_level": 4,
+    "status": 1,
+    "tags": {
+      "target_kink": [
+        "Anal Play",
+        "Submission"
+      ],
+      "required_accessories": [
+        "Butt plug"
+      ]
+    }
+  },
+  {
+    "id": 20,
+    "title": "Writing Lines",
+    "description": "Write 'I will complete my tasks properly' 50 times by hand. No shortcuts or typing allowed.",
+    "difficulty_level": 2,
+    "status": 1,
+    "tags": {
+      "target_kink": [
+        "Humiliation",
+        "Submission"
+      ],
+      "required_accessories": [
+        "Paper",
+        "Pen"
+      ]
+    }
+  },
+  {
+    "id": 21,
+    "title": "BDSM Service Punishment",
+    "description": "You must serve your partner for 24 hours. Follow their every command and fulfill their desires without question.",
+    "difficulty_level": 8,
+    "status": 1
+  },
+  {
+    "id": 22,
+    "title": "Sensory Deprivation Punishment",
+    "description": "You must wear a blindfold and earplugs for 2 hours while your partner teases you. You cannot see or hear anything.",
+    "difficulty_level": 6,
+    "status": 1
+  },
+  {
+    "id": 23,
+    "title": "Edging Denial Punishment",
+    "description": "You must edge yourself for 1 hour without orgasming. Stop just before the point of no return, then start again.",
+    "difficulty_level": 7,
+    "status": 1
+  },
+  {
+    "id": 24,
+    "title": "Public Humiliation Punishment",
+    "description": "You must wear something embarrassing under your clothes and go out in public for 2 hours. No one can know what you're wearing.",
+    "difficulty_level": 8,
+    "status": 1
+  },
+  {
+    "id": 25,
+    "title": "Temperature Play Punishment",
+    "description": "You must endure 30 minutes of temperature play with ice cubes and warm water. Your partner will control the temperature.",
+    "difficulty_level": 5,
+    "status": 1
+  },
+  {
+    "id": 26,
+    "title": "Roleplay Punishment",
+    "description": "You must act out a humiliating roleplay scenario with your partner for 1 hour. You cannot break character.",
+    "difficulty_level": 6,
+    "status": 1
+  },
+  {
+    "id": 27,
+    "title": "Bondage Punishment",
+    "description": "You must be tied up and restrained for 1 hour while your partner teases you. You cannot move or touch yourself.",
+    "difficulty_level": 7,
+    "status": 1
+  },
+  {
+    "id": 28,
+    "title": "Communication Punishment",
+    "description": "You must write a detailed letter to your partner about your sexual desires and fantasies. Be completely honest and vulnerable.",
+    "difficulty_level": 4,
+    "status": 1
+  },
+  {
+    "id": 29,
+    "title": "Wellness Punishment",
+    "description": "You must practice self-care and wellness activities for 2 hours. Focus on your mental and physical well-being.",
+    "difficulty_level": 3,
+    "status": 1
+  },
+  {
+    "id": 30,
+    "title": "Creative Punishment",
+    "description": "You must create something artistic that represents your sexuality. Take your time and make it meaningful.",
+    "difficulty_level": 4,
+    "status": 1
+  },
+  {
+    "id": 31,
+    "title": "Educational Punishment",
+    "description": "You must research and learn about a new sexual technique. Then teach it to your partner.",
+    "difficulty_level": 3,
+    "status": 1
+  },
+  {
+    "id": 32,
+    "title": "Solo Exploration Punishment",
+    "description": "You must spend 2 hours exploring your body and discovering new erogenous zones. Focus on what feels good.",
+    "difficulty_level": 4,
+    "status": 1
+  },
+  {
+    "id": 33,
+    "title": "Partner Worship Punishment",
+    "description": "You must spend 1 hour worshiping your partner's body. Focus on every inch of them and make them feel desired.",
+    "difficulty_level": 5,
+    "status": 1
+  },
+  {
+    "id": 34,
+    "title": "Sensory Deprivation Extended Punishment",
+    "description": "You must wear a blindfold and earplugs for 3 hours while your partner teases you. You cannot see or hear anything.",
+    "difficulty_level": 8,
+    "status": 1
+  },
+  {
+    "id": 35,
+    "title": "Power Exchange Punishment",
+    "description": "You must submit to your partner's control for 2 hours. They can do whatever they want with you.",
+    "difficulty_level": 9,
+    "status": 1
+  },
+  {
+    "id": 36,
+    "title": "Impact Play Punishment",
+    "description": "You must endure 30 minutes of impact play with your partner. Use spanking, flogging, or other impact tools.",
+    "difficulty_level": 7,
+    "status": 1
+  },
+  {
+    "id": 37,
+    "title": "Temperature Play Extended Punishment",
+    "description": "You must endure 1 hour of temperature play with ice, wax, and heat. Your partner will control the temperature.",
+    "difficulty_level": 8,
+    "status": 1
+  },
+  {
+    "id": 38,
+    "title": "Public Humiliation Extended Punishment",
+    "description": "You must wear something embarrassing under your clothes and go out in public for 4 hours. No one can know what you're wearing.",
+    "difficulty_level": 9,
+    "status": 1
+  },
+  {
+    "id": 39,
+    "title": "Bondage Extended Punishment",
+    "description": "You must be tied up and restrained for 2 hours while your partner teases you. You cannot move or touch yourself.",
+    "difficulty_level": 8,
+    "status": 1
+  },
+  {
+    "id": 40,
+    "title": "Communication Extended Punishment",
+    "description": "You must have a 2-hour deep conversation with your partner about your relationship and desires. Be completely honest.",
+    "difficulty_level": 6,
+    "status": 1
+  },
+  {
+    "id": 41,
+    "title": "Wellness Extended Punishment",
+    "description": "You must practice self-care and wellness activities for 4 hours. Focus on your mental and physical well-being.",
+    "difficulty_level": 5,
+    "status": 1
+  },
+  {
+    "id": 42,
+    "title": "Creative Extended Punishment",
+    "description": "You must create something artistic that represents your sexuality. Take your time and make it meaningful.",
+    "difficulty_level": 6,
+    "status": 1
+  },
+  {
+    "id": 43,
+    "title": "Educational Extended Punishment",
+    "description": "You must research and learn about a new sexual technique. Then teach it to your partner.",
+    "difficulty_level": 5,
+    "status": 1
+  },
+  {
+    "id": 44,
+    "title": "Solo Exploration Extended Punishment",
+    "description": "You must spend 4 hours exploring your body and discovering new erogenous zones. Focus on what feels good.",
+    "difficulty_level": 6,
+    "status": 1
+  },
+  {
+    "id": 45,
+    "title": "Partner Worship Extended Punishment",
+    "description": "You must spend 2 hours worshiping your partner's body. Focus on every inch of them and make them feel desired.",
+    "difficulty_level": 7,
+    "status": 1
+  },
+  {
+    "id": 46,
+    "title": "Sensory Deprivation Mastery Punishment",
+    "description": "You must wear a blindfold and earplugs for 4 hours while your partner teases you. You cannot see or hear anything.",
+    "difficulty_level": 9,
+    "status": 1
+  },
+  {
+    "id": 47,
+    "title": "Power Exchange Mastery Punishment",
+    "description": "You must submit to your partner's control for 4 hours. They can do whatever they want with you.",
+    "difishment_level": 10,
+    "status": 1
+  },
+  {
+    "id": 48,
+    "title": "Impact Play Mastery Punishment",
+    "description": "You must endure 1 hour of impact play with your partner. Use spanking, flogging, or other impact tools.",
+    "difficulty_level": 9,
+    "status": 1
+  },
+  {
+    "id": 49,
+    "title": "Temperature Play Mastery Punishment",
+    "description": "You must endure 2 hours of temperature play with ice, wax, and heat. Your partner will control the temperature.",
+    "difficulty_level": 9,
+    "status": 1
+  },
+  {
+    "id": 50,
+    "title": "Public Humiliation Mastery Punishment",
+    "description": "You must wear something embarrassing under your clothes and go out in public for 6 hours. No one can know what you're wearing.",
+    "difficulty_level": 10,
+    "status": 1
+  },
+  {
+    "id": 51,
+    "title": "Bondage Mastery Punishment",
+    "description": "You must be tied up and restrained for 3 hours while your partner teases you. You cannot move or touch yourself.",
+    "difficulty_level": 9,
+    "status": 1
+  },
+  {
+    "id": 52,
+    "title": "Communication Mastery Punishment",
+    "description": "You must have a 4-hour deep conversation with your partner about your relationship and desires. Be completely honest.",
+    "difficulty_level": 8,
+    "status": 1
+  },
+  {
+    "id": 53,
+    "title": "Wellness Mastery Punishment",
+    "description": "You must practice self-care and wellness activities for 6 hours. Focus on your mental and physical well-being.",
+    "difficulty_level": 7,
+    "status": 1
+  },
+  {
+    "id": 54,
+    "title": "Creative Mastery Punishment",
+    "description": "You must create something artistic that represents your sexuality. Take your time and make it meaningful.",
+    "difficulty_level": 8,
+    "status": 1
+  },
+  {
+    "id": 55,
+    "title": "Educational Mastery Punishment",
+    "description": "You must research and learn about a new sexual technique. Then teach it to your partner.",
+    "difficulty_level": 7,
+    "status": 1
+  },
+  {
+    "id": 56,
+    "title": "Solo Exploration Mastery Punishment",
+    "description": "You must spend 6 hours exploring your body and discovering new erogenous zones. Focus on what feels good.",
+    "difficulty_level": 8,
+    "status": 1
+  },
+  {
+    "id": 57,
+    "title": "Partner Worship Mastery Punishment",
+    "description": "You must spend 3 hours worshiping your partner's body. Focus on every inch of them and make them feel desired.",
+    "difficulty_level": 9,
+    "status": 1
+  },
+  {
+    "id": 58,
+    "title": "Sensory Deprivation Mastery Extended Punishment",
+    "description": "You must wear a blindfold and earplugs for 5 hours while your partner teases you. You cannot see or hear anything.",
+    "difficulty_level": 10,
+    "status": 1
+  },
+  {
+    "id": 59,
+    "title": "Power Exchange Mastery Extended Punishment",
+    "description": "You must submit to your partner's control for 6 hours. They can do whatever they want with you.",
+    "difficulty_level": 10,
+    "status": 1
+  },
+  {
+    "id": 60,
+    "title": "Impact Play Mastery Extended Punishment",
+    "description": "You must endure 2 hours of impact play with your partner. Use spanking, flogging, or other impact tools.",
+    "difficulty_level": 10,
+    "status": 1
+  },
+  {
+    "id": 61,
+    "title": "Temperature Play Mastery Extended Punishment",
+    "description": "You must endure 3 hours of temperature play with ice, wax, and heat. Your partner will control the temperature.",
+    "difficulty_level": 10,
+    "status": 1
+  },
+  {
+    "id": 62,
+    "title": "Public Humiliation Mastery Extended Punishment",
+    "description": "You must wear something embarrassing under your clothes and go out in public for 8 hours. No one can know what you're wearing.",
+    "difficulty_level": 10,
+    "status": 1
+  },
+  {
+    "id": 63,
+    "title": "Bondage Mastery Extended Punishment",
+    "description": "You must be tied up and restrained for 4 hours while your partner teases you. You cannot move or touch yourself.",
+    "difficulty_level": 10,
+    "status": 1
+  },
+  {
+    "id": 64,
+    "title": "Communication Mastery Extended Punishment",
+    "description": "You must have a 6-hour deep conversation with your partner about your relationship and desires. Be completely honest.",
+    "difficulty_level": 9,
+    "status": 1
+  },
+  {
+    "id": 65,
+    "title": "Wellness Mastery Extended Punishment",
+    "description": "You must practice self-care and wellness activities for 8 hours. Focus on your mental and physical well-being.",
+    "difficulty_level": 8,
+    "status": 1
+  },
+  {
+    "id": 66,
+    "title": "Creative Mastery Extended Punishment",
+    "description": "You must create something artistic that represents your sexuality. Take your time and make it meaningful.",
+    "difficulty_level": 9,
+    "status": 1
+  },
+  {
+    "id": 67,
+    "title": "Educational Mastery Extended Punishment",
+    "description": "You must research and learn about a new sexual technique. Then teach it to your partner.",
+    "difficulty_level": 8,
+    "status": 1
+  },
+  {
+    "id": 68,
+    "title": "Solo Exploration Mastery Extended Punishment",
+    "description": "You must spend 8 hours exploring your body and discovering new erogenous zones. Focus on what feels good.",
+    "difficulty_level": 9,
+    "status": 1
+  },
+  {
+    "id": 69,
+    "title": "Partner Worship Mastery Extended Punishment",
+    "description": "You must spend 4 hours worshiping your partner's body. Focus on every inch of them and make them feel desired.",
+    "difficulty_level": 10,
+    "status": 1
+  },
+  {
+    "id": 70,
+    "title": "Sensory Deprivation Mastery Extended Plus Punishment",
+    "description": "You must wear a blindfold and earplugs for 6 hours while your partner teases you. You cannot see or hear anything.",
+    "difficulty_level": 10,
+    "status": 1
+  },
+  {
+    "id": 71,
+    "title": "Power Exchange Mastery Extended Plus Punishment",
+    "description": "You must submit to your partner's control for 8 hours. They can do whatever they want with you.",
+    "difficulty_level": 10,
+    "status": 1
+  },
+  {
+    "id": 72,
+    "title": "Impact Play Mastery Extended Plus Punishment",
+    "description": "You must endure 3 hours of impact play with your partner. Use spanking, flogging, or other impact tools.",
+    "difficulty_level": 10,
+    "status": 1
+  },
+  {
+    "id": 73,
+    "title": "Temperature Play Mastery Extended Plus Punishment",
+    "description": "You must endure 4 hours of temperature play with ice, wax, and heat. Your partner will control the temperature.",
+    "difficulty_level": 10,
+    "status": 1
+  },
+  {
+    "id": 74,
+    "title": "Public Humiliation Mastery Extended Plus Punishment",
+    "description": "You must wear something embarrassing under your clothes and go out in public for 10 hours. No one can know what you're wearing.",
+    "difficulty_level": 10,
+    "status": 1
+  },
+  {
+    "id": 75,
+    "title": "Bondage Mastery Extended Plus Punishment",
+    "description": "You must be tied up and restrained for 5 hours while your partner teases you. You cannot move or touch yourself.",
+    "difficulty_level": 10,
+    "status": 1
+  },
+  {
+    "id": 76,
+    "title": "Communication Mastery Extended Plus Punishment",
+    "description": "You must have an 8-hour deep conversation with your partner about your relationship and desires. Be completely honest.",
+    "difficulty_level": 10,
+    "status": 1
+  },
+  {
+    "id": 77,
+    "title": "Wellness Mastery Extended Plus Punishment",
+    "description": "You must practice self-care and wellness activities for 10 hours. Focus on your mental and physical well-being.",
+    "difficulty_level": 9,
+    "status": 1
+  },
+  {
+    "id": 78,
+    "title": "Creative Mastery Extended Plus Punishment",
+    "description": "You must create something artistic that represents your sexuality. Take your time and make it meaningful.",
+    "difficulty_level": 10,
+    "status": 1
+  },
+  {
+    "id": 79,
+    "title": "Educational Mastery Extended Plus Punishment",
+    "description": "You must research and learn about a new sexual technique. Then teach it to your partner.",
+    "difficulty_level": 9,
+    "status": 1
+  },
+  {
+    "id": 80,
+    "title": "Solo Exploration Mastery Extended Plus Punishment",
+    "description": "You must spend 10 hours exploring your body and discovering new erogenous zones. Focus on what feels good.",
+    "difficulty_level": 10,
+    "status": 1
+  },
+  {
+    "id": 81,
+    "title": "Partner Worship Mastery Extended Plus Punishment",
+    "description": "You must spend 5 hours worshiping your partner's body. Focus on every inch of them and make them feel desired.",
+    "difficulty_level": 10,
+    "status": 1
+  },
+  {
+    "id": 82,
+    "title": "Sensory Deprivation Mastery Extended Plus Plus Punishment",
+    "description": "You must wear a blindfold and earplugs for 7 hours while your partner teases you. You cannot see or hear anything.",
+    "difficulty_level": 10,
+    "status": 1
+  },
+  {
+    "id": 83,
+    "title": "Power Exchange Mastery Extended Plus Plus Punishment",
+    "description": "You must submit to your partner's control for 10 hours. They can do whatever they want with you.",
+    "difficulty_level": 10,
+    "status": 1
+  },
+  {
+    "id": 84,
+    "title": "Impact Play Mastery Extended Plus Plus Punishment",
+    "description": "You must endure 4 hours of impact play with your partner. Use spanking, flogging, or other impact tools.",
+    "difficulty_level": 10,
+    "status": 1
+  },
+  {
+    "id": 85,
+    "title": "Temperature Play Mastery Extended Plus Plus Punishment",
+    "description": "You must endure 5 hours of temperature play with ice, wax, and heat. Your partner will control the temperature.",
+    "difficulty_level": 10,
+    "status": 1
+  },
+  {
+    "id": 86,
+    "title": "Public Humiliation Mastery Extended Plus Plus Punishment",
+    "description": "You must wear something embarrassing under your clothes and go out in public for 12 hours. No one can know what you're wearing.",
+    "difficulty_level": 10,
+    "status": 1
+  },
+  {
+    "id": 87,
+    "title": "Bondage Mastery Extended Plus Plus Punishment",
+    "description": "You must be tied up and restrained for 6 hours while your partner teases you. You cannot move or touch yourself.",
+    "difficulty_level": 10,
+    "status": 1
+  },
+  {
+    "id": 88,
+    "title": "Communication Mastery Extended Plus Plus Punishment",
+    "description": "You must have a 10-hour deep conversation with your partner about your relationship and desires. Be completely honest.",
+    "difficulty_level": 10,
+    "status": 1
+  },
+  {
+    "id": 89,
+    "title": "Wellness Mastery Extended Plus Plus Punishment",
+    "description": "You must practice self-care and wellness activities for 12 hours. Focus on your mental and physical well-being.",
+    "difficulty_level": 10,
+    "status": 1
+  },
+  {
+    "id": 90,
+    "title": "Creative Mastery Extended Plus Plus Punishment",
+    "description": "You must create something artistic that represents your sexuality. Take your time and make it meaningful.",
+    "difficulty_level": 10,
+    "status": 1
+  },
+  {
+    "id": 91,
+    "title": "Educational Mastery Extended Plus Plus Punishment",
+    "description": "You must research and learn about a new sexual technique. Then teach it to your partner.",
+    "difficulty_level": 10,
+    "status": 1
+  },
+  {
+    "id": 92,
+    "title": "Solo Exploration Mastery Extended Plus Plus Punishment",
+    "description": "You must spend 12 hours exploring your body and discovering new erogenous zones. Focus on what feels good.",
+    "difficulty_level": 10,
+    "status": 1
+  },
+  {
+    "id": 93,
+    "title": "Partner Worship Mastery Extended Plus Plus Punishment",
+    "description": "You must spend 6 hours worshiping your partner's body. Focus on every inch of them and make them feel desired.",
+    "difficulty_level": 10,
+    "status": 1
+  },
+  {
+    "id": 94,
+    "title": "Sensory Deprivation Mastery Extended Plus Plus Plus Punishment",
+    "description": "You must wear a blindfold and earplugs for 8 hours while your partner teases you. You cannot see or hear anything.",
+    "difficulty_level": 10,
+    "status": 1
+  },
+  {
+    "id": 95,
+    "title": "Power Exchange Mastery Extended Plus Plus Plus Punishment",
+    "description": "You must submit to your partner's control for 12 hours. They can do whatever they want with you.",
+    "difficulty_level": 10,
+    "status": 1
+  },
+  {
+    "id": 96,
+    "title": "Impact Play Mastery Extended Plus Plus Plus Punishment",
+    "description": "You must endure 5 hours of impact play with your partner. Use spanking, flogging, or other impact tools.",
+    "difficulty_level": 10,
+    "status": 1
+  },
+  {
+    "id": 97,
+    "title": "Temperature Play Mastery Extended Plus Plus Plus Punishment",
+    "description": "You must endure 6 hours of temperature play with ice, wax, and heat. Your partner will control the temperature.",
+    "difficulty_level": 10,
+    "status": 1
+  },
+  {
+    "id": 98,
+    "title": "Public Humiliation Mastery Extended Plus Plus Plus Punishment",
+    "description": "You must wear something embarrassing under your clothes and go out in public for 14 hours. No one can know what you're wearing.",
+    "difficulty_level": 10,
+    "status": 1
+  },
+  {
+    "id": 99,
+    "title": "Bondage Mastery Extended Plus Plus Plus Punishment",
+    "description": "You must be tied up and restrained for 7 hours while your partner teases you. You cannot move or touch yourself.",
+    "difficulty_level": 10,
+    "status": 1
+  },
+  {
+    "id": 100,
+    "title": "Communication Mastery Extended Plus Plus Plus Punishment",
+    "description": "You must have a 12-hour deep conversation with your partner about your relationship and desires. Be completely honest.",
+    "difficulty_level": 10,
+    "status": 1
+  }
 ]
