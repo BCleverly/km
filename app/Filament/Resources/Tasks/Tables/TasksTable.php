@@ -40,6 +40,11 @@ class TasksTable
                     ->sortable(),
                 TextColumn::make('view_count')
                     ->sortable(),
+                TextColumn::make('affiliate_links_count')
+                    ->counts('affiliateLinks')
+                    ->label('Affiliate Links')
+                    ->badge()
+                    ->color('success'),
                 IconColumn::make('is_premium')
                     ->boolean(),
                 TextColumn::make('created_at')

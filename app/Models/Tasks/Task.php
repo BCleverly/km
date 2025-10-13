@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Models\Tasks;
 
 use App\ContentStatus;
+use App\Models\AffiliateLink;
 use App\Models\Models\Tag;
 use App\Models\User;
 use App\TargetUserType;
@@ -78,6 +79,18 @@ class Task extends Model implements ReactableInterface
     public function recommendedPunishments(): BelongsToMany
     {
         return $this->recommendedOutcomes()->where('intended_type', 'punishment');
+    }
+
+    public function affiliateLinks(): BelongsToMany
+    {
+        return $this->belongsToMany(AffiliateLink::class, 'task_affiliate_links')
+            ->withPivot(['link_text', 'description', 'sort_order', 'is_primary'])
+            ->orderBy('task_affiliate_links.sort_order');
+    }
+
+    public function primaryAffiliateLink(): BelongsToMany
+    {
+        return $this->affiliateLinks()->wherePivot('is_primary', true);
     }
 
     /**
