@@ -1,4 +1,4 @@
-<div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6">
+<div class="bg-white dark:bg-gray-800 rounded-lg">
     <div class="flex items-start space-x-3">
         <img 
             src="{{ auth()->user()->profile_picture_url }}" 

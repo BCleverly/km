@@ -1,4 +1,4 @@
-<div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-2 sm:p-3"
+<div class="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-2 sm:p-3"
      x-data="{ 
         isDragging: false,
         handleDragOver(e) { 
@@ -67,19 +67,7 @@
             <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
         @enderror
 
-        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-            <div class="flex items-center space-x-4">
-                <label class="flex items-center">
-                    <input 
-                        type="checkbox" 
-                        wire:model="isPublic"
-                        class="rounded border-gray-300 text-red-600 shadow-sm focus:border-red-300 focus:ring focus:ring-red-200 focus:ring-opacity-50"
-                    >
-                    <span class="ml-2 text-sm text-gray-600 dark:text-gray-400">Public</span>
-                </label>
-            </div>
-
-            <div class="flex items-center justify-between sm:justify-end space-x-3">
+        <div class="flex items-center justify-end space-x-3">
                 <span class="text-sm text-gray-500 dark:text-gray-400">
                     <span class="{{ $this->remainingCharacters < 20 ? 'text-red-500' : 'text-gray-500' }}">
                         {{ $this->characterCount }}

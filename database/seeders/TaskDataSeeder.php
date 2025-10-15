@@ -77,7 +77,7 @@ class TaskDataSeeder extends Seeder
             $outcome = Outcome::create([
                 'title' => $rewardData['title'],
                 'description' => $rewardData['description'],
-                'difficulty_level' => $rewardData['difficulty_level'],
+                'difficulty_level' => $rewardData['difficulty_level'] ?? 5, // Default to 5 if not specified
                 'target_user_type' => TargetUserType::Any, // Default to Any for imported data
                 'user_id' => $systemUser->id,
                 'status' => ContentStatus::Approved, // Imported data should be approved
@@ -100,7 +100,7 @@ class TaskDataSeeder extends Seeder
             $outcome = Outcome::create([
                 'title' => $punishmentData['title'],
                 'description' => $punishmentData['description'],
-                'difficulty_level' => $punishmentData['difficulty_level'],
+                'difficulty_level' => $punishmentData['difficulty_level'] ?? 5, // Default to 5 if not specified
                 'target_user_type' => TargetUserType::Any, // Default to Any for imported data
                 'user_id' => $systemUser->id,
                 'status' => ContentStatus::Approved, // Imported data should be approved
